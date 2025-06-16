@@ -1,11 +1,11 @@
-name: Lint with Biome
+name: Test with Vitest
 
 on:
   pull_request:
     branches: [main]
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,8 +20,5 @@ jobs:
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: ✨ Lint Code
-        run: bun run lint:ci
-
-      - name: 🦺 Typecheck
-        run: bun run lint:tsc
+      - name: 🧪 Run Tests
+        run: bun run test
