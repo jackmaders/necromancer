@@ -2,7 +2,14 @@
   "name": "necromancer",
   "module": "src/index.ts",
   "type": "module",
+  "scripts": {
+    "start": "bun --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir ./dist --target bun",
+    "check": "biome check --write",
+    "check:ci": "biome ci ."
+  },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "@types/bun": "latest"
   },
   "peerDependencies": {
