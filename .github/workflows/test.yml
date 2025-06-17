@@ -15,10 +15,13 @@ jobs:
       - name: ⚡ Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: "1.2.2"
+          bun-version-file: ".bunrc"
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
+
+      - name: 🦺 Typecheck
+        run: bun run check:tsc
 
       - name: 🧪 Run Tests
         run: bun run test
