@@ -19,6 +19,7 @@
 		"@types/bun": "1.2.16",
 		"@vitest/coverage-v8": "3.2.3",
 		"lefthook": "^1.11.14",
+		"prisma": "^6.10.0",
 		"steiger": "^0.5.7",
 		"typescript": "^5.8.3",
 		"vitest": "^3.1.4"
