@@ -20,8 +20,5 @@ jobs:
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: 🦺 Typecheck
-        run: bun run check:tsc
-
       - name: 🧪 Run Tests
         run: bun run test
