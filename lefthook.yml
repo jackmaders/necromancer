@@ -1,0 +1,10 @@
+pre-commit:
+  commands:
+    check:
+      run: bunx @biomejs/biome check --write --colors=off {staged_files}
+      stage_fixed: true
+commit-msg:
+  commands:
+    check:
+      run: bunx @commitlint/cli --edit {commit_msg}
+

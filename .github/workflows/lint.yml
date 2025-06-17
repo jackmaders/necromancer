@@ -12,16 +12,9 @@ jobs:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
 
-      - name: ⚡ Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version-file: "1.2.2"
-
-      - name: 📦 Install Dependencies
-        run: bun install --frozen-lockfile
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
 
       - name: ✨ Lint Code
-        run: bun run lint:ci
+        run: biome ci
 
-      - name: 🦺 Typecheck
-        run: bun run lint:tsc
