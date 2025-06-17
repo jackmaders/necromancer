@@ -12,9 +12,20 @@ jobs:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Biome
-        uses: biomejs/setup-biome@v2
+      - name: ⚡ Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".bunrc"
 
-      - name: ✨ Lint Code
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile
+        
+      - name: 🦺 Check Type Safety
+        run: bun run check:tsc
+
+      - name: 📐 Check FSD Architecture
+        run: bun run check:fsd
+
+      - name: ✨ Check Linting and Formatting
         run: biome ci
 
