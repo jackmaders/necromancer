@@ -16,5 +16,5 @@ jobs:
         uses: biomejs/setup-biome@v2
 
       - name: ✨ Lint Code
-        run: bun run check:ci
+        run: biome ci
 

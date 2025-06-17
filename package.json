@@ -8,7 +8,6 @@
 		"check": "biome check --write",
 		"check:ci": "biome ci .",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
-		"prepare": "husky",
 		"test": "vitest run",
 		"test:watch": "vitest watch",
 		"test:coverage": "vitest run --coverage"
