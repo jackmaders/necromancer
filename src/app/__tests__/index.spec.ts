@@ -2,7 +2,7 @@ import { beforeAll, describe, expect, it, vi } from "vitest";
 import { start } from "..";
 import { initializeDiscordClient } from "../providers/discord.ts";
 
-describe("index.ts", () => {
+describe("Discord Bot Entrypoint", () => {
 	beforeAll(() => {
 		vi.spyOn(console, "error").mockImplementation(() => console);
 		vi.spyOn(process, "exit").mockImplementation(() => ({}) as never);

@@ -3,7 +3,7 @@ import { discordClient, initializeDiscordClient } from "../discord.ts";
 
 const token = "my-super-secret-token";
 
-describe("discord.ts", () => {
+describe("Discord Client Provider", () => {
 	beforeEach(() => {
 		vi.spyOn(console, "log").mockImplementation(() => ({}) as never);
 		vi.clearAllMocks();
