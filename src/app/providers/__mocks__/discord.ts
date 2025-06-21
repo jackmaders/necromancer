@@ -1,5 +1,9 @@
 import { vi } from "vitest";
 
-export const discordClient = vi.fn();
+const login = vi.fn();
+const once = vi.fn();
 
-export const initializeDiscordClient = vi.fn();
+export const discordProvider = {
+	login,
+	once,
+};

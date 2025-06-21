@@ -1,67 +1,54 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { discordClient, initializeDiscordClient } from "../discord.ts";
+import { Client, Events } from "discord.js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { DiscordProvider } from "../discord.ts";
 
-const token = "my-super-secret-token";
+describe("DiscordProvider", () => {
+	let provider: DiscordProvider;
+	const client = new Client({
+		intents: [],
+	});
 
-describe("Discord Client Provider", () => {
 	beforeEach(() => {
-		vi.spyOn(console, "log").mockImplementation(() => ({}) as never);
+		vi.spyOn(console, "log").mockImplementation(() => ({}));
 		vi.clearAllMocks();
+		provider = new DiscordProvider();
 	});
 
-	afterEach(() => {
-		vi.restoreAllMocks();
-	});
-
-	it("should call login with the provided token", async () => {
+	it("should register the ClientReady handler upon instantiation", () => {
 		expect.assertions(2);
 
-		await initializeDiscordClient(token);
-
-		expect(discordClient.login).toHaveBeenCalledOnce();
-		expect(discordClient.login).toHaveBeenCalledWith(token);
-	});
-
-	it("should propagate errors if login fails", async () => {
-		expect.assertions(1);
-
-		const error = new Error("Invalid Token");
-		vi.mocked(discordClient.login).mockRejectedValue(error);
-
-		await expect(initializeDiscordClient(token)).rejects.toThrow(error);
-	});
-
-	it("should register a listener for the ClientReady event upon import", async () => {
-		expect.assertions(2);
-		const token = "my-super-secret-token";
-
-		await initializeDiscordClient(token);
-		expect(discordClient.once).toHaveBeenCalledOnce();
-		expect(discordClient.once).toHaveBeenCalledWith(
-			"ready",
+		// The handler is registered in the constructor, so we can test it immediately.
+		expect(client.once).toHaveBeenCalledTimes(1);
+		expect(client.once).toHaveBeenCalledWith(
+			Events.ClientReady,
 			expect.any(Function),
 		);
 	});
 
-	it("should log the correct message when the ClientReady event is fired", async () => {
-		vi.mocked(discordClient.once).mockImplementation((_, fn) => {
-			fn(discordClient);
-			return discordClient;
+	it("should call login on the client", async () => {
+		expect.assertions(1);
+		const token = "my-super-secret-token";
+
+		await provider.login(token);
+
+		expect(client.login).toHaveBeenCalledWith(token);
+	});
+
+	it("should log the correct message when the ClientReady event is fired", () => {
+		expect.assertions(1);
+
+		vi.mocked(client.once).mockImplementation((_event, handler) => {
+			handler(client);
+			return client;
 		});
 
-		await initializeDiscordClient(token);
+		new DiscordProvider();
 
-		// biome-ignore lint/suspicious/noConsole: temporary debug
-		expect(console.log).toHaveBeenCalledOnce();
-		// biome-ignore lint/suspicious/noConsole: temporary debug
+		// biome-ignore lint/suspicious/noConsole: temporary logging
 		expect(console.log).toHaveBeenCalledWith(
 			"Ready! Logged in as TestBot#1234",
 		);
 	});
-
-	// describe("Event Handling", () => {
-
-	// });
 });
 
 vi.mock("discord.js");

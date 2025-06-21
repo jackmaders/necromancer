@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/style/useNamingConvention: Environment variables are CONSTANT_CASE */
-import { z } from "zod/v4";
+import { z } from "zod/v4"; // using "/v4" import as recommended by Zod documentation
 
 export const envSchema = z.object({
 	DISCORD_TOKEN: z.string().min(1),

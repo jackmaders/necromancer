@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { start } from "..";
-import { initializeDiscordClient } from "../providers/discord.ts";
+import { discordProvider } from "../providers/discord.ts";
 
 describe("Discord Bot Entrypoint", () => {
 	beforeAll(() => {
@@ -13,21 +13,21 @@ describe("Discord Bot Entrypoint", () => {
 
 		await start();
 
-		expect(initializeDiscordClient).toHaveBeenCalledTimes(1);
-		expect(initializeDiscordClient).toHaveBeenCalledWith("DISCORD_TOKEN");
+		expect(discordProvider.login).toHaveBeenCalledTimes(1);
+		expect(discordProvider.login).toHaveBeenCalledWith("DISCORD_TOKEN");
 	});
 
 	it("should handle an error", async () => {
 		expect.assertions(4);
-		vi.mocked(initializeDiscordClient).mockRejectedValueOnce(
+		vi.mocked(discordProvider.login).mockRejectedValueOnce(
 			new Error("Discord client error"),
 		);
 
 		await start();
 
-		// biome-ignore lint/suspicious/noConsole: temporary debug
+		// biome-ignore lint/suspicious/noConsole: temporary logging
 		expect(console.error).toHaveBeenCalledTimes(1);
-		// biome-ignore lint/suspicious/noConsole: temporary debug
+		// biome-ignore lint/suspicious/noConsole: temporary logging
 		expect(console.error).toHaveBeenCalledWith(
 			new Error("Discord client error"),
 		);

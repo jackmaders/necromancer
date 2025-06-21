@@ -30,7 +30,7 @@ This project is built with a modern, performance-focused toolchain and a highly 
 1.  **Clone the repository:**
 
     ```bash
-    git clone [https://github.com/YOUR_GITHUB_USERNAME/necromancer.git](https://github.com/YOUR_GITHUB_USERNAME/necromancer.git)
+    git clone [https://github.com/jackmaders/necromancer.git](https://github.com/jackmaders/necromancer.git)
     cd necromancer
     ```
 
