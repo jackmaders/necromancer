@@ -1,3 +1,3 @@
-export function greet(name: string): string {
-	return `Hello, ${name}!`;
-}
+import { start } from "./app/index.ts";
+
+start();

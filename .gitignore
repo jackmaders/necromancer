@@ -175,4 +175,7 @@ dist
 .DS_Store
 
 # Prisma
-prisma/
+prisma/generated/
+
+# VSCode
+.vscode/

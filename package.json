@@ -1,4 +1,8 @@
 {
+	"dependencies": {
+		"discord.js": "^14.20.0",
+		"zod": "^3.25.67"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.0.4",
 		"@commitlint/config-conventional": "^19.8.1",
