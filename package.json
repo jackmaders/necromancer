@@ -1,20 +1,6 @@
 {
-	"name": "necromancer",
-	"module": "src/index.ts",
-	"type": "module",
-	"scripts": {
-		"start": "bun --watch src/index.ts",
-		"build": "bun build src/index.ts --outdir ./dist --target bun",
-		"check": "biome check --write",
-		"check:ci": "biome ci .",
-		"check:tsc": "tsc --noEmit --skipLibCheck",
-		"check:fsd": "steiger ./src",
-		"test": "vitest run",
-		"test:watch": "vitest watch",
-		"test:coverage": "vitest run --coverage"
-	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "^2.0.4",
 		"@commitlint/config-conventional": "^19.8.1",
 		"@types/bun": "1.2.16",
 		"@vitest/coverage-v8": "3.2.3",
@@ -23,5 +9,19 @@
 		"steiger": "^0.5.7",
 		"typescript": "^5.8.3",
 		"vitest": "^3.1.4"
-	}
+	},
+	"module": "src/index.ts",
+	"name": "necromancer",
+	"scripts": {
+		"build": "bun build src/index.ts --outdir ./dist --target bun",
+		"check": "biome check --write",
+		"check:ci": "biome ci .",
+		"check:fsd": "steiger ./src",
+		"check:tsc": "tsc --noEmit --skipLibCheck",
+		"start": "bun --watch src/index.ts",
+		"test": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"test:watch": "vitest watch"
+	},
+	"type": "module"
 }
