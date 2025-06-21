@@ -12,6 +12,7 @@
 		"prisma": "^6.10.0",
 		"steiger": "^0.5.7",
 		"typescript": "^5.8.3",
+		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.1.4"
 	},
 	"module": "src/index.ts",
