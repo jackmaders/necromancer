@@ -1,7 +1,7 @@
 /** biome-ignore-all lint/style/useNamingConvention: Environment variables are CONSTANT_CASE */
 import { z } from "zod/v4";
 
-const envSchema = z.object({
+export const envSchema = z.object({
 	DISCORD_TOKEN: z.string().min(1),
 	PRISMA_DATABASE_URL: z.string().min(1),
 });
@@ -28,4 +28,4 @@ function env() {
 	}
 }
 
-export { env, envSchema };
+export { env };

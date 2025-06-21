@@ -1,11 +1,7 @@
-import { Client } from "discord.js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { initializeDiscordClient } from "../discord.ts";
+import { discordClient, initializeDiscordClient } from "../discord.ts";
 
 const token = "my-super-secret-token";
-const client = new Client({
-	intents: [],
-});
 
 describe("discord.ts", () => {
 	beforeEach(() => {
@@ -22,15 +18,15 @@ describe("discord.ts", () => {
 
 		await initializeDiscordClient(token);
 
-		expect(client.login).toHaveBeenCalledOnce();
-		expect(client.login).toHaveBeenCalledWith(token);
+		expect(discordClient.login).toHaveBeenCalledOnce();
+		expect(discordClient.login).toHaveBeenCalledWith(token);
 	});
 
 	it("should propagate errors if login fails", async () => {
 		expect.assertions(1);
 
 		const error = new Error("Invalid Token");
-		vi.mocked(client.login).mockRejectedValue(error);
+		vi.mocked(discordClient.login).mockRejectedValue(error);
 
 		await expect(initializeDiscordClient(token)).rejects.toThrow(error);
 	});
@@ -40,14 +36,17 @@ describe("discord.ts", () => {
 		const token = "my-super-secret-token";
 
 		await initializeDiscordClient(token);
-		expect(client.once).toHaveBeenCalledOnce();
-		expect(client.once).toHaveBeenCalledWith("ready", expect.any(Function));
+		expect(discordClient.once).toHaveBeenCalledOnce();
+		expect(discordClient.once).toHaveBeenCalledWith(
+			"ready",
+			expect.any(Function),
+		);
 	});
 
 	it("should log the correct message when the ClientReady event is fired", async () => {
-		vi.mocked(client.once).mockImplementation((_, fn) => {
-			fn(client);
-			return client;
+		vi.mocked(discordClient.once).mockImplementation((_, fn) => {
+			fn(discordClient);
+			return discordClient;
 		});
 
 		await initializeDiscordClient(token);
