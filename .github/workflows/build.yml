@@ -1,0 +1,21 @@
+name: Build with Docker
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🏷️ Get Bun Version
+        id: bun_version
+        run: echo "version=$(cat .bunrc)" >> $GITHUB_OUTPUT
+
+      - name: 🛠️ Check Docker Build
+        run: docker build . 
+            --file Dockerfile
+            --build-arg BUN_VERSION=${{ steps.bun_version.outputs.version }}
