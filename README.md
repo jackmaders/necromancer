@@ -1,15 +1,13 @@
-# 💀 necromancer
-
-[![Lint CI](https://github.com/YOUR_GITHUB_USERNAME/necromancer/actions/workflows/lint.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/necromancer/actions/workflows/lint.yml) [![Unit Tests](https://github.com/YOUR_GITHUB_USERNAME/necromancer/actions/workflows/test.yml/badge.svg)](https://github.com/YOUR_GITHUB_USERNAME/necromancer/actions/workflows/test.yml) [![Built with Biome](https://img.shields.io/badge/built%20with-Biome-60A5FA?logo=biome&style=flat)](https://biomejs.dev/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+- [![Lint CI](https://github.com/jackmaders/necromancer/actions/workflows/lint.yml/badge.svg)](https://github.com/jackmaders/necromancer/actions/workflows/lint.yml) [![Unit Tests](https://github.com/jackmaders/necromancer/actions/workflows/test.yml/badge.svg)](https://github.com/jackmaders/necromancer/actions/workflows/test.yml) [![Built with Biome](https://img.shields.io/badge/built%20with-Biome-60A5FA?logo=biome&style=flat)](https://biomejs.dev/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Necromancer is a powerful, intelligent Discord bot designed to streamline the complex process of scheduling for gaming teams. It automates availability polls, generates optimal rosters based on player preferences, and manages event reminders, letting you focus on the game, not the logistics.
 
 ## ✨ Key Features
 
--   **Automated Availability Polls**: Posts clear, interactive polls for players to mark their availability for the upcoming week.
--   **Intelligent Roster Generation**: Suggest draft rosters that prioritize the team's preferred days and players' preferred roles.
--   **Advanced Role Management**: Configure team roles and integrate substitute players (`@Ringer`) seamlessly.
--   **Nuanced Preferences**: Supports `Available`, `Prefer Not`, and `Unavailable` states for more flexible scheduling.
+- **Automated Availability Polls**: Posts clear, interactive polls for players to mark their availability for the upcoming week.
+- **Intelligent Roster Generation**: Suggest draft rosters that prioritize the team's preferred days and players' preferred roles.
+- **Advanced Role Management**: Configure team roles and integrate substitute players (`@Ringer`) seamlessly.
+- **Nuanced Preferences**: Supports `Available`, `Prefer Not`, and `Unavailable` states for more flexible scheduling.
 
 ## 🛠️ Tech Stack & Architecture
 
@@ -24,30 +22,34 @@ This project is built with a modern, performance-focused toolchain and a highly 
 
 ### Prerequisites
 
--   [Bun](https://bun.sh/) (v1.2.x or later)
--   A Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications)
+- [Bun](https://bun.sh/) (v1.2.x or later)
+- A Discord Bot Token from the [Discord Developer Portal](https://discord.com/developers/applications)
 
 ### Setup
 
 1.  **Clone the repository:**
+
     ```bash
-    git clone [https://github.com/YOUR_GITHUB_USERNAME/necromancer.git](https://github.com/YOUR_GITHUB_USERNAME/necromancer.git)
+    git clone [https://github.com/jackmaders/necromancer.git](https://github.com/jackmaders/necromancer.git)
     cd necromancer
     ```
 
 2.  **Install dependencies:**
+
     ```bash
     bun install
     ```
 
 3.  **Set up environment variables:**
     Copy the example environment file and fill in your development secrets.
+
     ```bash
     cp .env.example .env
     ```
 
 4.  **Set up the database:**
     This command will apply the database schema.
+
     ```bash
     bunx prisma migrate dev
     ```
