@@ -1,6 +1,6 @@
-import { beforeAll, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { start } from "..";
-import { discordProvider } from "../providers/discord.ts";
+import { discordClient } from "../clients/discord.ts";
 
 describe("Discord Bot Entrypoint", () => {
 	beforeAll(() => {
@@ -8,18 +8,22 @@ describe("Discord Bot Entrypoint", () => {
 		vi.spyOn(process, "exit").mockImplementation(() => ({}) as never);
 	});
 
+	beforeEach(() => {
+		vi.clearAllMocks();
+	});
+
 	it("should init the discord client", async () => {
 		expect.assertions(2);
 
 		await start();
 
-		expect(discordProvider.login).toHaveBeenCalledTimes(1);
-		expect(discordProvider.login).toHaveBeenCalledWith("DISCORD_TOKEN");
+		expect(discordClient.login).toHaveBeenCalledTimes(1);
+		expect(discordClient.login).toHaveBeenCalledWith("DISCORD_TOKEN");
 	});
 
 	it("should handle an error", async () => {
 		expect.assertions(4);
-		vi.mocked(discordProvider.login).mockRejectedValueOnce(
+		vi.mocked(discordClient.login).mockRejectedValueOnce(
 			new Error("Discord client error"),
 		);
 
@@ -37,4 +41,4 @@ describe("Discord Bot Entrypoint", () => {
 });
 
 vi.mock("@/shared/config/env.ts");
-vi.mock("../providers/discord.ts");
+vi.mock("../clients/discord.ts");

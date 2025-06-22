@@ -1,9 +1,9 @@
 import { Client, Events } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DiscordProvider } from "../discord.ts";
+import { DiscordClient } from "../discord.ts";
 
 describe("DiscordProvider", () => {
-	let provider: DiscordProvider;
+	let provider: DiscordClient;
 	const client = new Client({
 		intents: [],
 	});
@@ -11,7 +11,7 @@ describe("DiscordProvider", () => {
 	beforeEach(() => {
 		vi.spyOn(console, "log").mockImplementation(() => ({}));
 		vi.clearAllMocks();
-		provider = new DiscordProvider();
+		provider = new DiscordClient();
 	});
 
 	it("should register the ClientReady handler upon instantiation", () => {
@@ -42,7 +42,7 @@ describe("DiscordProvider", () => {
 			return client;
 		});
 
-		new DiscordProvider();
+		new DiscordClient();
 
 		// biome-ignore lint/suspicious/noConsole: temporary logging
 		expect(console.log).toHaveBeenCalledWith(

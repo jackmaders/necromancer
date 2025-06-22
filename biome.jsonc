@@ -28,7 +28,15 @@
 			"a11y": "on",
 			"complexity": "on",
 			"correctness": "on",
-			"performance": "on",
+			"performance": {
+				"noAccumulatingSpread": "on",
+				"noBarrelFile": "off", // Barrel files are required for FSD
+				"noDelete": "on",
+				"noDynamicNamespaceImportAccess": "on",
+				"noImgElement": "on",
+				"noReExportAll": "on",
+				"useTopLevelRegex": "on"
+			},
 			"security": "on",
 			"style": "on",
 			"suspicious": "on"

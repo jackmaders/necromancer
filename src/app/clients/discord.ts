@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits } from "discord.js";
 
-export class DiscordProvider {
+export class DiscordClient {
 	readonly client: Client;
 
 	constructor() {
@@ -28,4 +28,4 @@ export class DiscordProvider {
 	}
 }
 
-export const discordProvider = new DiscordProvider();
+export const discordClient = new DiscordClient();
