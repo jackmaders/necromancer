@@ -22,15 +22,12 @@ RUN bun run build
 FROM oven/bun:${BUN_VERSION}-slim
 WORKDIR /app
 ENV NODE_ENV="production"
-
-RUN groupadd --system --gid 1001 appgroup && \
-    useradd --system --uid 1001 --gid appgroup appuser
+RUN apt-get update -y && apt-get install -y openssl
 
 # Copy only the necessary files from the build stage
 # Don't need node_modules directory as bun bundles all dependencies
 COPY --from=build --chown=appuser:appgroup /app/dist /app/dist
 COPY --from=build --chown=appuser:appgroup /app/prisma /app/prisma
 
-USER appuser
 
 CMD [ "bun", "dist/index.js" ]
