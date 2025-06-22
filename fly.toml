@@ -1,0 +1,12 @@
+app = 'necromancer'
+primary_region = 'lhr'
+swap_size_mb = 1024
+
+[[mounts]]
+source = 'bot_data'
+destination = '/data'
+
+[[vm]]
+memory = 512
+cpu_kind = 'shared'
+cpus = 1
