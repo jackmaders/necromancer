@@ -1,4 +1,4 @@
-import { env } from "@/shared/config/index.ts";
+import { env } from "@/shared/config";
 import { discordClient } from "./clients/discord.ts";
 
 /**
