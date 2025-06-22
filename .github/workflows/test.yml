@@ -19,6 +19,9 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
+        
+      - name: 🔐 Scan for Vulnerabilities
+        run: bun audit --level=high
 
       - name: 🧪 Run Tests
-        run: bun run test
+        run: bun run test:coverage

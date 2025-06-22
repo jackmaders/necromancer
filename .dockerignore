@@ -176,6 +176,7 @@ dist
 
 # Prisma
 prisma/generated/
+prisma/dev.db
 
 # VSCode
 .vscode/

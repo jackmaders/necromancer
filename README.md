@@ -18,7 +18,7 @@ This project is built with a modern, performance-focused toolchain and a highly 
 ![Vitest](https://img.shields.io/badge/vitest-%236E9F18.svg?style=for-the-badge&logo=vitest&logoColor=white)
 ![Biome](https://img.shields.io/badge/biome-60A5FA?style=for-the-badge&logo=biome&logoColor=white)
 
-## 🚀 Getting Started
+## ✨ Getting Started
 
 ### Prerequisites
 
@@ -63,6 +63,20 @@ This project is built with a modern, performance-focused toolchain and a highly 
 ## 🗺️ Project Roadmap
 
 Curious about where the project is headed? We have a detailed plan outlining all upcoming features and versions in our [**Project Roadmap**](./docs/ROADMAP.md).
+
+## 🚀 Deployment
+
+This project is configured for CI/CD to [Fly.io](https://fly.io/) via GitHub Actions.
+
+- **Build & Test**: On every pull request into 'main', the code is linted, tested, and a Docker image is built to ensure it's valid.
+- **Deploy**: On every push to 'main', the application is automatically deployed to Fly.io.
+
+### Configuration
+
+For the Fly.io deployment to work correctly, you must set the following secrets in your Fly.io app dashboard:
+
+- `DISCORD_TOKEN`: Your Discord bot token.
+- `PRISMA_DATABASE_URL`:The connection string for the SQLite database. This should point to a file inside the Fly.io persistent volume, e.g., `file:/data/prod.db`.
 
 ## 🤝 Contributing
 

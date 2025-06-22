@@ -1,5 +1,6 @@
 # syntax = docker/dockerfile:1
-ARG BUN_VERSION=1.2.2
+
+ARG BUN_VERSION
 
 # ---- Build Stage ----
 FROM oven/bun:${BUN_VERSION}-slim AS build
@@ -9,12 +10,15 @@ ENV NODE_ENV="production"
 COPY package.json bun.lock ./
 RUN bun install --ci
 
-COPY . .
+COPY tsconfig.json .
 
+COPY prisma ./prisma
 RUN bun run prisma:generate
+
+COPY src ./src
 RUN bun run build
 
-# ---- Final Stage ----
+# ---- Deploy Stage ----
 FROM oven/bun:${BUN_VERSION}-slim
 WORKDIR /app
 ENV NODE_ENV="production"
@@ -22,11 +26,11 @@ ENV NODE_ENV="production"
 RUN groupadd --system --gid 1001 appgroup && \
     useradd --system --uid 1001 --gid appgroup appuser
 
+# Copy only the necessary files from the build stage
+# Don't need node_modules directory as bun bundles all dependencies
 COPY --from=build --chown=appuser:appgroup /app/dist /app/dist
 COPY --from=build --chown=appuser:appgroup /app/prisma /app/prisma
-COPY --from=build --chown=appuser:appgroup /app/package.json /app/package.json
-
 
 USER appuser
 
-CMD [ "bun", "run", "start:migrate" ]
+CMD [ "bun", "dist/index.js" ]

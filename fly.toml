@@ -2,7 +2,12 @@ app = 'necromancer'
 primary_region = 'lhr'
 swap_size_mb = 1024
 
+[deploy]
+release_command = "bunx prisma migrate deploy"
+
 [[mounts]]
+# IMPORTANT: You must set `PRISMA_DATABASE_URL` env var on Fly.io to point at /data
+# Otherwise, data will be stored in ephemeral storage and will be lost on app restart.
 source = 'bot_data'
 destination = '/data'
 
