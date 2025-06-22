@@ -6,7 +6,9 @@ import { discordClient } from "./clients/discord.ts";
  */
 export async function start() {
 	try {
-		await discordClient.login(env().DISCORD_TOKEN);
+		if (!discordClient.client.isReady()) {
+			await discordClient.login(env().DISCORD_TOKEN);
+		}
 	} catch (error) {
 		// biome-ignore lint/suspicious/noConsole: temporary error handling
 		console.error(error);

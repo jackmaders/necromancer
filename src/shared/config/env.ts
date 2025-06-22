@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 // Once 4.0.0 is released, we can remove the "/v4" import path and use "zod" directly.
 
 export const envSchema = z.object({
+	DISCORD_CLIENT_ID: z.string().min(1),
 	DISCORD_TOKEN: z.string().min(1),
 	PRISMA_DATABASE_URL: z.string().min(1),
 });

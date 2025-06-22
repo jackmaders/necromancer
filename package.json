@@ -25,7 +25,7 @@
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
 		"prisma:generate": "prisma generate",
-		"start": "bun --watch src/index.ts",
+		"start": "bun --hot src/index.ts",
 		"start:prod": "bun dist/index.js",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
