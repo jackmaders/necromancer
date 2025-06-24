@@ -2,6 +2,13 @@ name: Deploy to Fly.io
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_commands:
+        description: "Force deploy Discord?"
+        required: true
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -29,7 +36,7 @@ jobs:
             src/features/**/command.ts
 
       - name: 🔄 Deploy Discord Commands
-        if: steps.command_changes.outputs.any_changed == 'true'
+        if: (github.event_name == 'push' && steps.command_changes.outputs.any_changed == 'true') || (github.event_name == 'workflow_dispatch' && inputs.deploy_commands)
         run: bun run deploy:commands
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
