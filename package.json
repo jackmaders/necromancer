@@ -25,7 +25,7 @@
 		"check:ci": "biome ci .",
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
-		"deploy:commands": "bun src/scripts/deploy-commands.ts",
+		"deploy:commands": "bun scripts/deploy-commands.ts",
 		"prisma:generate": "prisma generate",
 		"start": "bun --watch src/index.ts",
 		"start:prod": "bun dist/index.js",
