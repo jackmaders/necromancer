@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Environment Variables Config", () => {
 	beforeEach(() => {
+		vi.stubEnv("DISCORD_CLIENT_ID", "valid_client_id");
 		vi.stubEnv("DISCORD_TOKEN", "valid_token");
 		vi.stubEnv("PRISMA_DATABASE_URL", "valid_url");
 

@@ -17,13 +17,13 @@ describe("Discord Bot Entrypoint", () => {
 
 		await start();
 
-		expect(discordClient.login).toHaveBeenCalledTimes(1);
-		expect(discordClient.login).toHaveBeenCalledWith("DISCORD_TOKEN");
+		expect(discordClient.init).toHaveBeenCalledTimes(1);
+		expect(discordClient.init).toHaveBeenCalledWith("DISCORD_TOKEN");
 	});
 
 	it("should handle an error", async () => {
 		expect.assertions(4);
-		vi.mocked(discordClient.login).mockRejectedValueOnce(
+		vi.mocked(discordClient.init).mockRejectedValueOnce(
 			new Error("Discord client error"),
 		);
 

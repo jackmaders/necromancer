@@ -1,32 +1,30 @@
+/** biome-ignore-all lint/suspicious/noConsole: temporary logging */
 import {
 	Client,
 	Events,
 	GatewayIntentBits,
 	type Interaction,
-	REST,
-	Routes,
+	type InteractionReplyOptions,
+	MessageFlags,
 } from "discord.js";
-import { env } from "@/shared/config";
 import type { Command } from "@/shared/lib/types";
 
 export class DiscordClient {
-	readonly client: Client;
 	readonly commands = new Map<string, Command>();
+	readonly client = new Client({
+		intents: [GatewayIntentBits.Guilds],
+	});
 
 	constructor() {
-		this.client = new Client({
-			intents: [GatewayIntentBits.Guilds],
-		});
-
 		this.registerEventHandlers();
-		this.deployCommands();
 	}
 
 	/**
-	 * Logs the client in with the provided token.
+	 * Initializes the Discord client and logs the client in.
 	 */
-	login(token: string): Promise<string> {
-		return this.client.login(token);
+	async init(token: string) {
+		await this.loadCommands();
+		await this.client.login(token);
 	}
 
 	/**
@@ -34,7 +32,6 @@ export class DiscordClient {
 	 */
 	private registerEventHandlers(): void {
 		this.client.once(Events.ClientReady, (readyClient) => {
-			// biome-ignore lint/suspicious/noConsole: temporary logging
 			console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 		});
 
@@ -43,26 +40,7 @@ export class DiscordClient {
 		);
 	}
 
-	private async deployCommands(): Promise<void> {
-		try {
-			await this.loadCommands();
-			const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = env();
-			const rest = new REST().setToken(DISCORD_TOKEN);
-
-			const commandsData = Array.from(this.commands.values()).map((command) =>
-				command.data.toJSON(),
-			);
-
-			await rest.put(Routes.applicationCommands(DISCORD_CLIENT_ID), {
-				body: commandsData,
-			});
-		} catch (error) {
-			// biome-ignore lint/suspicious/noConsole: temporary logging
-			console.error("Failed to deploy commands:", error);
-		}
-	}
-
-	async loadCommands() {
+	private async loadCommands() {
 		// Need dynamic import to support Bun's hot reloading
 		const { commands } = await import("../config/commands.ts");
 
@@ -77,23 +55,49 @@ export class DiscordClient {
 			if (!interaction.isChatInputCommand()) {
 				return;
 			}
+
 			const command = this.commands.get(interaction.commandName);
 
 			if (!command) {
+				console.warn(
+					`No command matching "${interaction.commandName}" was found.`,
+				);
 				return;
 			}
 
 			await command.execute(interaction);
 		} catch (error) {
-			// biome-ignore lint/suspicious/noConsole: temporary logging
-			console.error("Error handling interaction:", error);
+			console.error(
+				`Error handling interaction (ID: ${interaction.id}):`,
+				error,
+			);
+			await this.sendErrorReply(interaction);
+		}
+	}
+
+	private async sendErrorReply(interaction: Interaction) {
+		try {
+			if (!interaction.isRepliable()) {
+				throw new Error("Interaction is not repliable");
+			}
+
+			const replyOptions: InteractionReplyOptions = {
+				content: "There was an error while executing this command!",
+				flags: [MessageFlags.Ephemeral],
+			};
+
+			if (interaction.replied || interaction.deferred) {
+				await interaction.followUp(replyOptions);
+			} else {
+				await interaction.reply(replyOptions);
+			}
+		} catch (replyError) {
+			console.error(
+				`Failed to send error reply for interaction ${interaction.id}:`,
+				replyError,
+			);
 		}
 	}
 }
 
-// Set discordClint in globalThis to support Bun's hot reloading
-// This allows us to reload commands without restarting the server
-globalThis.discordClient?.loadCommands();
-globalThis.discordClient ??= new DiscordClient();
-
-export const discordClient = globalThis.discordClient;
+export const discordClient = new DiscordClient();

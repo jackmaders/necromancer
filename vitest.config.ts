@@ -6,7 +6,12 @@ export default defineConfig({
 	plugins: [tsconfigPaths()],
 	test: {
 		coverage: {
-			exclude: [...coverageConfigDefaults.exclude, "prisma/generated"],
+			exclude: [
+				...coverageConfigDefaults.exclude,
+				"prisma/generated",
+				"**/__mocks__/**",
+			],
+			reporter: "text",
 		},
 	},
 });

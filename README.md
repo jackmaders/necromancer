@@ -56,8 +56,15 @@ This project is built with a modern, performance-focused toolchain and a highly 
 
 5.  **Run the bot in development mode:**
     The bot will start and automatically reload on file changes.
+
     ```bash
     bun run start
+    ```
+
+6.  **Deploy slash commands:**
+    To use slash commands, you need to register them with Discord. You only need to run this script one time, and then when you add a new command.
+    ```bash
+    bun run deploy:commands
     ```
 
 ## 🗺️ Project Roadmap
@@ -76,6 +83,7 @@ This project is configured for CI/CD to [Fly.io](https://fly.io/) via GitHub Act
 For the Fly.io deployment to work correctly, you must set the following secrets in your Fly.io app dashboard:
 
 - `DISCORD_TOKEN`: Your Discord bot token.
+- `DISCORD_CLIENT_ID`: Your Discord client id.
 - `PRISMA_DATABASE_URL`:The connection string for the SQLite database. This should point to a file inside the Fly.io persistent volume, e.g., `file:/data/prod.db`.
 
 ## 🤝 Contributing
