@@ -14,7 +14,8 @@
 		"steiger": "^0.5.7",
 		"typescript": "^5.8.3",
 		"vite-tsconfig-paths": "^5.1.4",
-		"vitest": "^3.1.4"
+		"vitest": "^3.1.4",
+		"vitest-mock-extended": "^3.1.0"
 	},
 	"module": "src/index.ts",
 	"name": "necromancer",
@@ -24,6 +25,7 @@
 		"check:ci": "biome ci .",
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
+		"deploy:commands": "bun src/scripts/deploy-commands.ts",
 		"prisma:generate": "prisma generate",
 		"start": "bun --watch src/index.ts",
 		"start:prod": "bun dist/index.js",

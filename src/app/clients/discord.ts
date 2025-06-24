@@ -1,30 +1,102 @@
-import { Client, Events, GatewayIntentBits } from "discord.js";
+/** biome-ignore-all lint/suspicious/noConsole: temporary logging */
+import {
+	Client,
+	Events,
+	GatewayIntentBits,
+	type Interaction,
+	type InteractionReplyOptions,
+	MessageFlags,
+} from "discord.js";
+import type { Command } from "@/shared/lib/types";
 
 export class DiscordClient {
-	readonly client: Client;
+	readonly commands = new Map<string, Command>();
+	readonly client = new Client({
+		intents: [GatewayIntentBits.Guilds],
+	});
 
 	constructor() {
-		this.client = new Client({
-			intents: [GatewayIntentBits.Guilds],
-		});
-		this.registerHandlers();
+		this.registerEventHandlers();
+	}
+
+	/**
+	 * Initializes the Discord client and logs the client in.
+	 */
+	async init(token: string) {
+		await this.loadCommands();
+		await this.client.login(token);
 	}
 
 	/**
 	 * Registers all client event handlers.
 	 */
-	private registerHandlers(): void {
+	private registerEventHandlers(): void {
 		this.client.once(Events.ClientReady, (readyClient) => {
-			// biome-ignore lint/suspicious/noConsole: temporary logging
 			console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 		});
+
+		this.client.on(Events.InteractionCreate, (interaction) =>
+			this.handleInteraction(interaction),
+		);
 	}
 
-	/**
-	 * Logs the client in with the provided token.
-	 */
-	login(token: string): Promise<string> {
-		return this.client.login(token);
+	private async loadCommands() {
+		// Need dynamic import to support Bun's hot reloading
+		const { commands } = await import("../config/commands.ts");
+
+		this.commands.clear();
+		for (const command of commands) {
+			this.commands.set(command.data.name, command);
+		}
+	}
+
+	private async handleInteraction(interaction: Interaction) {
+		try {
+			if (!interaction.isChatInputCommand()) {
+				return;
+			}
+
+			const command = this.commands.get(interaction.commandName);
+
+			if (!command) {
+				console.warn(
+					`No command matching "${interaction.commandName}" was found.`,
+				);
+				return;
+			}
+
+			await command.execute(interaction);
+		} catch (error) {
+			console.error(
+				`Error handling interaction (ID: ${interaction.id}):`,
+				error,
+			);
+			await this.sendErrorReply(interaction);
+		}
+	}
+
+	private async sendErrorReply(interaction: Interaction) {
+		try {
+			if (!interaction.isRepliable()) {
+				throw new Error("Interaction is not repliable");
+			}
+
+			const replyOptions: InteractionReplyOptions = {
+				content: "There was an error while executing this command!",
+				flags: [MessageFlags.Ephemeral],
+			};
+
+			if (interaction.replied || interaction.deferred) {
+				await interaction.followUp(replyOptions);
+			} else {
+				await interaction.reply(replyOptions);
+			}
+		} catch (replyError) {
+			console.error(
+				`Failed to send error reply for interaction ${interaction.id}:`,
+				replyError,
+			);
+		}
 	}
 }
 

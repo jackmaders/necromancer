@@ -1,21 +1,27 @@
+/** biome-ignore-all lint/suspicious/noConsole: temporary logging */
+
 import { Client, Events } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { commands } from "@/app/config/commands.ts";
+import { InteractionBuilder } from "@/shared/testing";
 import { DiscordClient } from "../discord.ts";
 
-describe("DiscordProvider", () => {
-	let provider: DiscordClient;
+describe("DiscordClient", () => {
 	const client = new Client({
 		intents: [],
 	});
 
 	beforeEach(() => {
+		vi.spyOn(console, "error").mockImplementation(() => ({}));
 		vi.spyOn(console, "log").mockImplementation(() => ({}));
+
 		vi.clearAllMocks();
-		provider = new DiscordClient();
 	});
 
 	it("should register the ClientReady handler upon instantiation", () => {
 		expect.assertions(2);
+
+		new DiscordClient();
 
 		// The handler is registered in the constructor, so we can test it immediately.
 		expect(client.once).toHaveBeenCalledTimes(1);
@@ -29,7 +35,7 @@ describe("DiscordProvider", () => {
 		expect.assertions(1);
 		const token = "my-super-secret-token";
 
-		await provider.login(token);
+		await new DiscordClient().init(token);
 
 		expect(client.login).toHaveBeenCalledWith(token);
 	});
@@ -44,11 +50,157 @@ describe("DiscordProvider", () => {
 
 		new DiscordClient();
 
-		// biome-ignore lint/suspicious/noConsole: temporary logging
 		expect(console.log).toHaveBeenCalledWith(
 			"Ready! Logged in as TestBot#1234",
 		);
 	});
+
+	it("should handle an slash command interaction", async () => {
+		expect.assertions(2);
+
+		const interaction = new InteractionBuilder("ping").build();
+
+		let handler = vi.fn();
+		vi.mocked(client.on).mockImplementation((_event, listener) => {
+			handler = vi.fn(listener);
+			return client;
+		});
+
+		await new DiscordClient().init("token");
+
+		await handler(interaction);
+
+		expect(commands[0].execute).toHaveBeenCalled();
+		expect(commands[0].execute).toHaveBeenCalledWith(interaction);
+	});
+
+	it("should handle an invalid interaction type", async () => {
+		expect.assertions(2);
+
+		const interaction = new InteractionBuilder("ping").build();
+
+		vi.mocked(interaction.isChatInputCommand).mockReturnValue(false);
+
+		let handler = vi.fn();
+		vi.mocked(client.on).mockImplementation((_event, listener) => {
+			handler = vi.fn(listener);
+			return client;
+		});
+
+		await new DiscordClient().init("token");
+
+		const response = await handler(interaction);
+
+		expect(response).toBeUndefined();
+		expect(commands[0].execute).not.toHaveBeenCalled();
+	});
+
+	it("should handle an invalid command name", async () => {
+		expect.assertions(2);
+
+		const interaction = new InteractionBuilder("invalid").build();
+
+		let handler = vi.fn();
+		vi.mocked(client.on).mockImplementation((_event, listener) => {
+			handler = vi.fn(listener);
+			return client;
+		});
+
+		await new DiscordClient().init("token");
+
+		const response = await handler(interaction);
+
+		expect(response).toBeUndefined();
+		expect(commands[0].execute).not.toHaveBeenCalled();
+	});
+
+	it("should handle an command throwing an error", async () => {
+		expect.assertions(5);
+
+		const interaction = new InteractionBuilder("ping").build();
+
+		const error = new Error("Unexpected error");
+		let handler = vi.fn();
+		vi.mocked(client.on).mockImplementation((_event, listener) => {
+			handler = vi.fn(listener);
+			return client;
+		});
+		vi.mocked(commands[0].execute).mockRejectedValue(error);
+
+		await new DiscordClient().init("token");
+		const response = await handler(interaction);
+
+		expect(response).toBeUndefined();
+		expect(console.error).toHaveBeenCalledTimes(1);
+		expect(console.error).toHaveBeenCalledWith(
+			`Error handling interaction (ID: ${interaction.id}):`,
+			error,
+		);
+		expect(interaction.reply).toHaveBeenCalled();
+		expect(interaction.reply).toHaveBeenCalledWith({
+			content: "There was an error while executing this command!",
+			flags: expect.any(Array),
+		});
+	});
+
+	it("should handle an command throwing an error for an unrepliable message", async () => {
+		expect.assertions(4);
+
+		const interaction = new InteractionBuilder("ping").build();
+		vi.mocked(interaction.isRepliable).mockReturnValue(false);
+
+		const error = new Error("Unexpected error");
+		let handler = vi.fn();
+		vi.mocked(client.on).mockImplementation((_event, listener) => {
+			handler = vi.fn(listener);
+			return client;
+		});
+		vi.mocked(commands[0].execute).mockRejectedValue(error);
+
+		await new DiscordClient().init("token");
+		const response = await handler(interaction);
+
+		expect(response).toBeUndefined();
+		expect(console.error).toHaveBeenCalledTimes(2);
+		expect(console.error).toHaveBeenCalledWith(
+			`Error handling interaction (ID: ${interaction.id}):`,
+			error,
+		);
+		expect(console.error).toHaveBeenCalledWith(
+			`Failed to send error reply for interaction ${interaction.id}:`,
+			expect.any(Object),
+		);
+	});
+
+	it("should handle an command throwing an error for a replied message", async () => {
+		expect.assertions(5);
+
+		const interaction = new InteractionBuilder("ping").replied().build();
+
+		const error = new Error("Unexpected error");
+		let handler = vi.fn();
+		vi.mocked(client.on).mockImplementation((_event, listener) => {
+			handler = vi.fn(listener);
+			return client;
+		});
+		vi.mocked(commands[0].execute).mockRejectedValue(error);
+
+		await new DiscordClient().init("token");
+		const response = await handler(interaction);
+
+		expect(response).toBeUndefined();
+		expect(console.error).toHaveBeenCalledTimes(1);
+		expect(console.error).toHaveBeenCalledWith(
+			`Error handling interaction (ID: ${interaction.id}):`,
+			error,
+		);
+		expect(interaction.followUp).toHaveBeenCalled();
+		expect(interaction.followUp).toHaveBeenCalledWith({
+			content: "There was an error while executing this command!",
+			flags: expect.any(Array),
+		});
+	});
 });
 
 vi.mock("discord.js");
+vi.mock("../../config/commands.ts");

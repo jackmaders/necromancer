@@ -16,6 +16,6 @@ jobs:
         run: echo "version=$(cat .bunrc)" >> $GITHUB_OUTPUT
 
       - name: 🛠️ Check Docker Build
-        run: docker build . 
-            --file Dockerfile
-            --build-arg BUN_VERSION=${{ steps.bun_version.outputs.version }}
+        run: docker build .
+          --file Dockerfile
+          --build-arg BUN_VERSION=${{ steps.bun_version.outputs.version }}

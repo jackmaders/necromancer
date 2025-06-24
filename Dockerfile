@@ -29,5 +29,4 @@ RUN apt-get update -y && apt-get install -y openssl
 COPY --from=build --chown=appuser:appgroup /app/dist /app/dist
 COPY --from=build --chown=appuser:appgroup /app/prisma /app/prisma
 
-
 CMD [ "bun", "dist/index.js" ]

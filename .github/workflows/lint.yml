@@ -19,7 +19,7 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
-        
+
       - name: 🦺 Check Type Safety
         run: bun run check:tsc
 
@@ -28,4 +28,3 @@ jobs:
 
       - name: ✨ Check Linting and Formatting
         run: bun run check
-
