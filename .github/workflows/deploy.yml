@@ -37,7 +37,7 @@ jobs:
 
       - name: 🔄 Deploy Discord Commands
         if: (github.event_name == 'push' && steps.command_changes.outputs.any_changed == 'true') || (github.event_name == 'workflow_dispatch' && inputs.deploy_commands)
-        run: bun run deploy:commands
+        run: bun run commands:deploy
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}

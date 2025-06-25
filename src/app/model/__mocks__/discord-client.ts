@@ -2,6 +2,6 @@ import { vi } from "vitest";
 
 const init = vi.fn();
 
-export const discordClient = {
+export const discord = {
 	init,
 };

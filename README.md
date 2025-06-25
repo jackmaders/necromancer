@@ -64,7 +64,7 @@ This project is built with a modern, performance-focused toolchain and a highly 
 6.  **Deploy slash commands:**
     To use slash commands, you need to register them with Discord. You only need to run this script one time, and then when you add a new command.
     ```bash
-    bun run deploy:commands
+    bun run commands:deploy
     ```
 
 ## 🗺️ Project Roadmap

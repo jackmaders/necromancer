@@ -2,19 +2,22 @@
 	"dependencies": {
 		"@prisma/client": "^6.10.0",
 		"discord.js": "^14.20.0",
+		"pino": "^9.7.0",
 		"zod": "^3.25.67"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^2.0.4",
 		"@commitlint/config-conventional": "^19.8.1",
 		"@types/bun": "1.2.17",
-		"@vitest/coverage-v8": "3.2.3",
+		"@vitest/coverage-v8": "^3.2.4",
 		"lefthook": "^1.11.14",
+		"pino-pretty": "^13.0.0",
 		"prisma": "^6.10.0",
 		"steiger": "^0.5.7",
 		"typescript": "^5.8.3",
+		"vite": "^7.0.0",
 		"vite-tsconfig-paths": "^5.1.4",
-		"vitest": "^3.1.4",
+		"vitest": "^3.2.4",
 		"vitest-mock-extended": "^3.1.0"
 	},
 	"module": "src/index.ts",
@@ -25,7 +28,7 @@
 		"check:ci": "biome ci .",
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
-		"deploy:commands": "bun scripts/deploy-commands.ts",
+		"commands:deploy": "bun scripts/deploy-commands.ts",
 		"prisma:generate": "prisma generate",
 		"start": "bun --watch src/index.ts",
 		"start:prod": "bun dist/index.js",
@@ -33,5 +36,6 @@
 		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest watch"
 	},
-	"type": "module"
+	"type": "module",
+	"version": "0.1.0"
 }

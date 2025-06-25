@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { InteractionBuilder } from "@/shared/testing";
+import { InteractionBuilder } from "@/shared/model/index.ts";
 import { pingCommand } from "../command.ts";
 
 describe("Ping Command", () => {

@@ -1,21 +1,13 @@
-/** biome-ignore-all lint/suspicious/noConsole: temporary logging */
-
 import { Client, Events } from "discord.js";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
-import { InteractionBuilder } from "@/shared/testing";
-import { DiscordClient } from "../discord.ts";
+import { logger } from "@/shared/model";
+import { InteractionBuilder } from "@/shared/model/index.ts";
+import { DiscordClient } from "../discord-client.ts";
 
 describe("DiscordClient", () => {
 	const client = new Client({
 		intents: [],
-	});
-
-	beforeEach(() => {
-		vi.spyOn(console, "error").mockImplementation(() => ({}));
-		vi.spyOn(console, "log").mockImplementation(() => ({}));
-
-		vi.clearAllMocks();
 	});
 
 	it("should register the ClientReady handler upon instantiation", () => {
@@ -23,7 +15,6 @@ describe("DiscordClient", () => {
 
 		new DiscordClient();
 
-		// The handler is registered in the constructor, so we can test it immediately.
 		expect(client.once).toHaveBeenCalledTimes(1);
 		expect(client.once).toHaveBeenCalledWith(
 			Events.ClientReady,
@@ -50,7 +41,7 @@ describe("DiscordClient", () => {
 
 		new DiscordClient();
 
-		expect(console.log).toHaveBeenCalledWith(
+		expect(logger.info).toHaveBeenCalledWith(
 			"Ready! Logged in as TestBot#1234",
 		);
 	});
@@ -131,8 +122,8 @@ describe("DiscordClient", () => {
 		const response = await handler(interaction);
 
 		expect(response).toBeUndefined();
-		expect(console.error).toHaveBeenCalledTimes(1);
-		expect(console.error).toHaveBeenCalledWith(
+		expect(logger.error).toHaveBeenCalledTimes(1);
+		expect(logger.error).toHaveBeenCalledWith(
 			`Error handling interaction (ID: ${interaction.id}):`,
 			error,
 		);
@@ -161,12 +152,12 @@ describe("DiscordClient", () => {
 		const response = await handler(interaction);
 
 		expect(response).toBeUndefined();
-		expect(console.error).toHaveBeenCalledTimes(2);
-		expect(console.error).toHaveBeenCalledWith(
+		expect(logger.error).toHaveBeenCalledTimes(2);
+		expect(logger.error).toHaveBeenCalledWith(
 			`Error handling interaction (ID: ${interaction.id}):`,
 			error,
 		);
-		expect(console.error).toHaveBeenCalledWith(
+		expect(logger.error).toHaveBeenCalledWith(
 			`Failed to send error reply for interaction ${interaction.id}:`,
 			expect.any(Object),
 		);
@@ -189,8 +180,8 @@ describe("DiscordClient", () => {
 		const response = await handler(interaction);
 
 		expect(response).toBeUndefined();
-		expect(console.error).toHaveBeenCalledTimes(1);
-		expect(console.error).toHaveBeenCalledWith(
+		expect(logger.error).toHaveBeenCalledTimes(1);
+		expect(logger.error).toHaveBeenCalledWith(
 			`Error handling interaction (ID: ${interaction.id}):`,
 			error,
 		);
@@ -204,3 +195,4 @@ describe("DiscordClient", () => {
 
 vi.mock("discord.js");
 vi.mock("../../config/commands.ts");
+vi.mock("@/shared/model/logging/logger-client.ts");

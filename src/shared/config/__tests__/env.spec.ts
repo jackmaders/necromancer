@@ -1,26 +1,16 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("Environment Variables Config", () => {
 	beforeEach(() => {
-		vi.stubEnv("DISCORD_CLIENT_ID", "valid_client_id");
-		vi.stubEnv("DISCORD_TOKEN", "valid_token");
-		vi.stubEnv("PRISMA_DATABASE_URL", "valid_url");
-
-		vi.clearAllMocks();
 		vi.resetModules();
-	});
-
-	afterEach(() => {
-		vi.restoreAllMocks();
-		vi.unstubAllEnvs();
 	});
 
 	it("should parse valid environment variables", async () => {
 		expect.assertions(2);
 
-		const { env } = await import("../env.ts");
-		expect(env().DISCORD_TOKEN).toBe("valid_token");
-		expect(env().PRISMA_DATABASE_URL).toBe("valid_url");
+		const { getEnvVar } = await import("../env.ts");
+		expect(getEnvVar().DISCORD_TOKEN).toBe("your_discord_token");
+		expect(getEnvVar().PRISMA_DATABASE_URL).toBe("file:./dev.db");
 	});
 
 	it("should exit if DISCORD_TOKEN is missing", async () => {
@@ -28,9 +18,9 @@ describe("Environment Variables Config", () => {
 
 		vi.stubEnv("DISCORD_TOKEN", undefined);
 
-		const { env } = await import("../env.ts");
+		const { getEnvVar } = await import("../env.ts");
 
-		expect(env).toThrow(
+		expect(getEnvVar).toThrow(
 			"✖ Invalid input: expected string, received undefined\n  → at DISCORD_TOKEN",
 		);
 	});
@@ -40,9 +30,9 @@ describe("Environment Variables Config", () => {
 
 		vi.stubEnv("PRISMA_DATABASE_URL", undefined);
 
-		const { env } = await import("../env.ts");
+		const { getEnvVar } = await import("../env.ts");
 
-		expect(env).toThrow(
+		expect(getEnvVar).toThrow(
 			"✖ Invalid input: expected string, received undefined\n  → at PRISMA_DATABASE_URL",
 		);
 	});
@@ -52,12 +42,21 @@ describe("Environment Variables Config", () => {
 
 		const error = new Error("Unknown error");
 
-		const { env, envSchema } = await import("../env.ts");
+		const { getEnvVar, envSchema } = await import("../env.ts");
 
 		vi.spyOn(envSchema, "parse").mockImplementation(() => {
 			throw error;
 		});
 
-		expect(env).toThrow(error);
+		expect(getEnvVar).toThrow(error);
+	});
+
+	it("should handle a partial set of environment variables", async () => {
+		expect.assertions(2);
+		vi.stubEnv("PRISMA_DATABASE_URL", undefined);
+
+		const { getEnvVar } = await import("../env.ts");
+		expect(getEnvVar(true).DISCORD_TOKEN).toBe("your_discord_token");
+		expect(getEnvVar(true).PRISMA_DATABASE_URL).toBeUndefined();
 	});
 });
