@@ -11,3 +11,4 @@ describe("Application Entrypoint", () => {
 });
 
 vi.mock("../app/index.ts");
+vi.mock("@/shared/model/LoggerClient.ts");

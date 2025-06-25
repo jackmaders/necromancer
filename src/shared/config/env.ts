@@ -6,6 +6,10 @@ import { z } from "zod/v4";
 export const envSchema = z.object({
 	DISCORD_CLIENT_ID: z.string().min(1),
 	DISCORD_TOKEN: z.string().min(1),
+	NODE_ENV: z.string().default("production"),
+	PINO_LOG_LEVEL: z
+		.enum(["trace", "debug", "info", "warn", "error", "fatal"])
+		.default("info"),
 	PRISMA_DATABASE_URL: z.string().min(1),
 });
 
@@ -14,7 +18,7 @@ let _env: z.infer<typeof envSchema> | undefined;
 /**
  * Parses and validates environment variables using Zod schema.
  */
-function env() {
+function getEnvVar() {
 	try {
 		if (!_env) {
 			/** biome-ignore lint/style/noProcessEnv: This file is responsible for env parsing */
@@ -31,4 +35,4 @@ function env() {
 	}
 }
 
-export { env };
+export { getEnvVar };

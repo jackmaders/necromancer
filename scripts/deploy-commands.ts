@@ -1,6 +1,6 @@
-/** biome-ignore-all lint/suspicious/noConsole: bespoke script doesn't need a logging util */
 import { type APIApplicationCommand, REST, Routes } from "discord.js";
 import { commands } from "@/app/config/commands";
+import { logger } from "@/shared/model/LoggerClient";
 
 /**
  * This script registers all application slash commands with Discord.
@@ -8,11 +8,9 @@ import { commands } from "@/app/config/commands";
  */
 (async () => {
 	try {
-		console.log(
-			`Started deploying ${commands.length} application (/) command(s).`,
-		);
+		logger.info(`Deploying ${commands.length} command(s)...`);
 
-		// biome-ignore lint/style/noProcessEnv: only need a subset of vars so avoiding env()
+		// biome-ignore lint/style/noProcessEnv: only need a subset of variables so avoiding getEnvVar()
 		const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
 
 		if (!DISCORD_TOKEN) {
@@ -24,10 +22,8 @@ import { commands } from "@/app/config/commands";
 
 		const rest = new REST().setToken(DISCORD_TOKEN);
 
-		// Transform command definitions into the required JSON format
 		const commandsData = commands.map((command) => command.data.toJSON());
 
-		// The "put" method is used to fully refresh all commands with the current set
 		const data = (await rest.put(
 			Routes.applicationCommands(DISCORD_CLIENT_ID),
 			{
@@ -35,11 +31,9 @@ import { commands } from "@/app/config/commands";
 			},
 		)) as APIApplicationCommand[];
 
-		console.log(
-			`Successfully deployed ${data.length} application command(s).\n`,
-		);
+		logger.info(`Successfully deployed ${data.length} command(s).`);
 	} catch (error) {
-		console.error("Failed to deploy commands:", error);
+		logger.error("Failed to deploy commands:", error);
 		process.exit(1);
 	}
 })();

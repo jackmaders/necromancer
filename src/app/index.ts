@@ -1,15 +1,15 @@
-import { env } from "@/shared/config";
-import { discordClient } from "./clients/discord.ts";
+import { getEnvVar } from "@/shared/config";
+import { logger } from "@/shared/model/LoggerClient.ts";
+import { discord } from "./model/DiscordClient.ts";
 
 /**
  * Starts the application by initializing the Discord client.
  */
 export async function start() {
 	try {
-		await discordClient.init(env().DISCORD_TOKEN);
+		await discord.init(getEnvVar().DISCORD_TOKEN);
 	} catch (error) {
-		// biome-ignore lint/suspicious/noConsole: temporary error handling
-		console.error(error);
+		logger.error(error);
 		process.exit(1);
 	}
 }

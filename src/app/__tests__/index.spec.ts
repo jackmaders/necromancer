@@ -1,15 +1,11 @@
-import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { logger } from "@/shared/model/LoggerClient.ts";
 import { start } from "..";
-import { discordClient } from "../clients/discord.ts";
+import { discord } from "../model/DiscordClient.ts";
 
 describe("Discord Bot Entrypoint", () => {
-	beforeAll(() => {
-		vi.spyOn(console, "error").mockImplementation(() => console);
-		vi.spyOn(process, "exit").mockImplementation(() => ({}) as never);
-	});
-
 	beforeEach(() => {
-		vi.clearAllMocks();
+		vi.spyOn(process, "exit").mockImplementation(() => ({}) as never);
 	});
 
 	it("should init the discord client", async () => {
@@ -17,22 +13,20 @@ describe("Discord Bot Entrypoint", () => {
 
 		await start();
 
-		expect(discordClient.init).toHaveBeenCalledTimes(1);
-		expect(discordClient.init).toHaveBeenCalledWith("DISCORD_TOKEN");
+		expect(discord.init).toHaveBeenCalledTimes(1);
+		expect(discord.init).toHaveBeenCalledWith("your_discord_token");
 	});
 
 	it("should handle an error", async () => {
 		expect.assertions(4);
-		vi.mocked(discordClient.init).mockRejectedValueOnce(
+		vi.mocked(discord.init).mockRejectedValueOnce(
 			new Error("Discord client error"),
 		);
 
 		await start();
 
-		// biome-ignore lint/suspicious/noConsole: temporary logging
-		expect(console.error).toHaveBeenCalledTimes(1);
-		// biome-ignore lint/suspicious/noConsole: temporary logging
-		expect(console.error).toHaveBeenCalledWith(
+		expect(logger.error).toHaveBeenCalledTimes(1);
+		expect(logger.error).toHaveBeenCalledWith(
 			new Error("Discord client error"),
 		);
 		expect(process.exit).toHaveBeenCalledTimes(1);
@@ -40,5 +34,5 @@ describe("Discord Bot Entrypoint", () => {
 	});
 });
 
-vi.mock("@/shared/config/env.ts");
-vi.mock("../clients/discord.ts");
+vi.mock("@/shared/model/LoggerClient.ts");
+vi.mock("../model/DiscordClient.ts");

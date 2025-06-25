@@ -1,4 +1,3 @@
-/** biome-ignore-all lint/suspicious/noConsole: temporary logging */
 import {
 	Client,
 	Events,
@@ -7,7 +6,8 @@ import {
 	type InteractionReplyOptions,
 	MessageFlags,
 } from "discord.js";
-import type { Command } from "@/shared/lib/types";
+import { logger } from "@/shared/model/LoggerClient.ts";
+import type { Command } from "@/shared/model/types.ts";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
@@ -32,7 +32,7 @@ export class DiscordClient {
 	 */
 	private registerEventHandlers(): void {
 		this.client.once(Events.ClientReady, (readyClient) => {
-			console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+			logger.info(`Ready! Logged in as ${readyClient.user.tag}`);
 		});
 
 		this.client.on(Events.InteractionCreate, (interaction) =>
@@ -59,7 +59,7 @@ export class DiscordClient {
 			const command = this.commands.get(interaction.commandName);
 
 			if (!command) {
-				console.warn(
+				logger.warn(
 					`No command matching "${interaction.commandName}" was found.`,
 				);
 				return;
@@ -67,7 +67,7 @@ export class DiscordClient {
 
 			await command.execute(interaction);
 		} catch (error) {
-			console.error(
+			logger.error(
 				`Error handling interaction (ID: ${interaction.id}):`,
 				error,
 			);
@@ -92,7 +92,7 @@ export class DiscordClient {
 				await interaction.reply(replyOptions);
 			}
 		} catch (replyError) {
-			console.error(
+			logger.error(
 				`Failed to send error reply for interaction ${interaction.id}:`,
 				replyError,
 			);
@@ -100,4 +100,4 @@ export class DiscordClient {
 	}
 }
 
-export const discordClient = new DiscordClient();
+export const discord = new DiscordClient();
