@@ -50,4 +50,13 @@ describe("Environment Variables Config", () => {
 
 		expect(getEnvVar).toThrow(error);
 	});
+
+	it("should handle a partial set of environment variables", async () => {
+		expect.assertions(2);
+		vi.stubEnv("PRISMA_DATABASE_URL", undefined);
+
+		const { getEnvVar } = await import("../env.ts");
+		expect(getEnvVar(true).DISCORD_TOKEN).toBe("your_discord_token");
+		expect(getEnvVar(true).PRISMA_DATABASE_URL).toBeUndefined();
+	});
 });

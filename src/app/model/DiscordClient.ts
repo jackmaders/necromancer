@@ -6,7 +6,7 @@ import {
 	type InteractionReplyOptions,
 	MessageFlags,
 } from "discord.js";
-import { logger } from "@/shared/model/LoggerClient.ts";
+import { logger } from "@/shared/model/logging/LoggerClient.ts";
 import type { Command } from "@/shared/model/types.ts";
 
 export class DiscordClient {

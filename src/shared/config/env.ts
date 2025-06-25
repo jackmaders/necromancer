@@ -13,24 +13,30 @@ export const envSchema = z.object({
 	PRISMA_DATABASE_URL: z.string().min(1),
 });
 
-let _env: z.infer<typeof envSchema> | undefined;
+type EnvSchema = z.infer<typeof envSchema>;
+let _env: EnvSchema | undefined;
 
 /**
- * Parses and validates environment variables using Zod schema.
+ * Parses and validates environment variables using a Zod schema.
+ * @param partial - Whether to accept a partial process.env object.
  */
-function getEnvVar() {
+function getEnvVar<T extends boolean = false>(
+	partial: T = false as T,
+): T extends true ? Partial<EnvSchema> : EnvSchema {
 	try {
-		if (!_env) {
+		if (partial) {
 			/** biome-ignore lint/style/noProcessEnv: This file is responsible for env parsing */
-			_env = envSchema.parse(process.env);
+			const partialEnv = envSchema.partial().parse(process.env);
+			return partialEnv as T extends true ? Partial<EnvSchema> : EnvSchema;
 		}
 
-		return _env;
+		/** biome-ignore lint/style/noProcessEnv: This file is responsible for env parsing */
+		_env = envSchema.parse(process.env);
+		return _env as T extends true ? Partial<EnvSchema> : EnvSchema;
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error(z.prettifyError(error));
 		}
-
 		throw error;
 	}
 }

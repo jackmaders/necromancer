@@ -1,1 +1,1 @@
-export { InteractionBuilder } from "./InteractionBuilder.ts";
+export { InteractionBuilder } from "./testing/InteractionBuilder.ts";

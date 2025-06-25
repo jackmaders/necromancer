@@ -2,7 +2,7 @@ import { Client, Events } from "discord.js";
 import { describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
 import { InteractionBuilder } from "@/shared/model/index.ts";
-import { logger } from "@/shared/model/LoggerClient.ts";
+import { logger } from "@/shared/model/logging/LoggerClient.ts";
 import { DiscordClient } from "../DiscordClient.ts";
 
 describe("DiscordClient", () => {
@@ -195,4 +195,4 @@ describe("DiscordClient", () => {
 
 vi.mock("discord.js");
 vi.mock("../../config/commands.ts");
-vi.mock("@/shared/model/LoggerClient.ts");
+vi.mock("@/shared/model/logging/LoggerClient.ts");

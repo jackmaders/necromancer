@@ -2,7 +2,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
 import { getEnvVar } from "@/shared/config/env.ts";
-import { logger } from "@/shared/model/LoggerClient.ts";
+import { logger } from "@/shared/model/logging/LoggerClient.ts";
 
 describe("Command Deployment Script", () => {
 	beforeEach(() => {
@@ -64,5 +64,5 @@ describe("Command Deployment Script", () => {
 	});
 });
 
-vi.mock("@/shared/model/LoggerClient.ts");
+vi.mock("@/shared/model/logging/LoggerClient.ts");
 vi.mock("discord.js");

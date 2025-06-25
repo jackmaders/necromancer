@@ -1,6 +1,6 @@
 import { type APIApplicationCommand, REST, Routes } from "discord.js";
 import { commands } from "@/app/config/commands";
-import { logger } from "@/shared/model/LoggerClient";
+import { logger } from "@/shared/model/logging/LoggerClient";
 
 /**
  * This script registers all application slash commands with Discord.
