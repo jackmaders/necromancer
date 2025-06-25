@@ -6,8 +6,8 @@ import {
 	type InteractionReplyOptions,
 	MessageFlags,
 } from "discord.js";
-import { logger } from "@/shared/model/logging/LoggerClient.ts";
-import type { Command } from "@/shared/model/types.ts";
+import type { Command } from "@/shared/model";
+import { logger } from "@/shared/model";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();

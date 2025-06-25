@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { logger } from "@/shared/model/logging/LoggerClient.ts";
+import { logger } from "@/shared/model";
 import { start } from "..";
-import { discord } from "../model/DiscordClient.ts";
+import { discord } from "../model/discord-client.ts";
 
 describe("Discord Bot Entrypoint", () => {
 	beforeEach(() => {
@@ -34,5 +34,5 @@ describe("Discord Bot Entrypoint", () => {
 	});
 });
 
-vi.mock("@/shared/model/logging/LoggerClient.ts");
-vi.mock("../model/DiscordClient.ts");
+vi.mock("@/shared/model/logging/logger-client.ts");
+vi.mock("../model/discord-client.ts");

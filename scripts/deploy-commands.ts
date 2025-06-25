@@ -1,6 +1,7 @@
 import { type APIApplicationCommand, REST, Routes } from "discord.js";
 import { commands } from "@/app/config/commands";
-import { logger } from "@/shared/model/logging/LoggerClient";
+import { getEnvVar } from "@/shared/config";
+import { logger } from "@/shared/model/logging/logger-client";
 
 /**
  * This script registers all application slash commands with Discord.
@@ -10,8 +11,7 @@ import { logger } from "@/shared/model/logging/LoggerClient";
 	try {
 		logger.info(`Deploying ${commands.length} command(s)...`);
 
-		// biome-ignore lint/style/noProcessEnv: only need a subset of variables so avoiding getEnvVar()
-		const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = process.env;
+		const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = getEnvVar(true);
 
 		if (!DISCORD_TOKEN) {
 			throw new Error("Missing Environment Variable: DISCORD_TOKEN");

@@ -1,17 +1,15 @@
 import { type Logger, type LoggerOptions, pino } from "pino";
 import { getEnvVar } from "@/shared/config";
 
-class LoggerClient {
+export class LoggerClient {
 	initialised = false;
 	private logger: Logger = pino();
-	// biome-ignore lint/suspicious/noConsole: use console fallback
+	// biome-ignore-start lint/suspicious/noConsole: console logging default
 	debug: Logger["debug"] = console.debug;
-	// biome-ignore lint/suspicious/noConsole: use console fallback
 	info: Logger["info"] = console.info;
-	// biome-ignore lint/suspicious/noConsole: use console fallback
 	warn: Logger["warn"] = console.warn;
-	// biome-ignore lint/suspicious/noConsole: use console fallback
 	error: Logger["error"] = console.error;
+	// biome-ignore-end lint/suspicious/noConsole: console logging default
 
 	init() {
 		const { NODE_ENV, PINO_LOG_LEVEL } = getEnvVar();
@@ -44,6 +42,7 @@ class LoggerClient {
 		this.warn = this.logger.warn.bind(this.logger);
 
 		this.initialised = true;
+		return this;
 	}
 }
 

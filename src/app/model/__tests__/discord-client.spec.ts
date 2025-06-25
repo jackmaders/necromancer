@@ -1,9 +1,9 @@
 import { Client, Events } from "discord.js";
 import { describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
+import { logger } from "@/shared/model";
 import { InteractionBuilder } from "@/shared/model/index.ts";
-import { logger } from "@/shared/model/logging/LoggerClient.ts";
-import { DiscordClient } from "../DiscordClient.ts";
+import { DiscordClient } from "../discord-client.ts";
 
 describe("DiscordClient", () => {
 	const client = new Client({
@@ -195,4 +195,4 @@ describe("DiscordClient", () => {
 
 vi.mock("discord.js");
 vi.mock("../../config/commands.ts");
-vi.mock("@/shared/model/logging/LoggerClient.ts");
+vi.mock("@/shared/model/logging/logger-client.ts");

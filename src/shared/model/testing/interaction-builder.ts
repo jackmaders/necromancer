@@ -60,10 +60,7 @@ export class InteractionBuilder {
 					return {} as InteractionResponse;
 				}
 
-				if (options?.fetchReply) {
-					return mockReplyMessage;
-				}
-				return {} as InteractionResponse;
+				return mockReplyMessage;
 			},
 		);
 
