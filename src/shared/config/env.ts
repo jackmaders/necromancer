@@ -30,6 +30,10 @@ function getEnvVar<T extends boolean = false>(
 			return partialEnv as T extends true ? Partial<EnvSchema> : EnvSchema;
 		}
 
+		if (_env) {
+			return _env;
+		}
+
 		/** biome-ignore lint/style/noProcessEnv: This file is responsible for env parsing */
 		_env = envSchema.parse(process.env);
 		return _env as T extends true ? Partial<EnvSchema> : EnvSchema;
