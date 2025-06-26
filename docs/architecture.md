@@ -1,6 +1,4 @@
-# Contributing
-
-## Project Architecture
+# Project Architecture
 
 This project follows the principles of **Feature-Sliced Design (FSD)**. The goal is to create a scalable and maintainable codebase by organizing code according to business domains rather than technical types.
 
@@ -14,7 +12,7 @@ src
 └── shared/
 ```
 
-### Layers
+## Layers
 
 Layers are the main horizontal division of the project. They have a strict hierarchy: higher layers can import from lower layers, but **never** the other way around.
 
@@ -37,71 +35,3 @@ The `entities` layer is the heart of our business logic. Each entity (e.g., `ent
 - `/api`: Contains functions that handle communication with external services, primarily the database.
 - `/lib`: Contains miscellaneous helpers, constants, or utility functions that are specific _only_ to this entity.
 - `/config`: Contains configuration & feature flags for this specific entity.
-
-## Development Setup
-
-### Prerequisites
-
-1. [Bun](https://bun.sh/) (v1.2.2 or later recommended)
-2. A Discord Server and Account with administrative permissions.
-3. A Discord Bot Application created via the [Discord Developer Portal](https://discord.com/developers/applications).
-
-### Setup
-
-```bash
-# Install dependencies
-bun install
-```
-
-```bash
-# Setup environment variables
-# Ensure to set the relevant variables in the new .env file
-cp .env.example .env
-```
-
-```bash
-# Setup database
-bunx prisma migrate dev
-```
-
-```bash
-# Run the bot
-bun run start
-```
-
-### Database changes
-
-If you make any changes to `prisma/schema.prisma` you will need to re-run the database migration command.
-
-```bash
-bunx prisma migrate dev
-```
-
-During development, the database migration command will likely automatically generate a typed Prisma Client based on your schema. However, you may need to generate one manually with the below script.
-
-```bash
-bunx prisma generate
-```
-
-## Coding Standards
-
-### Discord.js Interaction Replies
-
-- Avoid the Deprecated `ephemeral: true` option when sending replies or follow-ups that should only be visible to the user.
-- Instead, you should import `MessageFlags` from `discord.js` and use the `flags` property on the reply or follow-up.
-
-```typescript
-import { MessageFlags } from "discord.js";
-
-// Correct
-await interaction.reply({
-  content,
-  flags: [MessageFlags.Ephemeral],
-});
-
-// Incorrect
-// await interaction.reply({
-//     content,
-//     ephemeral: true // <-- Do not use
-// });
-```
