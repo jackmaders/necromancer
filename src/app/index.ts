@@ -7,6 +7,7 @@ import { discord } from "./model/discord-client.ts";
  */
 export async function start() {
 	try {
+		logger.init();
 		await discord.init(getEnvVar().DISCORD_TOKEN);
 	} catch (error) {
 		logger.error(error);
