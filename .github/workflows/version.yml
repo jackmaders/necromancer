@@ -46,6 +46,10 @@ jobs:
           # Configure git user for the commit
           git config --global user.name "Version Bump Bot"
           git config --global user.email "bot@users.noreply.github.com"
-          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --push --no-verify -y
+          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --no-verify -y
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "📌 Push Bump Commit (without tags)"
+        if: steps.semver.outputs.changed == 'true' && steps.semver.outputs.version_type != 'none'
+        run: git push
