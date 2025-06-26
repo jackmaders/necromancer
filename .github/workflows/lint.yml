@@ -6,6 +6,7 @@ on:
 
 jobs:
   lint:
+    name: ✨ Check Code Quality
     runs-on: ubuntu-latest
 
     steps:
