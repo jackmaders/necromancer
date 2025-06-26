@@ -4,6 +4,7 @@ Necromancer is a powerful, intelligent Discord bot designed to streamline the co
 
 ## ✨ Key Features
 
+- **Multi-Team Management**: Configure and manage independent schedules, roles, and rosters for any number of teams in your server.
 - **Automated Availability Polls**: Posts clear, interactive polls for players to mark their availability for the upcoming week.
 - **Intelligent Roster Generation**: Suggest draft rosters that prioritize the team's preferred days and players' preferred roles.
 - **Advanced Role Management**: Configure team roles and integrate substitute players (`@Ringer`) seamlessly.
