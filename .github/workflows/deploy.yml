@@ -102,7 +102,7 @@ jobs:
           bun-version-file: ".bunrc"
 
       - name: 🎈 Setup Fly.io
-        uses: superfly/flyctl-actions/setup-flyctl@v1.4
+        uses: superfly/flyctl-actions/setup-flyctl@1.5
 
       - name: 🏷️ Get Bun Version
         id: bun_version
