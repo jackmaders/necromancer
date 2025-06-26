@@ -29,6 +29,7 @@
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
 		"commands:deploy": "bun scripts/deploy-commands.ts",
+		"postinstall": "lefthook install",
 		"prisma:generate": "prisma generate",
 		"start": "bun --watch src/index.ts",
 		"start:prod": "bun dist/index.js",
