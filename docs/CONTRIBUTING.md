@@ -22,7 +22,7 @@ Layers are the main horizontal division of the project. They have a strict hiera
 
 1.  `app/` - **The highest layer.** This is the entry point of the application. It initializes the Discord client, connects to the database, registers commands, and sets up global middleware and error handlers. It composes the final application from the lower-level layers.
 
-2.  `features/` - **User interactions and use cases.** Each subdirectory in `features/` represents a specific user action, most often a single slash command. A feature's job is to orchestrate a response to a user action by calling logic from the `entities` layer. For example, `features/query-availability/` handles the logic for the `/availability query` command.
+2.  `features/` - **User interactions and use cases.** Each subdirectory in `features/` represents a specific user action, most often a single slash command. A feature's job is to orchestrate a response to a user action by calling logic from the `entities` layer. For example, `features/post-availability/` handles the logic for the `/availability post` command.
 
 3.  `entities/` - **Business domains.** This is the core of the application. Each subdirectory here represents a core business entity (e.g., `user`, `schedule`, `availability`). An entity contains all the self-contained logic, data types, and UI components related to that domain. It should not know about what commands are implemented (`features`) or how the bot in setup (`app`).
 

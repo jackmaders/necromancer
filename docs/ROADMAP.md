@@ -1,27 +1,25 @@
 # 🗺️ Project Roadmap
 
-_(This roadmap was finalized on Monday, 16 June 2025 and uses this date for all examples.)_
-
 ## v0.X
 
 Any releases before v1.0 will focus on getting the bot set up and running with essential functionality.
 
 ## v1.0: Availability Query
 
-This release establishes the bot's core ability to ask for and display player availability.
+This release establishes the bot's core ability to ask for and display player availability for multiple teams.
 
 ### Commands & Features
 
-- `/setup`: Guided command for initial admin/team roles and channel setup.
+- `/team create`: Starts a guided setup to create a new team, including its roles and channels.
 - `/help`: Lists all commands.
-- `/availability post`: Manually creates the availability poll.
-- `/config view`: Shows current settings.
-- `/config preferences`: Sets the default duration for availability polls.
-- `/config schedule type:poll`: Sets the automated schedule for posting the poll.
+- `/availability post`: Manually creates the availability poll for the team associated with the current channel.
+- `/config view`: Shows the current team's settings.
+- `/config preferences`: Sets the team's preferences, like the duration for availability polls.
+- `/config schedule type:poll`: Sets the team's automated schedule for posting the poll.
 
 ### User Experience
 
-- The bot posts an embed for the upcoming week (e.g., **Monday, 23 June 2025 - Sunday, 29 June 2025**). Players use buttons to mark themselves available, and a live summary shows the results.
+- The bot posts an embed for the upcoming week (e.g., **Monday, 23 June 2025 - Sunday, 29 June 2025**) in a team's dedicated channel. Players use buttons to mark themselves available, and a live summary shows the results.
 
 ## v1.1: Edit Availability
 
@@ -41,8 +39,8 @@ This release adds reminders to ensure polls are completed on time.
 
 ### Commands & Features
 
-- `/config reminders type:availability enabled:<boolean>`: Enables or disables availability reminders.
-- **Update:** `/setup` now includes a prompt to enable this feature by default.
+- `/team config reminders type:availability enabled:<boolean>`: Enables or disables availability reminders for the team.
+- **Update:** `/team create` now includes a prompt to enable this feature by default.
 
 ### User Experience
 
@@ -54,17 +52,17 @@ This release introduces the core scheduling intelligence.
 
 ### Commands & Features
 
-- `/roster generate`: Generates a draft roster.
-- `/config link_roles`: Links bot concepts (e.g., "Tank") to Discord roles (e.g., `@Tank`).
-- `/roles assign [user] [role]`: Assigns an in-game role to a player.
-- `/roles sync`: Audits and fixes Discord roles to match the bot's database.
-- **Update:** `/config preferences` now sets roster logic (min/max days, preferred days) and role self-assign permissions.
-- **Update:** `/config schedule type:roster`: Sets the schedule for automated roster generation.
-- **Update:** `/setup` is now a comprehensive wizard for all core configuration.
+- `/roster generate`: Generates a draft roster for the current team.
+- `/team config link_roles`: Links team-specific concepts (e.g., "Tank") to Discord roles (e.g., `@MyTeam-Tank`).
+- `/roles assign [user] [role]`: Assigns a team-specific role to a player.
+- `/roles sync`: Audits and fixes Discord roles against the team's configuration.
+- **Update:** `/team config preferences` now sets the team's roster logic (min/max days, preferred days) and role self-assign permissions.
+- **Update:** `/team config schedule type:roster`: Sets the team's schedule for automated roster generation.
+- **Update:** `/team create` is now a comprehensive wizard for all of a team's core configuration.
 
 ### User Experience
 
-- The scheduler generates a draft roster, prioritising the team's `preferred_days` from the configuration. Players can be managed with `/roles assign`, and the `/setup` wizard makes initial configuration seamless.
+- The scheduler generates a draft roster, prioritising the team's `preferred_days` from their configuration. Players can be managed with `/roles assign`, and the `/team create` wizard makes initial configuration seamless.
 
 ## v1.4: Schedule Confirmation
 
@@ -72,7 +70,7 @@ This release adds an administrative approval workflow.
 
 ### Commands & Features
 
-- `/config channel <type> <channel>`: Sets dedicated channels for `availability`, `draft_rosters`, and `confirmed_rosters`.
+- `/team config channel <type> <channel>`: Sets a team's dedicated channels for `availability`, `draft_rosters`, and `confirmed_rosters`.
 - **Update:** Bot posts now go to their configured channels.
 
 ### User Experience
@@ -85,7 +83,7 @@ This release adds flexibility by allowing players to have preferred and fallback
 
 ### Commands & Features
 
-- **Update:** `/roles assign` now accepts an optional `fallback_role` argument.
+- **Update:** `/roles assign` (for a team) now accepts an optional `fallback_role` argument.
 - **Update:** `/roster generate` logic is enhanced.
 
 ### User Experience
@@ -98,11 +96,11 @@ This release integrates substitute players into the workflow.
 
 ### Commands & Features
 
-- **Update:** `/config link_roles` now accepts a `ringer` type.
-- **Update:** `/availability post [include_ringers:<boolean>]` can now include ringers from the start.
+- **Update:** `/team config link_roles` now accepts a `ringer` type for a specific team.
+- **Update:** `/availability post [include_ringers:<boolean>]` can now include ringers from the team's configured ringer role.
 - **Update:** The availability poll message gains a button for managers: "Open to Ringers".
 - **Update:** `/roster generate [with_ringers:<boolean>]` can now include ringers in calculations.
-- **Update:** `/setup` now includes an option to set the ringer role.
+- **Update:** `/team create` now includes an option to set the team's ringer role.
 
 ### User Experience
 
@@ -114,7 +112,7 @@ This release adds automated reminders for confirmed events.
 
 ### Commands & Features
 
-- **Update:** `/config reminders <type>` now accepts an `event` type.
+- **Update:** `/team config reminders <type>` now accepts an `event` type.
 
 ### User Experience
 
