@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   version:
-    if: !github.event.pull_request.head.repo.fork
+    if: ${{ !github.event.pull_request.head.repo.fork }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -46,6 +46,6 @@ jobs:
           # Configure git user for the commit
           git config --global user.name "Version Bump Bot"
           git config --global user.email "bot@users.noreply.github.com"
-          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --push --no-verify
+          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --push --no-verify -y
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
