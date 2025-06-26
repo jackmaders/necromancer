@@ -3,6 +3,13 @@
 import { vi } from "vitest";
 
 export const SlashCommandBuilder = vi.fn(() => ({
+	addSubcommand: vi.fn().mockReturnThis(),
+	setDescription: vi.fn().mockReturnThis(),
+	setName: vi.fn().mockReturnThis(),
+	toJSON: vi.fn(),
+}));
+
+export const SlashCommandSubcommandBuilder = vi.fn(() => ({
 	setDescription: vi.fn().mockReturnThis(),
 	setName: vi.fn().mockReturnThis(),
 	toJSON: vi.fn(),
