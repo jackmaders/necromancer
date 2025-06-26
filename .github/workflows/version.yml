@@ -46,7 +46,7 @@ jobs:
           # Configure git user for the commit
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "bot@users.noreply.github.com"
-          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --no-verify -y
+          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --no-tag --no-verify -y
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
