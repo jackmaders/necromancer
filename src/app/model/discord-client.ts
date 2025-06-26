@@ -42,7 +42,7 @@ export class DiscordClient {
 
 	private async loadCommands() {
 		// Need dynamic import to support Bun's hot reloading
-		const { commands } = await import("../config/commands.ts");
+		const { commands } = await import("../config/commands/index.ts");
 
 		this.commands.clear();
 		for (const command of commands) {

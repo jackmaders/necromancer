@@ -1,6 +1,6 @@
 /** biome-ignore-all lint/suspicious/noConsole: bespoke script doesn't need a logging util */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { commands } from "@/app/config/commands.ts";
+import { commands } from "@/app/config/commands/index.ts";
 import { getEnvVar } from "@/shared/config/env.ts";
 import { logger } from "@/shared/model";
 
