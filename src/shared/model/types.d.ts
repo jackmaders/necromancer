@@ -16,5 +16,4 @@ export interface Command {
 		| SlashCommandSubcommandsOnlyBuilder
 		| Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
 	execute: (interaction: ChatInputCommandInteraction) => Promise<void> | void;
-	subcommands?: Map<string, Subcommand>;
 }
