@@ -18,6 +18,8 @@ jobs:
     steps:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: ⚡ Setup Bun
         uses: oven-sh/setup-bun@v2
@@ -26,6 +28,25 @@ jobs:
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
+
+      - name: 🔖 Get Version from package.json
+        id: get_version
+        run: echo "version=v$(bun -e 'console.log(require("./package.json").version)')" >> $GITHUB_OUTPUT
+
+      - name: 🏷️ Tag Release
+        if: steps.get_version.outputs.version != ''
+        run: |
+          VERSION_TAG="${{ steps.get_version.outputs.version }}"
+
+          if git rev-parse --quiet --verify "refs/tags/$VERSION_TAG"; then
+            echo "Tag $VERSION_TAG already exists. Skipping."
+          else
+            echo "Tagging commit with $VERSION_TAG"
+            git config user.name "GitHub Actions Bot"
+            git config user.email "bot@users.noreply.github.com"
+            git tag -a "$VERSION_TAG" -m "Release $VERSION_TAG"
+            git push origin "$VERSION_TAG"
+          fi
 
       - name: 🔍 Check for command changes
         id: command_changes
