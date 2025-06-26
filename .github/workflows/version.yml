@@ -1,0 +1,51 @@
+name: Update Project Version
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  version:
+    if: !github.event.pull_request.head.repo.fork
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: "🛒 Checkout"
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: "⚡ Setup Bun"
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".bunrc"
+
+      - name: "📦 Install Dependencies"
+        run: bun install --frozen-lockfile
+
+      - name: "🧮 Calculate Next Version"
+        id: semver
+        uses: "paulhatch/semantic-version@v5.4.0"
+        with:
+          major_pattern: "feat!:"
+          minor_pattern: "feat:"
+          search_commit_body: true
+          enable_prerelease_mode: true
+
+      - name: "🚀 Bump Version, Commit, and Push"
+        if: steps.semver.outputs.changed == 'true' && steps.semver.outputs.version_type != 'none'
+        run: |
+          # Configure git user for the commit
+          git config --global user.name "Version Bump Bot"
+          git config --global user.email "bot@users.noreply.github.com"
+          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --push --no-verify
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

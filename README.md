@@ -90,6 +90,20 @@ For the Fly.io deployment to work correctly, you must set the following secrets 
 
 We welcome contributions! Please see our [**Contributing Guide**](./docs/CONTRIBUTING.md) for development setup, coding standards, and architectural guidelines.
 
+## Commit Messages & Versioning
+
+This project adheres to the [Conventional Commits](https://www.conventionalcommits.org/) specification. This practice helps maintain a clear and descriptive commit history, and it also powers our automated versioning system.
+
+When you open a pull request or push new commits to it, a bot will analyze your commit messages. If a version change is detected, it will push a new commit to your branch with the updated package.json version. Please remember to git pull these changes to your local branch before pushing any subsequent updates to avoid merge conflicts.
+
+```
+feat!: Triggers a major version bump (e.g., 0.1.0 → 2.0.0).
+feat: Triggers a minor version bump (e.g., 0.1.0 → 0.2.0).
+fix: Triggers a patch version bump (e.g., 0.1.0 → 0.1.1).
+```
+
+**Note**: While the project version is under `1.0.0`, breaking changes will result in a minor version bump, and new features will result in a patch bump, per semantic versioning guidelines.
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
