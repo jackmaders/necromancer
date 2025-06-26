@@ -11,10 +11,12 @@ on:
         default: false
 
 jobs:
-  deploy:
-    name: Deploy app
+  version:
+    name: 🔖 Add Version Tag
     runs-on: ubuntu-latest
-    concurrency: deploy-group
+    concurrency: version-tag-group
+    permissions:
+      contents: write
     steps:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
@@ -48,6 +50,26 @@ jobs:
             git push origin "$VERSION_TAG"
           fi
 
+  deploy-commands:
+    name: 🖥️ Deploy Commands
+    runs-on: ubuntu-latest
+    needs: version
+    concurrency: deploy-group
+
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⚡ Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".bunrc"
+
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile
+
       - name: 🔍 Check for command changes
         id: command_changes
         uses: tj-actions/changed-files@v46
@@ -62,6 +84,22 @@ jobs:
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           DISCORD_CLIENT_ID: ${{ secrets.DISCORD_CLIENT_ID }}
+
+  deploy-app:
+    name: 🚀 Deploy app
+    runs-on: ubuntu-latest
+    needs: version
+    concurrency: deploy-group
+    steps:
+      - name: 🛒 Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: ⚡ Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".bunrc"
 
       - name: 🎈 Setup Fly.io
         uses: superfly/flyctl-actions/setup-flyctl@v1.4
