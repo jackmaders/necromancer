@@ -1,4 +1,4 @@
-name: Lint with Biome
+name: Lint with Biome, Typescript, and Steiger
 
 on:
   pull_request:
