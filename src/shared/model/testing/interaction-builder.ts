@@ -6,6 +6,7 @@ import type {
 } from "discord.js";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
+import { getObjectProperty } from "@/shared/lib/get-object-property";
 
 export class InteractionBuilder {
 	private readonly _interaction: ChatInputCommandInteraction;
@@ -49,18 +50,30 @@ export class InteractionBuilder {
 	 */
 	withReplyLatency(latencyMs: number): this {
 		const mockReplyMessage = mock<InteractionResponse>();
-		// biome-ignore lint/suspicious/noExplicitAny: overriding readonly property
-		(mockReplyMessage as any).createdTimestamp =
-			this._interaction.createdTimestamp + latencyMs;
+		Object.defineProperty(mockReplyMessage, "createdTimestamp", {
+			configurable: true,
+			get: () => this._interaction.createdTimestamp + latencyMs,
+		});
 
 		vi.mocked(this._interaction.reply).mockImplementation(
 			// biome-ignore lint/suspicious/useAwait: mirroring existing async function
 			async (options: string | MessagePayload | InteractionReplyOptions) => {
-				if (!(typeof options === "object" && "fetchReply" in options)) {
-					return {} as InteractionResponse;
+				// This block returns the wrong shape
+				if (getObjectProperty(options, "withResponse")) {
+					return {
+						interaction: mockReplyMessage,
+					} as unknown as InteractionResponse;
 				}
 
-				return mockReplyMessage;
+				if (getObjectProperty(options, "withResponse")) {
+					return mockReplyMessage;
+				}
+
+				if (getObjectProperty(options, "fetchReply")) {
+					return mockReplyMessage;
+				}
+
+				return {} as InteractionResponse;
 			},
 		);
 
