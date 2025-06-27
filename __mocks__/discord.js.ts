@@ -2,12 +2,13 @@
 /** biome-ignore-all lint/style/noEnum: Mirroring existing module */
 import { vi } from "vitest";
 
-export const SlashCommandBuilder = vi.fn(() => ({
+const slashCommandBuilderMock = {
 	addSubcommand: vi.fn().mockReturnThis(),
 	setDescription: vi.fn().mockReturnThis(),
 	setName: vi.fn().mockReturnThis(),
 	toJSON: vi.fn(),
-}));
+};
+export const SlashCommandBuilder = vi.fn(() => slashCommandBuilderMock);
 
 export const SlashCommandSubcommandBuilder = vi.fn(() => ({
 	setDescription: vi.fn().mockReturnThis(),

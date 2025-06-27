@@ -2,7 +2,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
 import { getEnvVar } from "@/shared/config/env.ts";
-import { logger } from "@/shared/model";
 
 describe("Command Deployment Script", () => {
 	beforeEach(() => {
@@ -27,6 +26,7 @@ describe("Command Deployment Script", () => {
 		vi.stubEnv("DISCORD_TOKEN", undefined);
 
 		await import("../deploy-commands.ts");
+		const { logger } = await import("@/shared/model/logging/logger-client.ts");
 
 		expect(logger.error).toHaveBeenCalledWith(
 			"Failed to deploy commands:",
@@ -39,6 +39,7 @@ describe("Command Deployment Script", () => {
 		vi.stubEnv("DISCORD_CLIENT_ID", undefined);
 
 		await import("../deploy-commands.ts");
+		const { logger } = await import("@/shared/model/logging/logger-client.ts");
 
 		expect(logger.error).toHaveBeenCalledWith(
 			"Failed to deploy commands:",
@@ -55,6 +56,7 @@ describe("Command Deployment Script", () => {
 		});
 
 		await import("../deploy-commands.ts");
+		const { logger } = await import("@/shared/model/logging/logger-client.ts");
 
 		expect(logger.error).toHaveBeenCalledWith(
 			"Failed to deploy commands:",
