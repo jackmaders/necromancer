@@ -47,7 +47,7 @@ bunx prisma generate
 
 ## Coding Standards
 
-### Discord.js Interaction Replies
+### Discord.js Ephemeral Replies
 
 - Avoid the Deprecated `ephemeral: true` option when sending replies or follow-ups that should only be visible to the user.
 - Instead, you should import `MessageFlags` from `discord.js` and use the `flags` property on the reply or follow-up.
@@ -65,6 +65,27 @@ await interaction.reply({
 // await interaction.reply({
 //     content,
 //     ephemeral: true // <-- Do not use
+// });
+```
+
+### Discord.js Reply With Response
+
+- Avoid the Deprecated `fetchReply: true` option when sending replies via the discord.js SDK.
+- Instead, you should use the new `withResponse: true` property.
+
+```typescript
+import { MessageFlags } from "discord.js";
+
+// Correct
+await interaction.reply({
+  content,
+  withResponse: true,
+});
+
+// Incorrect
+// await interaction.reply({
+//     content,
+//     fetchReply: true // <-- Do not use
 // });
 ```
 
