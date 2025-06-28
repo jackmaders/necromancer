@@ -65,10 +65,6 @@ export class InteractionBuilder {
 					} as unknown as InteractionResponse;
 				}
 
-				if (getObjectProperty(options, "withResponse")) {
-					return mockReplyMessage;
-				}
-
 				if (getObjectProperty(options, "fetchReply")) {
 					return mockReplyMessage;
 				}
