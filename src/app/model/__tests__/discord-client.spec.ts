@@ -2,7 +2,7 @@ import { Client, Events } from "discord.js";
 import { describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
 import { logger } from "@/shared/model";
-import { InteractionBuilder } from "@/shared/model/index.ts";
+import { InteractionBuilder } from "@/testing/interaction-builder.ts";
 import { DiscordClient } from "../discord-client.ts";
 
 describe("DiscordClient", () => {

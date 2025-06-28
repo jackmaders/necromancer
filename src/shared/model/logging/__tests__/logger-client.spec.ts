@@ -41,6 +41,7 @@ describe("Logger Client", () => {
 			...process,
 			stdout: {
 				...process.stdout,
+				// biome-ignore lint/style/useNamingConvention: Mirror existing Process
 				isTTY: true,
 			},
 		});

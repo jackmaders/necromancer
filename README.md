@@ -89,7 +89,7 @@ For the Fly.io deployment to work correctly, you must set the following secrets 
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [**Contributing Guide**](./docs/CONTRIBUTING.md) for development setup, coding standards, and architectural guidelines.
+We welcome contributions! Please see our [**Contributing Guide**](./docs/contributing.md) for development setup, coding standards, and architectural guidelines.
 
 ## Commit Messages & Versioning
 
