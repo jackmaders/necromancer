@@ -6,7 +6,6 @@ import type {
 } from "discord.js";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
-import { getObjectProperty } from "@/shared/lib/get-object-property";
 
 export class InteractionBuilder {
 	private readonly _interaction: ChatInputCommandInteraction;
@@ -58,15 +57,14 @@ export class InteractionBuilder {
 		vi.mocked(this._interaction.reply).mockImplementation(
 			// biome-ignore lint/suspicious/useAwait: mirroring existing async function
 			async (options: string | MessagePayload | InteractionReplyOptions) => {
-				// This block returns the wrong shape
-				if (getObjectProperty(options, "withResponse")) {
+				if (typeof options === "string") {
+					return {} as InteractionResponse;
+				}
+
+				if ("withResponse" in options && options.withResponse) {
 					return {
 						interaction: mockReplyMessage,
 					} as unknown as InteractionResponse;
-				}
-
-				if (getObjectProperty(options, "fetchReply")) {
-					return mockReplyMessage;
 				}
 
 				return {} as InteractionResponse;

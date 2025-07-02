@@ -31,8 +31,8 @@ describe("Interaction Builder", () => {
 			.withReplyLatency(delay)
 			.build();
 		const interactionTimestamp = interaction.createdTimestamp;
-		const replyTimestamp = (await interaction.reply({ fetchReply: true }))
-			.createdTimestamp;
+		const replyTimestamp = (await interaction.reply({ withResponse: true }))
+			.interaction.createdTimestamp;
 
 		expect(replyTimestamp - interactionTimestamp).toBe(delay);
 	});
