@@ -13,6 +13,8 @@ import { logger } from "@/shared/model/logging/logger-client";
 
 		const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = getEnvVar(true);
 
+		// Need to check for existence of env vars, since not all are present in GHA
+		// So, getEnvVar(true) doesn't throw an error for missing vars
 		if (!DISCORD_TOKEN) {
 			throw new Error("Missing Environment Variable: DISCORD_TOKEN");
 		}
