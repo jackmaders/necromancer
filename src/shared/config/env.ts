@@ -14,7 +14,6 @@ export const envSchema = z.object({
 });
 
 type EnvSchema = z.infer<typeof envSchema>;
-let _env: EnvSchema | undefined;
 
 /**
  * Parses and validates environment variables using a Zod schema.
@@ -30,13 +29,8 @@ function getEnvVar<T extends boolean = false>(
 			return partialEnv as T extends true ? Partial<EnvSchema> : EnvSchema;
 		}
 
-		if (_env) {
-			return _env;
-		}
-
 		/** biome-ignore lint/style/noProcessEnv: This file is responsible for env parsing */
-		_env = envSchema.parse(process.env);
-		return _env as T extends true ? Partial<EnvSchema> : EnvSchema;
+		return envSchema.parse(process.env);
 	} catch (error) {
 		if (error instanceof z.ZodError) {
 			throw new Error(z.prettifyError(error));
