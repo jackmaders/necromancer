@@ -35,3 +35,13 @@ The `entities` layer is the heart of our business logic. Each entity (e.g., `ent
 - `/api`: Contains functions that handle communication with external services, primarily the database.
 - `/lib`: Contains miscellaneous helpers, constants, or utility functions that are specific _only_ to this entity.
 - `/config`: Contains configuration & feature flags for this specific entity.
+
+## Controller-Service-Repository Pattern
+
+To further organize the logic within our `entities` and `features`, we adopt the **Controller-Service-Repository (CSR)** pattern. This pattern complements Feature-Sliced Design by providing a clear separation of concerns for handling user interactions, business logic, and data access.
+
+Here’s how the CSR pattern maps to our FSD structure:
+
+- **Controller**: `entity/index.ts` - Handles the user's request and orchestrates any business logic.
+- **Service**: `{entity}/model` - Handles the core business logic of an entity.
+- **Repository**: `{entity}/api` - Handles the data access requests.
