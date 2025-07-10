@@ -3,24 +3,42 @@
 import { vi } from "vitest";
 
 const slashCommandStringOption = {
-	setDescription: vi.fn().mockReturnThis(),
-	setName: vi.fn().mockReturnThis(),
-	setRequired: vi.fn().mockReturnThis(),
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setName: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setRequired: vi.fn(function (this: unknown) {
+		return this;
+	}),
 };
 export const SlashCommandStringOption = vi.fn(() => slashCommandStringOption);
 
 const slashCommandBuilderMock = {
-	addSubcommand: vi.fn().mockReturnThis(),
-	setDescription: vi.fn().mockReturnThis(),
-	setName: vi.fn().mockReturnThis(),
+	addSubcommand: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setName: vi.fn(function (this: unknown) {
+		return this;
+	}),
 	toJSON: vi.fn(),
 };
 export const SlashCommandBuilder = vi.fn(() => slashCommandBuilderMock);
 
 export const SlashCommandSubcommandBuilder = vi.fn(() => ({
-	addStringOption: vi.fn().mockReturnThis(),
-	setDescription: vi.fn().mockReturnThis(),
-	setName: vi.fn().mockReturnThis(),
+	addStringOption: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setName: vi.fn(function (this: unknown) {
+		return this;
+	}),
 	toJSON: vi.fn(),
 }));
 
@@ -101,7 +119,9 @@ export enum MessageFlags {
 
 const rest = {
 	put: vi.fn().mockImplementation(() => []),
-	setToken: vi.fn().mockReturnThis(),
+	setToken: vi.fn(function (this: unknown) {
+		return this;
+	}),
 };
 
 export const REST = vi.fn(() => rest);

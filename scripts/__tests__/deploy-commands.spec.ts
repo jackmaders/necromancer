@@ -65,4 +65,18 @@ describe("Command Deployment Script", () => {
 		);
 		expect(process.exit).toHaveBeenCalledWith(1);
 	});
+
+	it("should execute the function on import for non-test environments", async () => {
+		vi.stubEnv("NODE_ENV", "production");
+		vi.resetModules();
+
+		const { REST } = await import("discord.js");
+		await import("../deploy-commands.ts");
+
+		expect(new REST().setToken).toHaveBeenCalledWith(getEnvVar().DISCORD_TOKEN);
+		expect(new REST().put).toHaveBeenCalledWith(
+			Routes.applicationCommands("DISCORD_CLIENT_ID"),
+			{ body: commands.map((command) => command.data.toJSON()) },
+		);
+	});
 });
