@@ -8,7 +8,7 @@ declare global {
 	var prismaClient: PrismaClient | undefined;
 }
 
-const { NODE_ENV } = getEnvVar();
+const { NODE_ENV } = getEnvVar(true);
 
 const prisma = global.prismaClient ?? new PrismaClient({});
 

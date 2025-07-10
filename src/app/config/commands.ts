@@ -1,7 +1,6 @@
 import { createTeamSubcommand } from "@/features/create-team";
 import { pingCommand } from "@/features/ping";
 import { createParentCommand } from "@/shared/lib";
-import type { Command } from "@/shared/model";
 
 const teamCommand = createParentCommand(
 	"team",
@@ -9,4 +8,4 @@ const teamCommand = createParentCommand(
 	[createTeamSubcommand],
 );
 
-export const commands: Command[] = [pingCommand, teamCommand];
+export const commands = [pingCommand, teamCommand];

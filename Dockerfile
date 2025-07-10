@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-ARG BUN_VERSION
+ARG BUN_VERSION=1.2.17
 
 # ---- Build Stage ----
 FROM oven/bun:${BUN_VERSION}-slim AS build
