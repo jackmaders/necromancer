@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { describe, expect, it, vi } from "vitest";
 import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
 import { teamRepository } from "../../api/team-repository.ts";
