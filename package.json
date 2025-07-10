@@ -31,7 +31,7 @@
 		"commands:deploy": "bun scripts/deploy-commands.ts",
 		"prisma:generate": "prisma generate",
 		"start": "bun --watch src/index.ts",
-		"start:prod": "bun dist/index.js",
+		"start:prod": "bunx prisma migrate deploy && bun dist/index.js",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
 		"test:watch": "vitest watch"
