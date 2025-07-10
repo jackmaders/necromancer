@@ -26,7 +26,7 @@ jobs:
       - name: ⚡ Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: ".bunrc"
+          bun-version-file: ".bun-version"
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
@@ -65,7 +65,7 @@ jobs:
       - name: ⚡ Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: ".bunrc"
+          bun-version-file: ".bun-version"
 
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
@@ -99,14 +99,14 @@ jobs:
       - name: ⚡ Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version-file: ".bunrc"
+          bun-version-file: ".bun-version"
 
       - name: 🎈 Setup Fly.io
         uses: superfly/flyctl-actions/setup-flyctl@1.5
 
       - name: 🏷️ Get Bun Version
         id: bun_version
-        run: echo "version=$(cat .bunrc)" >> $GITHUB_OUTPUT
+        run: echo "version=$(cat .bun-version)" >> $GITHUB_OUTPUT
 
       - name: 🚀 Deploy
         run: flyctl deploy --remote-only --build-arg BUN_VERSION=${{ steps.bun_version.outputs.version }}
