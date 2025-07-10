@@ -1,13 +1,13 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { describe, expect, it, vi } from "vitest";
+import { guildService } from "@/entities/guild/index.ts";
 import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
 import { teamRepository } from "../../api/team-repository.ts";
 import { TeamAlreadyExistsError } from "../errors/team-already-exists-error.ts";
-import { guildService } from "../guild-service.ts";
 import { teamService } from "../team-service.ts";
 
 vi.mock("../../api/team-repository.ts");
-vi.mock("../guild-service.ts");
+vi.mock("@/entities/guild/index.ts");
 vi.mock("@/shared/model/data/prisma-errors.ts");
 
 describe("Team Service", () => {

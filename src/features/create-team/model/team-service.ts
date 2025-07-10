@@ -1,7 +1,7 @@
+import { guildService } from "@/entities/guild";
 import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
 import { teamRepository } from "../api/team-repository.ts";
 import { TeamAlreadyExistsError } from "./errors/team-already-exists-error.ts";
-import { guildService } from "./guild-service.ts";
 
 export const teamService = {
 	/**
