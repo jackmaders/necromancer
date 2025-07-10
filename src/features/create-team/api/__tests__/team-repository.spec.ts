@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { prisma } from "@/shared/model/data/prisma-client";
+import { prisma } from "@/shared/model";
 import { teamRepository } from "../team-repository.ts";
 
 vi.mock("@/shared/model/data/prisma-client.ts");

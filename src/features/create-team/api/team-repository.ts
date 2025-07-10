@@ -1,4 +1,4 @@
-import { prisma } from "@/shared/model/data/prisma-client";
+import { prisma } from "@/shared/model";
 
 export const teamRepository = {
 	/**
