@@ -13,7 +13,7 @@ const { NODE_ENV } = getEnvVar();
 const prisma = global.prismaClient ?? new PrismaClient({});
 
 if (NODE_ENV !== "production") {
-	global.prismaClient = prismaClient;
+	global.prismaClient = prisma;
 }
 
 export { prisma };

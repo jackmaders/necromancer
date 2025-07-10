@@ -2,6 +2,13 @@
 /** biome-ignore-all lint/style/noEnum: Mirroring existing module */
 import { vi } from "vitest";
 
+const slashCommandStringOption = {
+	setDescription: vi.fn().mockReturnThis(),
+	setName: vi.fn().mockReturnThis(),
+	setRequired: vi.fn().mockReturnThis(),
+};
+export const SlashCommandStringOption = vi.fn(() => slashCommandStringOption);
+
 const slashCommandBuilderMock = {
 	addSubcommand: vi.fn().mockReturnThis(),
 	setDescription: vi.fn().mockReturnThis(),
@@ -11,6 +18,7 @@ const slashCommandBuilderMock = {
 export const SlashCommandBuilder = vi.fn(() => slashCommandBuilderMock);
 
 export const SlashCommandSubcommandBuilder = vi.fn(() => ({
+	addStringOption: vi.fn().mockReturnThis(),
 	setDescription: vi.fn().mockReturnThis(),
 	setName: vi.fn().mockReturnThis(),
 	toJSON: vi.fn(),
