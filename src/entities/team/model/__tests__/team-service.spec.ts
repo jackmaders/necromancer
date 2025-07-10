@@ -7,7 +7,7 @@ import { TeamAlreadyExistsError } from "../errors/team-already-exists-error.ts";
 import { teamService } from "../team-service.ts";
 
 vi.mock("../../api/team-repository.ts");
-vi.mock("@/entities/guild/index.ts");
+vi.mock("@/entities/guild/@x/team.ts");
 vi.mock("@/shared/model/data/prisma-errors.ts");
 
 describe("Team Service", () => {
