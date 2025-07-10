@@ -30,7 +30,7 @@ describe("Discord Bot Entrypoint", () => {
 
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(
-			new Error("Discord client error"),
+			"Error initialising bot: Error: Discord client error",
 		);
 		expect(process.exit).toHaveBeenCalledTimes(1);
 		expect(process.exit).toHaveBeenCalledWith(1);

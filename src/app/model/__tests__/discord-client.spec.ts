@@ -128,8 +128,7 @@ describe("DiscordClient", () => {
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(
-			`Error handling interaction (ID: ${interaction.id}):`,
-			error,
+			`Error handling interaction (ID: ${interaction.id}): ${error}`,
 		);
 		expect(interaction.reply).toHaveBeenCalled();
 		expect(interaction.reply).toHaveBeenCalledWith({
@@ -158,12 +157,10 @@ describe("DiscordClient", () => {
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(2);
 		expect(logger.error).toHaveBeenCalledWith(
-			`Error handling interaction (ID: ${interaction.id}):`,
-			error,
+			`Error handling interaction (ID: ${interaction.id}): ${error}`,
 		);
 		expect(logger.error).toHaveBeenCalledWith(
-			`Failed to send error reply for interaction ${interaction.id}:`,
-			expect.any(Object),
+			`Failed to send error reply for interaction ${interaction.id}: Error: Interaction is not repliable`,
 		);
 	});
 
@@ -186,8 +183,7 @@ describe("DiscordClient", () => {
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(1);
 		expect(logger.error).toHaveBeenCalledWith(
-			`Error handling interaction (ID: ${interaction.id}):`,
-			error,
+			`Error handling interaction (ID: ${interaction.id}): ${error}`,
 		);
 		expect(interaction.followUp).toHaveBeenCalled();
 		expect(interaction.followUp).toHaveBeenCalledWith({

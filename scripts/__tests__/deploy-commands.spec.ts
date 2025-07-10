@@ -32,8 +32,7 @@ describe("Command Deployment Script", () => {
 		await deployCommands();
 
 		expect(logger.error).toHaveBeenCalledWith(
-			"Failed to deploy commands:",
-			new Error("Missing Environment Variable: DISCORD_TOKEN"),
+			"Failed to deploy commands: Error: Missing Environment Variable: DISCORD_TOKEN",
 		);
 		expect(process.exit).toHaveBeenCalledWith(1);
 	});
@@ -44,8 +43,7 @@ describe("Command Deployment Script", () => {
 		await deployCommands();
 
 		expect(logger.error).toHaveBeenCalledWith(
-			"Failed to deploy commands:",
-			new Error("Missing Environment Variable: DISCORD_CLIENT_ID"),
+			"Failed to deploy commands: Error: Missing Environment Variable: DISCORD_CLIENT_ID",
 		);
 		expect(process.exit).toHaveBeenCalledWith(1);
 	});
@@ -60,8 +58,7 @@ describe("Command Deployment Script", () => {
 		await deployCommands();
 
 		expect(logger.error).toHaveBeenCalledWith(
-			"Failed to deploy commands:",
-			error,
+			"Failed to deploy commands: Error: Unexpected Error",
 		);
 		expect(process.exit).toHaveBeenCalledWith(1);
 	});
