@@ -47,6 +47,16 @@ describe("Interaction Builder", () => {
 		expect(replyTimestamp).toBeUndefined();
 	});
 
+	it("should create a delayed interaction with a string", async () => {
+		const delay = 10;
+		const interaction = new InteractionBuilder()
+			.withReplyLatency(delay)
+			.build();
+		const response = await interaction.reply("");
+
+		expect(response).toEqual({});
+	});
+
 	it("should create an interaction with overridden properties", () => {
 		const overrides = {
 			id: "12341234",
