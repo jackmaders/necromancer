@@ -6,6 +6,7 @@ import { coverageConfigDefaults, defineConfig } from "vitest/config";
 export default defineConfig(({ mode }) => ({
 	plugins: [tsconfigPaths()],
 	test: {
+		clearMocks: true,
 		coverage: {
 			exclude: [
 				...coverageConfigDefaults.exclude,
@@ -15,7 +16,6 @@ export default defineConfig(({ mode }) => ({
 			reporter: "text",
 		},
 		env: loadEnv(mode, process.cwd(), ""),
-		mockReset: true,
 		setupFiles: ["./tests/setup.ts"],
 		testTimeout: 50,
 		unstubEnvs: true,

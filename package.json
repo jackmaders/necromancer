@@ -30,7 +30,7 @@
 		"check:tsc": "tsc --noEmit --skipLibCheck",
 		"commands:deploy": "bun scripts/deploy-commands.ts",
 		"prisma:generate": "prisma generate",
-		"start": "NODE_ENV='local' bun --watch src/index.ts",
+		"start": "bun --watch src/index.ts",
 		"start:prod": "bun dist/index.js",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",

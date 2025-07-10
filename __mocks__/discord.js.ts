@@ -100,9 +100,8 @@ export enum MessageFlags {
 }
 
 const rest = {
-	put: vi.fn(() => []),
+	put: vi.fn().mockImplementation(() => []),
 	setToken: vi.fn().mockReturnThis(),
-	uuid: crypto.randomUUID(),
 };
 
 export const REST = vi.fn(() => rest);

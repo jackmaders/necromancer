@@ -1,5 +1,11 @@
-/** biome-ignore-all lint/style/useNamingConvention: Mirroring existing codes */
-import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
+/* biome-ignore-all lint/style/useNamingConvention: Mirroring existing codes */
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
+/*
+ * This file is intentionally verbose. Each error code has its own class to provide maximum
+ * type safety and clarity. This is a deliberate trade-off, prioritizing a clean and maintainable
+ * error handling for prisma.
+ */
 
 class BaseError extends PrismaClientKnownRequestError {
 	constructor(error: PrismaClientKnownRequestError) {
@@ -184,7 +190,7 @@ export class PrismaTransactionApiError extends BaseError {
 	code = "P2028";
 }
 
-export class PrismaFulltextIndexNotFoundError extends BaseError {
+export class PrismaFullTextIndexNotFoundError extends BaseError {
 	code = "P2030";
 }
 
@@ -412,7 +418,7 @@ const errorCodeToClass = {
 	P2026: PrismaUnsupportedFeatureError,
 	P2027: PrismaDatabaseQueryExecutionErrors,
 	P2028: PrismaTransactionApiError,
-	P2030: PrismaFulltextIndexNotFoundError,
+	P2030: PrismaFullTextIndexNotFoundError,
 	P2031: PrismaMongoDbReplicaSetError,
 	P2033: PrismaNumberOutOfRangeError,
 	P2034: PrismaTransactionConflictError,

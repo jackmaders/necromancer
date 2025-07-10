@@ -1,18 +1,19 @@
 /** biome-ignore-all lint/suspicious/noConsole: bespoke script doesn't need a logging util */
+
+import { REST, Routes } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { commands } from "@/app/config/commands.ts";
 import { getEnvVar } from "@/shared/config/env.ts";
+import { logger } from "@/shared/model/index.ts";
+import { deployCommands } from "../deploy-commands.ts";
 
 describe("Command Deployment Script", () => {
 	beforeEach(() => {
 		vi.spyOn(process, "exit").mockImplementation(() => ({}) as never);
-
-		vi.resetModules();
 	});
 
 	it("should deploy the registered commands", async () => {
-		await import("../deploy-commands.ts");
-		const { REST, Routes } = await import("discord.js");
+		await deployCommands();
 
 		expect(new REST().setToken).toHaveBeenCalledWith(getEnvVar().DISCORD_TOKEN);
 
@@ -25,8 +26,7 @@ describe("Command Deployment Script", () => {
 	it("should exit if DISCORD_TOKEN is missing", async () => {
 		vi.stubEnv("DISCORD_TOKEN", undefined);
 
-		await import("../deploy-commands.ts");
-		const { logger } = await import("@/shared/model/logging/logger-client.ts");
+		await deployCommands();
 
 		expect(logger.error).toHaveBeenCalledWith(
 			"Failed to deploy commands:",
@@ -38,8 +38,7 @@ describe("Command Deployment Script", () => {
 	it("should exit if DISCORD_CLIENT_ID is missing", async () => {
 		vi.stubEnv("DISCORD_CLIENT_ID", undefined);
 
-		await import("../deploy-commands.ts");
-		const { logger } = await import("@/shared/model/logging/logger-client.ts");
+		await deployCommands();
 
 		expect(logger.error).toHaveBeenCalledWith(
 			"Failed to deploy commands:",
@@ -50,13 +49,12 @@ describe("Command Deployment Script", () => {
 
 	it("should handle an unexpected error", async () => {
 		const error = new Error("Unexpected Error");
-		const { REST } = await import("discord.js");
+
 		vi.mocked(new REST().setToken).mockImplementation(() => {
 			throw error;
 		});
 
-		await import("../deploy-commands.ts");
-		const { logger } = await import("@/shared/model/logging/logger-client.ts");
+		await deployCommands();
 
 		expect(logger.error).toHaveBeenCalledWith(
 			"Failed to deploy commands:",

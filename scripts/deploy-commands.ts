@@ -7,14 +7,15 @@ import { logger } from "@/shared/model/logging/logger-client";
  * This script registers all application slash commands with Discord.
  * It should be run whenever a command is added, removed, or changed.
  */
-(async () => {
+export async function deployCommands() {
 	try {
 		logger.info(`Deploying ${commands.length} command(s)...`);
 
+		// Passing true bypasses error handling for missing vars
+		// Since not all vars are present in GHA, but we still need token and client id
 		const { DISCORD_TOKEN, DISCORD_CLIENT_ID } = getEnvVar(true);
 
-		// Need to check for existence of env vars, since not all are present in GHA
-		// So, getEnvVar(true) doesn't throw an error for missing vars
+		// Still need to check each var since we can't be 100% these are available
 		if (!DISCORD_TOKEN) {
 			throw new Error("Missing Environment Variable: DISCORD_TOKEN");
 		}
@@ -38,4 +39,6 @@ import { logger } from "@/shared/model/logging/logger-client";
 		logger.error("Failed to deploy commands:", error);
 		process.exit(1);
 	}
-})();
+}
+
+deployCommands();
