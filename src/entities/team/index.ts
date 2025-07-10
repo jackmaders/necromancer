@@ -1,5 +1,5 @@
 export {
 	TeamAlreadyExistsError,
-	TeamDoesNotExistsError,
+	TeamDoesNotExistError,
 } from "./model/errors/index.ts";
 export { teamService } from "./model/team-service.ts";

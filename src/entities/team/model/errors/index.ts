@@ -4,9 +4,9 @@ export class TeamAlreadyExistsError extends Error {
 		this.name = "TeamExistsError";
 	}
 }
-export class TeamDoesNotExistsError extends Error {
+export class TeamDoesNotExistError extends Error {
 	constructor(teamName: string) {
 		super(`A team with the name "${teamName}" does not exist.`);
-		this.name = "TeamDoesNotExistsError";
+		this.name = "TeamDoesNotExistError";
 	}
 }

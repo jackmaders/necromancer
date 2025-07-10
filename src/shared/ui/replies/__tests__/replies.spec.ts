@@ -6,7 +6,7 @@ import {
 	replyWithGuildOnlyCommandWarn,
 } from "../replies.ts";
 
-describe("Create Team Replies", () => {
+describe("Default Replies", () => {
 	it("should send a guild-only command warning", async () => {
 		const interaction = new InteractionBuilder("team").build();
 		await replyWithGuildOnlyCommandWarn(interaction);

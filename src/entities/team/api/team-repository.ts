@@ -14,12 +14,16 @@ export const teamRepository = {
 	},
 
 	/**
-	 * Deletes a team record from the database by its CUID.
+	 * Deletes a team record from the database by its name and parent guild ID.
 	 */
-	async delete(id: string) {
+	async deleteByName(guildDbId: string, name: string) {
 		return await prisma.team.delete({
 			where: {
-				id,
+				// biome-ignore lint/style/useNamingConvention: snake case used for indexes
+				guildId_name: {
+					guildId: guildDbId,
+					name,
+				},
 			},
 		});
 	},

@@ -6,7 +6,7 @@ import {
 import { teamRepository } from "../api/team-repository.ts";
 import {
 	TeamAlreadyExistsError,
-	TeamDoesNotExistsError,
+	TeamDoesNotExistError,
 } from "./errors/index.ts";
 import { guildService } from "./guild-service.ts";
 
@@ -30,15 +30,15 @@ export const teamService = {
 	},
 
 	/**
-	 * Deletes an existing team.
+	 * Deletes an existing team by its name within a specific Discord guild.
 	 */
 	async deleteTeam(discordGuildId: string, name: string) {
+		const guild = await guildService.ensureExists(discordGuildId);
 		try {
-			const team = await teamRepository.findByName(discordGuildId, name);
-			return await teamRepository.delete(team.id);
+			return await teamRepository.deleteByName(guild.id, name);
 		} catch (error) {
 			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
-				throw new TeamDoesNotExistsError(name);
+				throw new TeamDoesNotExistError(name);
 			}
 
 			throw error;

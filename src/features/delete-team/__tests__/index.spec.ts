@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { TeamDoesNotExistsError, teamService } from "@/entities/team/index.ts";
+import { TeamDoesNotExistError, teamService } from "@/entities/team/index.ts";
 import {
 	replyWithErrorMessage,
 	replyWithGuildOnlyCommandWarn,
@@ -51,7 +51,7 @@ describe("Delete Team Subcommand", () => {
 				valueOf: vi.fn(),
 			})
 			.build();
-		const teamNotExistError = new TeamDoesNotExistsError(teamName);
+		const teamNotExistError = new TeamDoesNotExistError(teamName);
 		vi.mocked(teamService.deleteTeam).mockRejectedValueOnce(teamNotExistError);
 
 		await deleteTeamSubcommand.execute(interaction);

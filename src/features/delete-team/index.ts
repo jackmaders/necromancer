@@ -3,7 +3,7 @@ import {
 	SlashCommandStringOption,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { TeamDoesNotExistsError } from "@/entities/team";
+import { TeamDoesNotExistError } from "@/entities/team";
 import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
 import {
@@ -34,7 +34,7 @@ export const deleteTeamSubcommand: Subcommand = {
 			await teamService.deleteTeam(interaction.guildId, teamName);
 			await replyWithTeamDeleted(interaction, teamName);
 		} catch (error) {
-			if (error instanceof TeamDoesNotExistsError) {
+			if (error instanceof TeamDoesNotExistError) {
 				await replyWithErrorMessage(interaction, error);
 				return;
 			}
