@@ -7,7 +7,7 @@ const guild = {
 const team = {
 	create: vi.fn(),
 	delete: vi.fn(),
-	findUnique: vi.fn(),
+	findUniqueOrThrow: vi.fn(),
 };
 
 export const prisma = { guild, team };

@@ -1,30 +1,42 @@
+import type { Team } from "prisma/generated/prisma-client-js";
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library.js";
 import { describe, expect, it, vi } from "vitest";
 import { guildService } from "@/entities/guild/@x/team.ts";
 import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
 import { teamRepository } from "../../api/team-repository.ts";
-import { TeamAlreadyExistsError } from "../errors/team-already-exists-error.ts";
+import {
+	TeamAlreadyExistsError,
+	TeamDoesNotExistsError,
+} from "../errors/index.ts";
 import { teamService } from "../team-service.ts";
 
 vi.mock("../../api/team-repository.ts");
 vi.mock("@/entities/guild/@x/team.ts");
-vi.mock("@/shared/model/data/prisma-errors.ts");
+
+const guild = {
+	createdAt: new Date(),
+	guildId: "test-guild-db-id",
+	id: "test-db-guild-id",
+	updatedAt: new Date(),
+};
+const team: Team = {
+	createdAt: new Date(),
+	guildId: guild.guildId,
+	id: "test-team-id",
+	name: "Test Team",
+	updatedAt: new Date(),
+};
 
 describe("Team Service", () => {
-	const discordGuildId = "test-discord-guild-id";
-	const teamName = "Test Team";
-	const guild = { guildId: discordGuildId, id: "test-db-guild-id" };
-
 	it("should create a team successfully", async () => {
-		vi.mocked(guildService.ensureExists).mockResolvedValue(guild as never);
-		const expectedTeam = { guildId: guild.id, name: teamName };
-		vi.mocked(teamRepository.create).mockResolvedValue(expectedTeam as never);
+		vi.mocked(guildService.ensureExists).mockResolvedValue(guild);
+		vi.mocked(teamRepository.create).mockResolvedValue(team);
 
-		const result = await teamService.createTeam(discordGuildId, teamName);
+		const result = await teamService.createTeam(team.guildId, team.name);
 
-		expect(guildService.ensureExists).toHaveBeenCalledWith(discordGuildId);
-		expect(teamRepository.create).toHaveBeenCalledWith(guild.id, teamName);
-		expect(result).toEqual(expectedTeam);
+		expect(guildService.ensureExists).toHaveBeenCalledWith(team.guildId);
+		expect(teamRepository.create).toHaveBeenCalledWith(guild.id, team.name);
+		expect(result).toEqual(team);
 	});
 
 	it("should throw TeamAlreadyExistsError on unique constraint violation", async () => {
@@ -32,24 +44,52 @@ describe("Team Service", () => {
 			clientVersion: "x",
 			code: "P2002",
 		});
-		const uniqueConstraintError = new PrismaUniqueConstraintError(prismaError);
 		vi.mocked(guildService.ensureExists).mockResolvedValue(guild as never);
 		vi.mocked(teamRepository.create).mockRejectedValue(prismaError);
-		vi.mocked(parsePrismaError).mockReturnValue(uniqueConstraintError);
 
 		await expect(
-			teamService.createTeam(discordGuildId, teamName),
-		).rejects.toThrow(new TeamAlreadyExistsError(teamName));
+			teamService.createTeam(team.guildId, team.name),
+		).rejects.toThrow(new TeamAlreadyExistsError(team.name));
 	});
 
 	it("should re-throw other errors", async () => {
 		const otherError = new Error("Some other database error");
-		vi.mocked(guildService.ensureExists).mockResolvedValue(guild as never);
+		vi.mocked(guildService.ensureExists).mockResolvedValue(guild);
 		vi.mocked(teamRepository.create).mockRejectedValue(otherError);
-		vi.mocked(parsePrismaError).mockReturnValue(null);
 
 		await expect(
-			teamService.createTeam(discordGuildId, teamName),
+			teamService.createTeam(team.guildId, team.name),
 		).rejects.toThrow(otherError);
+	});
+
+	it("should delete a team successfully", async () => {
+		vi.mocked(teamRepository.findByName).mockResolvedValue(team);
+
+		await teamService.deleteTeam(team.guildId, team.name);
+
+		expect(teamRepository.delete).toHaveBeenCalledWith(team.id);
+	});
+
+	it("should throw TeamDoesNotExistsError on operation failure", async () => {
+		const error = new PrismaClientKnownRequestError("Error", {
+			clientVersion: "x",
+			code: "P2025",
+		});
+
+		vi.mocked(teamRepository.findByName).mockRejectedValue(error);
+
+		await expect(
+			teamService.deleteTeam(team.guildId, team.name),
+		).rejects.toThrow(new TeamDoesNotExistsError(team.name));
+	});
+
+	it("should re-throw other errors", async () => {
+		const error = new Error("Some other database error");
+		vi.mocked(teamRepository.delete).mockRejectedValue(error);
+		vi.mocked(teamRepository.findByName).mockResolvedValue(team);
+
+		await expect(
+			teamService.deleteTeam(team.guildId, team.name),
+		).rejects.toThrow(error);
 	});
 });

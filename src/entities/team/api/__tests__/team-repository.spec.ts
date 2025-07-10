@@ -53,11 +53,11 @@ describe("Team Repository", () => {
 
 	it("should handle fetching a team by name", async () => {
 		expect.assertions(2);
-		vi.mocked(prisma.team.findUnique).mockResolvedValue(team);
-		const result = await teamRepository.getByName(team.guildId, team.name);
+		vi.mocked(prisma.team.findUniqueOrThrow).mockResolvedValue(team);
+		const result = await teamRepository.findByName(team.guildId, team.name);
 
 		expect(result).toEqual(team);
-		expect(prisma.team.findUnique).toHaveBeenCalledWith({
+		expect(prisma.team.findUniqueOrThrow).toHaveBeenCalledWith({
 			where: {
 				guildId_name: {
 					guildId: team.guildId,
@@ -76,12 +76,12 @@ describe("Team Repository", () => {
 				code: "P2025",
 			},
 		);
-		vi.mocked(prisma.team.findUnique).mockRejectedValueOnce(error);
+		vi.mocked(prisma.team.findUniqueOrThrow).mockRejectedValueOnce(error);
 
-		const promise = teamRepository.getByName(team.guildId, team.name);
+		const promise = teamRepository.findByName(team.guildId, team.name);
 
 		await expect(promise).rejects.toThrow(error);
-		expect(prisma.team.findUnique).toHaveBeenCalledWith({
+		expect(prisma.team.findUniqueOrThrow).toHaveBeenCalledWith({
 			where: {
 				guildId_name: {
 					guildId: team.guildId,

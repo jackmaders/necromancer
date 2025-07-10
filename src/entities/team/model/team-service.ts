@@ -1,14 +1,16 @@
 import { guildService } from "@/entities/guild/@x/team.ts";
 import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
+import { PrismaOperationFailedError } from "@/shared/model/data/prisma-errors.ts";
 import { teamRepository } from "../api/team-repository.ts";
-import { TeamAlreadyExistsError } from "./errors/team-already-exists-error.ts";
+import {
+	TeamAlreadyExistsError,
+	TeamDoesNotExistsError,
+} from "./errors/index.ts";
 
 export const teamService = {
 	/**
-	 * Creates a new team. It first ensures the guild exists, then attempts to create the team.
-	 * @param discordGuildId The Discord ID of the guild where the team is being created.
-	 * @param name The name of the new team.
-	 * @throws {TeamAlreadyExistsError} If a team with the given name already exists in the guild.
+	 * Creates a new team.
+	 * If the relevant guild does not exist, it also be created.
 	 */
 	async createTeam(discordGuildId: string, name: string) {
 		const guild = await guildService.ensureExists(discordGuildId);
@@ -18,6 +20,22 @@ export const teamService = {
 		} catch (error) {
 			if (parsePrismaError(error) instanceof PrismaUniqueConstraintError) {
 				throw new TeamAlreadyExistsError(name);
+			}
+
+			throw error;
+		}
+	},
+
+	/**
+	 * Deletes an existing team.
+	 */
+	async deleteTeam(discordGuildId: string, name: string) {
+		try {
+			const team = await teamRepository.findByName(discordGuildId, name);
+			return await teamRepository.delete(team.id);
+		} catch (error) {
+			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
+				throw new TeamDoesNotExistsError(name);
 			}
 
 			throw error;
