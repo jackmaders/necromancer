@@ -36,7 +36,7 @@ export async function deployCommands() {
 
 		logger.info(`Successfully deployed ${data.length} command(s).`);
 	} catch (error) {
-		logger.error("Failed to deploy commands:", error);
+		logger.error(`Failed to deploy commands: ${error}`);
 		process.exit(1);
 	}
 }

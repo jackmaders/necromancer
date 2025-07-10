@@ -10,7 +10,7 @@ export async function start() {
 		logger.init();
 		await discord.init(getEnvVar().DISCORD_TOKEN);
 	} catch (error) {
-		logger.error(error);
+		logger.error(`Error initialising bot: ${error}`);
 		process.exit(1);
 	}
 }

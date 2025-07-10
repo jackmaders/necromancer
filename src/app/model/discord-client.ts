@@ -68,8 +68,7 @@ export class DiscordClient {
 			await command.execute(interaction);
 		} catch (error) {
 			logger.error(
-				`Error handling interaction (ID: ${interaction.id}):`,
-				error,
+				`Error handling interaction (ID: ${interaction.id}): ${error}`,
 			);
 			await this.sendErrorReply(interaction);
 		}
@@ -93,8 +92,7 @@ export class DiscordClient {
 			}
 		} catch (replyError) {
 			logger.error(
-				`Failed to send error reply for interaction ${interaction.id}:`,
-				replyError,
+				`Failed to send error reply for interaction ${interaction.id}: ${replyError}`,
 			);
 		}
 	}
