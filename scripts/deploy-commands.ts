@@ -41,4 +41,7 @@ export async function deployCommands() {
 	}
 }
 
-deployCommands();
+// biome-ignore lint/style/noProcessEnv: checking for test scenario
+if (process.env.NODE_ENV !== "test") {
+	deployCommands();
+}
