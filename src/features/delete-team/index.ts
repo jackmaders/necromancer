@@ -3,18 +3,19 @@ import {
 	SlashCommandStringOption,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
+import { TeamDoesNotExistsError } from "@/entities/team";
+import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
 import {
 	replyWithErrorMessage,
 	replyWithGuildOnlyCommandWarn,
-} from "@/shared/ui";
-import { replyWithTeamCreated } from "./ui/replies.ts";
+} from "@/shared/ui/index.ts";
+import { replyWithTeamDeleted } from "./ui/replies.ts";
 
-export const createTeamSubcommand: Subcommand = {
+export const deleteTeamSubcommand: Subcommand = {
 	data: new SlashCommandSubcommandBuilder()
-		.setName("create")
-		.setDescription("Creates a new team in this server.")
+		.setName("delete")
+		.setDescription("Deletes an existing team from this server.")
 		.addStringOption(
 			new SlashCommandStringOption()
 				.setName("name")
@@ -30,10 +31,10 @@ export const createTeamSubcommand: Subcommand = {
 
 		try {
 			const teamName = interaction.options.getString("name", true);
-			await teamService.createTeam(interaction.guildId, teamName);
-			await replyWithTeamCreated(interaction, teamName);
+			await teamService.deleteTeam(interaction.guildId, teamName);
+			await replyWithTeamDeleted(interaction, teamName);
 		} catch (error) {
-			if (error instanceof TeamAlreadyExistsError) {
+			if (error instanceof TeamDoesNotExistsError) {
 				await replyWithErrorMessage(interaction, error);
 				return;
 			}

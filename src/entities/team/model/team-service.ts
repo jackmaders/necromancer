@@ -1,4 +1,3 @@
-import { guildService } from "@/entities/guild/@x/team.ts";
 import {
 	PrismaOperationFailedError,
 	PrismaUniqueConstraintError,
@@ -9,6 +8,7 @@ import {
 	TeamAlreadyExistsError,
 	TeamDoesNotExistsError,
 } from "./errors/index.ts";
+import { guildService } from "./guild-service.ts";
 
 export const teamService = {
 	/**

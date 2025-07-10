@@ -1,18 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
-import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
+import { TeamDoesNotExistsError, teamService } from "@/entities/team/index.ts";
 import {
 	replyWithErrorMessage,
 	replyWithGuildOnlyCommandWarn,
 } from "@/shared/ui";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
-import { createTeamSubcommand } from "..";
-import { replyWithTeamCreated } from "../ui/replies.ts";
+import { deleteTeamSubcommand } from "..";
+import { replyWithTeamDeleted } from "../ui/replies.ts";
 
 vi.mock("@/entities/team/index.ts");
 vi.mock("../ui/replies.ts");
 vi.mock("@/shared/ui");
 
-describe("Create Team Subcommand", () => {
+describe("Delete Team Subcommand", () => {
 	const teamName = "Test Team";
 	const guildId = "test-guild-id";
 
@@ -20,11 +20,11 @@ describe("Create Team Subcommand", () => {
 		const interaction = new InteractionBuilder("team").build();
 		interaction.guildId = null;
 
-		await createTeamSubcommand.execute(interaction);
+		await deleteTeamSubcommand.execute(interaction);
 		expect(replyWithGuildOnlyCommandWarn).toHaveBeenCalledWith(interaction);
 	});
 
-	it("should create a team and reply with a success message", async () => {
+	it("should delete a team and reply with a success message", async () => {
 		const interaction = new InteractionBuilder("team")
 			.with({
 				guildId,
@@ -35,10 +35,10 @@ describe("Create Team Subcommand", () => {
 			})
 			.build();
 
-		await createTeamSubcommand.execute(interaction);
+		await deleteTeamSubcommand.execute(interaction);
 
-		expect(teamService.createTeam).toHaveBeenCalledWith(guildId, teamName);
-		expect(replyWithTeamCreated).toHaveBeenCalledWith(interaction, teamName);
+		expect(teamService.deleteTeam).toHaveBeenCalledWith(guildId, teamName);
+		expect(replyWithTeamDeleted).toHaveBeenCalledWith(interaction, teamName);
 	});
 
 	it("should handle cases where the team already exists", async () => {
@@ -51,14 +51,14 @@ describe("Create Team Subcommand", () => {
 				valueOf: vi.fn(),
 			})
 			.build();
-		const existingTeamError = new TeamAlreadyExistsError(teamName);
-		vi.mocked(teamService.createTeam).mockRejectedValueOnce(existingTeamError);
+		const teamNotExistError = new TeamDoesNotExistsError(teamName);
+		vi.mocked(teamService.deleteTeam).mockRejectedValueOnce(teamNotExistError);
 
-		await createTeamSubcommand.execute(interaction);
+		await deleteTeamSubcommand.execute(interaction);
 
 		expect(replyWithErrorMessage).toHaveBeenCalledWith(
 			interaction,
-			existingTeamError,
+			teamNotExistError,
 		);
 	});
 
@@ -73,9 +73,9 @@ describe("Create Team Subcommand", () => {
 			})
 			.build();
 		const unexpectedError = new Error("Something went wrong!");
-		vi.mocked(teamService.createTeam).mockRejectedValueOnce(unexpectedError);
+		vi.mocked(teamService.deleteTeam).mockRejectedValueOnce(unexpectedError);
 
-		await expect(createTeamSubcommand.execute(interaction)).rejects.toThrow(
+		await expect(deleteTeamSubcommand.execute(interaction)).rejects.toThrow(
 			unexpectedError,
 		);
 	});

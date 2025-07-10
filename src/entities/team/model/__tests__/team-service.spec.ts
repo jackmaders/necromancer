@@ -1,16 +1,16 @@
 import type { Team } from "prisma/generated/prisma-client-js";
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library.js";
 import { describe, expect, it, vi } from "vitest";
-import { guildService } from "@/entities/guild/@x/team.ts";
 import { teamRepository } from "../../api/team-repository.ts";
 import {
 	TeamAlreadyExistsError,
 	TeamDoesNotExistsError,
 } from "../errors/index.ts";
+import { guildService } from "../guild-service.ts";
 import { teamService } from "../team-service.ts";
 
 vi.mock("../../api/team-repository.ts");
-vi.mock("@/entities/guild/@x/team.ts");
+vi.mock("../guild-service.ts");
 
 const guild = {
 	createdAt: new Date(),
