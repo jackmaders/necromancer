@@ -6,6 +6,7 @@ import type {
 } from "discord.js";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
+import type { DeepPartial } from "@/shared/lib/types";
 
 export class InteractionBuilder {
 	private readonly _interaction: ChatInputCommandInteraction;
@@ -78,7 +79,7 @@ export class InteractionBuilder {
 	 * Overrides specific properties on the mock.
 	 * @param overrides An object of properties to merge into the mock.
 	 */
-	with(overrides: Partial<ChatInputCommandInteraction>): this {
+	with(overrides: DeepPartial<ChatInputCommandInteraction>): this {
 		Object.assign(this._interaction, overrides);
 		return this;
 	}
