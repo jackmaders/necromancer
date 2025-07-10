@@ -374,7 +374,7 @@ export class PrismaDataProxyInteractiveTransactionError extends BaseError {
 	code = "P5015";
 }
 
-const errorCodeToClass = {
+export const errorCodeToClass = {
 	P1000: PrismaAuthenticationFailedError,
 	P1001: PrismaDatabaseUnreachableError,
 	P1002: PrismaDatabaseTimeoutError,
