@@ -3,6 +3,9 @@ import { logger } from "@/shared/model";
 import { start } from "..";
 import { discord } from "../model/discord-client.ts";
 
+vi.mock("@/shared/model/logging/logger-client.ts");
+vi.mock("../model/discord-client.ts");
+
 describe("Discord Bot Entrypoint", () => {
 	beforeEach(() => {
 		vi.spyOn(process, "exit").mockImplementation(() => ({}) as never);
@@ -33,6 +36,3 @@ describe("Discord Bot Entrypoint", () => {
 		expect(process.exit).toHaveBeenCalledWith(1);
 	});
 });
-
-vi.mock("@/shared/model/logging/logger-client.ts");
-vi.mock("../model/discord-client.ts");

@@ -9,16 +9,7 @@ import { logger } from "@/shared/model/logging/logger-client.ts";
 import { InteractionBuilder } from "../../../testing/interaction-builder.ts";
 import { createParentCommand } from "../command-factory.ts";
 
-const newSubcommands = () => [
-	{
-		data: new SlashCommandSubcommandBuilder().setName("sub1"),
-		execute: vi.fn(),
-	},
-	{
-		data: new SlashCommandSubcommandBuilder().setName("sub2"),
-		execute: vi.fn(),
-	},
-];
+vi.mock("@/shared/model/logging/logger-client.ts");
 
 describe("createParentCommand", () => {
 	let subcommands = newSubcommands();
@@ -119,4 +110,15 @@ describe("createParentCommand", () => {
 	});
 });
 
-vi.mock("@/shared/model/logging/logger-client.ts");
+function newSubcommands() {
+	return [
+		{
+			data: new SlashCommandSubcommandBuilder().setName("sub1"),
+			execute: vi.fn(),
+		},
+		{
+			data: new SlashCommandSubcommandBuilder().setName("sub2"),
+			execute: vi.fn(),
+		},
+	];
+}

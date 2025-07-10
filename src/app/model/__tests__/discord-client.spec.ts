@@ -5,6 +5,10 @@ import { logger } from "@/shared/model";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
 import { DiscordClient } from "../discord-client.ts";
 
+vi.mock("discord.js");
+vi.mock("../../config/commands.ts");
+vi.mock("@/shared/model/logging/logger-client.ts");
+
 describe("DiscordClient", () => {
 	const client = new Client({
 		intents: [],
@@ -192,7 +196,3 @@ describe("DiscordClient", () => {
 		});
 	});
 });
-
-vi.mock("discord.js");
-vi.mock("../../config/commands.ts");
-vi.mock("@/shared/model/logging/logger-client.ts");
