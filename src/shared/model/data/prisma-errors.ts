@@ -1,5 +1,5 @@
 /* biome-ignore-all lint/style/useNamingConvention: Mirroring existing codes */
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
+import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 
 /*
  * This file is intentionally verbose. Each error code has its own class to provide maximum

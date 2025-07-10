@@ -1,5 +1,5 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import type { Team } from "prisma/generated/prisma-client-js";
+import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 import { describe, expect, it, vi } from "vitest";
 import { teamRepository } from "../../api/team-repository.ts";
 import {

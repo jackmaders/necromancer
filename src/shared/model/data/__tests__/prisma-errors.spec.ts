@@ -1,4 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
+import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 import { describe, expect, it } from "vitest";
 import { errorCodeToClass, parsePrismaError } from "../prisma-errors.ts";
 
