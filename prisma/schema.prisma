@@ -12,8 +12,23 @@ model Guild {
     id      String @id @default(cuid())
     guildId String @unique
 
+    teams Team[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@map("guilds")
+}
+
+model Team {
+    id      String @id @default(cuid())
+    name    String
+    guild   Guild  @relation(fields: [guildId], references: [id])
+    guildId String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([guildId, name])
+    @@map("teams")
 }

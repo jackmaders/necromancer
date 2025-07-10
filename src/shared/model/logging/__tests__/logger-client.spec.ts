@@ -2,6 +2,8 @@ import { pino } from "pino";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { LoggerClient } from "../logger-client.ts";
 
+vi.mock("pino");
+
 describe("Logger Client", () => {
 	beforeEach(() => {
 		vi.spyOn(console, "debug").mockImplementation(() => ({}));
@@ -41,6 +43,7 @@ describe("Logger Client", () => {
 			...process,
 			stdout: {
 				...process.stdout,
+				// biome-ignore lint/style/useNamingConvention: Mirror existing Process
 				isTTY: true,
 			},
 		});
@@ -84,5 +87,3 @@ describe("Logger Client", () => {
 		// biome-ignore-end lint/suspicious/noConsole: console logging default
 	});
 });
-
-vi.mock("pino");

@@ -14,8 +14,8 @@ export class LoggerClient {
 	init() {
 		const { NODE_ENV, PINO_LOG_LEVEL } = getEnvVar();
 
-		const IsProduction = NODE_ENV === "production";
-		const IsDevelopmentTty = !IsProduction && process.stdout.isTTY;
+		const isProduction = NODE_ENV === "production";
+		const isDevelopmentTty = !isProduction && process.stdout.isTTY;
 
 		const DevOptions: Partial<LoggerOptions> = {
 			transport: {
@@ -31,7 +31,7 @@ export class LoggerClient {
 		const options: LoggerOptions = {
 			level: PINO_LOG_LEVEL,
 			timestamp: pino.stdTimeFunctions.isoTime,
-			...(!IsProduction && IsDevelopmentTty ? DevOptions : {}),
+			...(isDevelopmentTty ? DevOptions : {}),
 		};
 
 		this.logger = pino(options);

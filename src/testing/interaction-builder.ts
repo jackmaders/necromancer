@@ -6,6 +6,7 @@ import type {
 } from "discord.js";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
+import type { DeepPartial } from "@/shared/lib/types";
 
 export class InteractionBuilder {
 	private readonly _interaction: ChatInputCommandInteraction;
@@ -49,18 +50,25 @@ export class InteractionBuilder {
 	 */
 	withReplyLatency(latencyMs: number): this {
 		const mockReplyMessage = mock<InteractionResponse>();
-		// biome-ignore lint/suspicious/noExplicitAny: overriding readonly property
-		(mockReplyMessage as any).createdTimestamp =
-			this._interaction.createdTimestamp + latencyMs;
+		Object.defineProperty(mockReplyMessage, "createdTimestamp", {
+			configurable: true,
+			get: () => this._interaction.createdTimestamp + latencyMs,
+		});
 
 		vi.mocked(this._interaction.reply).mockImplementation(
 			// biome-ignore lint/suspicious/useAwait: mirroring existing async function
 			async (options: string | MessagePayload | InteractionReplyOptions) => {
-				if (!(typeof options === "object" && "fetchReply" in options)) {
+				if (typeof options === "string") {
 					return {} as InteractionResponse;
 				}
 
-				return mockReplyMessage;
+				if ("withResponse" in options && options.withResponse) {
+					return {
+						interaction: mockReplyMessage,
+					} as unknown as InteractionResponse;
+				}
+
+				return {} as InteractionResponse;
 			},
 		);
 
@@ -71,7 +79,7 @@ export class InteractionBuilder {
 	 * Overrides specific properties on the mock.
 	 * @param overrides An object of properties to merge into the mock.
 	 */
-	with(overrides: Partial<ChatInputCommandInteraction>): this {
+	with(overrides: DeepPartial<ChatInputCommandInteraction>): this {
 		Object.assign(this._interaction, overrides);
 		return this;
 	}

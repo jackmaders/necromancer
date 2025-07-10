@@ -2,9 +2,43 @@
 /** biome-ignore-all lint/style/noEnum: Mirroring existing module */
 import { vi } from "vitest";
 
-export const SlashCommandBuilder = vi.fn(() => ({
-	setDescription: vi.fn().mockReturnThis(),
-	setName: vi.fn().mockReturnThis(),
+const slashCommandStringOption = {
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setName: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setRequired: vi.fn(function (this: unknown) {
+		return this;
+	}),
+};
+export const SlashCommandStringOption = vi.fn(() => slashCommandStringOption);
+
+const slashCommandBuilderMock = {
+	addSubcommand: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setName: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	toJSON: vi.fn(),
+};
+export const SlashCommandBuilder = vi.fn(() => slashCommandBuilderMock);
+
+export const SlashCommandSubcommandBuilder = vi.fn(() => ({
+	addStringOption: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setName: vi.fn(function (this: unknown) {
+		return this;
+	}),
 	toJSON: vi.fn(),
 }));
 
@@ -84,9 +118,10 @@ export enum MessageFlags {
 }
 
 const rest = {
-	put: vi.fn(() => []),
-	setToken: vi.fn().mockReturnThis(),
-	uuid: crypto.randomUUID(),
+	put: vi.fn().mockImplementation(() => []),
+	setToken: vi.fn(function (this: unknown) {
+		return this;
+	}),
 };
 
 export const REST = vi.fn(() => rest);

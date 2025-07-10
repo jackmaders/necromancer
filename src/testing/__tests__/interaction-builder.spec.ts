@@ -31,8 +31,8 @@ describe("Interaction Builder", () => {
 			.withReplyLatency(delay)
 			.build();
 		const interactionTimestamp = interaction.createdTimestamp;
-		const replyTimestamp = (await interaction.reply({ fetchReply: true }))
-			.createdTimestamp;
+		const replyTimestamp = (await interaction.reply({ withResponse: true }))
+			.interaction.createdTimestamp;
 
 		expect(replyTimestamp - interactionTimestamp).toBe(delay);
 	});
@@ -45,6 +45,16 @@ describe("Interaction Builder", () => {
 		const replyTimestamp = (await interaction.reply({})).createdTimestamp;
 
 		expect(replyTimestamp).toBeUndefined();
+	});
+
+	it("should create a delayed interaction with a string", async () => {
+		const delay = 10;
+		const interaction = new InteractionBuilder()
+			.withReplyLatency(delay)
+			.build();
+		const response = await interaction.reply("");
+
+		expect(response).toEqual({});
 	});
 
 	it("should create an interaction with overridden properties", () => {

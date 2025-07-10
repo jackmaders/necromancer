@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { InteractionBuilder } from "@/shared/model/index.ts";
-import { pingCommand } from "../command.ts";
+import { InteractionBuilder } from "@/testing/interaction-builder.ts";
+import { pingCommand } from "../../index.ts";
 
 describe("Ping Command", () => {
 	it("should export the correct properties", () => {
@@ -18,7 +18,7 @@ describe("Ping Command", () => {
 		expect(interaction.reply).toHaveBeenCalled();
 		expect(interaction.reply).toHaveBeenCalledWith({
 			content: "Pinging...",
-			fetchReply: true,
+			withResponse: true,
 		});
 		expect(interaction.editReply).toHaveBeenCalledWith(
 			"Pong! Roundtrip test latency: 12ms",
