@@ -28,5 +28,6 @@ RUN apt-get update -y && apt-get install -y openssl
 # Don't need node_modules directory as bun bundles all dependencies
 COPY --from=build --chown=appuser:appgroup /app/dist /app/dist
 COPY --from=build --chown=appuser:appgroup /app/prisma /app/prisma
+COPY --from=build --chown=appuser:appgroup /app/package.json /app/package.json
 
-CMD [ "bun", "dist/index.js" ]
+CMD [ "bun", "start:prod" ]
