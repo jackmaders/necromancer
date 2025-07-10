@@ -30,6 +30,7 @@ export const teamRepository = {
 	async findByName(guildDbId: string, name: string) {
 		return await prisma.team.findUniqueOrThrow({
 			where: {
+				// biome-ignore lint/style/useNamingConvention: snake case used for indexes
 				guildId_name: {
 					guildId: guildDbId,
 					name,

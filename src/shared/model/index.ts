@@ -1,5 +1,6 @@
 export { prisma } from "./data/prisma-client.ts";
 export {
+	PrismaOperationFailedError,
 	PrismaUniqueConstraintError,
 	parsePrismaError,
 } from "./data/prisma-errors.ts";

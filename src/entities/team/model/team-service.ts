@@ -1,6 +1,9 @@
 import { guildService } from "@/entities/guild/@x/team.ts";
-import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
-import { PrismaOperationFailedError } from "@/shared/model/data/prisma-errors.ts";
+import {
+	PrismaOperationFailedError,
+	PrismaUniqueConstraintError,
+	parsePrismaError,
+} from "@/shared/model";
 import { teamRepository } from "../api/team-repository.ts";
 import {
 	TeamAlreadyExistsError,

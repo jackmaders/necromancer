@@ -59,6 +59,7 @@ describe("Team Repository", () => {
 		expect(result).toEqual(team);
 		expect(prisma.team.findUniqueOrThrow).toHaveBeenCalledWith({
 			where: {
+				// biome-ignore lint/style/useNamingConvention: snake case used for indexes
 				guildId_name: {
 					guildId: team.guildId,
 					name: team.name,
@@ -83,6 +84,7 @@ describe("Team Repository", () => {
 		await expect(promise).rejects.toThrow(error);
 		expect(prisma.team.findUniqueOrThrow).toHaveBeenCalledWith({
 			where: {
+				// biome-ignore lint/style/useNamingConvention: snake case used for indexes
 				guildId_name: {
 					guildId: team.guildId,
 					name: team.name,
