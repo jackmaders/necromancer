@@ -1,6 +1,6 @@
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { describe, expect, it, vi } from "vitest";
-import { guildService } from "@/entities/guild/index.ts";
+import { guildService } from "@/entities/guild/@x/team.ts";
 import { PrismaUniqueConstraintError, parsePrismaError } from "@/shared/model";
 import { teamRepository } from "../../api/team-repository.ts";
 import { TeamAlreadyExistsError } from "../errors/team-already-exists-error.ts";

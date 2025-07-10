@@ -1,11 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
+import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
 import { createTeamSubcommand } from "..";
-import { TeamAlreadyExistsError } from "../model/errors/team-already-exists-error.ts";
-import { teamService } from "../model/team-service.ts";
 import * as replies from "../ui/replies.ts";
 
-vi.mock("../model/team-service.ts");
+vi.mock("@/entities/team/index.ts");
 vi.mock("../ui/replies.ts");
 
 describe("Create Team Subcommand", () => {

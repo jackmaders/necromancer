@@ -3,9 +3,8 @@ import {
 	SlashCommandStringOption,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
+import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
-import { TeamAlreadyExistsError } from "./model/errors/team-already-exists-error.ts";
-import { teamService } from "./model/team-service.ts";
 import {
 	replyWithErrorMessage,
 	replyWithGuildOnlyCommandWarn,

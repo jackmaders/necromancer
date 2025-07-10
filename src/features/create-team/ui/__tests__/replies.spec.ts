@@ -1,7 +1,7 @@
 import { MessageFlags } from "discord.js";
 import { describe, expect, it } from "vitest";
+import { TeamAlreadyExistsError } from "@/entities/team/index.ts";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
-import { TeamAlreadyExistsError } from "../../model/errors/team-already-exists-error.ts";
 import {
 	replyWithErrorMessage,
 	replyWithGuildOnlyCommandWarn,
