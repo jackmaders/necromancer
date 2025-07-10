@@ -21,7 +21,6 @@ jobs:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: ⚡ Setup Bun
@@ -32,7 +31,7 @@ jobs:
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: 🧮 Calculate Next Version"
+      - name: 🧮 Calculate Next Version
         id: semver
         uses: "paulhatch/semantic-version@v5.4.0"
         with:
@@ -44,7 +43,6 @@ jobs:
       - name: 🚀 Bump Version
         if: steps.semver.outputs.changed == 'true' && steps.semver.outputs.version_type != 'none'
         run: |
-          # Configure git user for the commit
           git config --global user.name "GitHub Actions Bot"
           git config --global user.email "bot@users.noreply.github.com"
           bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --no-tag --no-verify -y
