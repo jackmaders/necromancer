@@ -5,16 +5,18 @@ import { guildService } from "../guild-service.ts";
 vi.mock("../../api/guild-repository.ts");
 
 describe("Guild Service", () => {
-	it("should call the repository to find or create a guild", async () => {
-		const guildId = "test-guild-id";
-		const expectedGuild = { guildId, id: "1" };
-		vi.mocked(guildRepository.findOrCreate).mockResolvedValue(
-			expectedGuild as never,
-		);
+	describe("ensureExists", () => {
+		it("should call the repository to find or create a guild", async () => {
+			const guildId = "test-guild-id";
+			const expectedGuild = { guildId, id: "1" };
+			vi.mocked(guildRepository.findOrCreate).mockResolvedValue(
+				expectedGuild as never,
+			);
 
-		const result = await guildService.ensureExists(guildId);
+			const result = await guildService.ensureExists(guildId);
 
-		expect(guildRepository.findOrCreate).toHaveBeenCalledWith(guildId);
-		expect(result).toEqual(expectedGuild);
+			expect(guildRepository.findOrCreate).toHaveBeenCalledWith(guildId);
+			expect(result).toEqual(expectedGuild);
+		});
 	});
 });
