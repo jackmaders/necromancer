@@ -32,25 +32,16 @@ jobs:
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
-      - name: 🧮 Calculate Next Version"
-        id: semver
-        uses: "paulhatch/semantic-version@v5.4.0"
-        with:
-          major_pattern: "feat!:"
-          minor_pattern: "feat:"
-          search_commit_body: true
-          enable_prerelease_mode: true
-
-      - name: 🚀 Bump Version
-        if: steps.semver.outputs.changed == 'true' && steps.semver.outputs.version_type != 'none'
+      - name: ✍️ Configure Git User
         run: |
-          # Configure git user for the commit
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "bot@users.noreply.github.com"
-          bunx bumpp ${{ steps.semver.outputs.version_type }} --commit "chore(release): 🏷️ bump version to v%s" --no-tag --no-verify -y
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: 🚀 Bump Version if Needed
+        id: version_bump
+        run: bun run version:increment
+        continue-on-error: true
 
       - name: 📌 Push Bump Commit
-        if: steps.semver.outputs.changed == 'true' && steps.semver.outputs.version_type != 'none'
+        if: steps.version_bump.outcome == 'success' && hashFiles('package.json') != '' && `git rev-parse HEAD` != `git rev-parse origin/${{ github.head_ref }}`
         run: git push

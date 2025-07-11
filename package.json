@@ -34,8 +34,9 @@
 		"start:prod": "bunx prisma migrate deploy && bun dist/index.js",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
-		"test:watch": "vitest watch"
+		"test:watch": "vitest watch",
+		"version:increment": "bun scripts/increment-version.ts"
 	},
 	"type": "module",
-	"version": "0.8.5"
+	"version": "0.8.7"
 }
