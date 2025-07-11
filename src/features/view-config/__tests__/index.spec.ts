@@ -25,7 +25,7 @@ const team: Team = {
 	updatedAt: new Date(),
 };
 
-describe("Create Team Subcommand", () => {
+describe("View Config Subcommand", () => {
 	it("should warn the user if the command is not used in a guild", async () => {
 		const interaction = new InteractionBuilder("team").build();
 		interaction.guildId = null;

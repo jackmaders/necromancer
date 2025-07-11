@@ -46,7 +46,7 @@ export const teamService = {
 	},
 
 	/**
-	 * Retrieves an existing team by its name within a specific Discord guild.
+	 * Retrieves all teams within a specific Discord guild.
 	 */
 	async getTeamsByGuildId(discordGuildId: string) {
 		const guild = await guildService.ensureExists(discordGuildId);

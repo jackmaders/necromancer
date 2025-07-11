@@ -29,7 +29,7 @@ export const teamRepository = {
 	},
 
 	/**
-	 * Retrieves a team by its name and parent guild ID.
+	 * Retrieves all teams associated with a specific guild ID.
 	 */
 	async findAllByGuildId(guildDbId: string) {
 		return await prisma.team.findMany({

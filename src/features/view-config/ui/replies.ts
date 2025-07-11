@@ -18,7 +18,11 @@ export async function replyWithGuildConfig(
 		.addFields({
 			inline: true,
 			name: "Teams",
-			value: teams.map((t) => t.name).join(", ") || "None",
+			value:
+				teams
+					.map((t) => t.name)
+					.join(", ")
+					.slice(0, 1020) || "None",
 		})
 		.setFooter({ text: `Server ID: ${interaction.guild?.id}` });
 
