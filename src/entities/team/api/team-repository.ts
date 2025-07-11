@@ -31,6 +31,17 @@ export const teamRepository = {
 	/**
 	 * Retrieves a team by its name and parent guild ID.
 	 */
+	async findAllByGuildId(guildDbId: string) {
+		return await prisma.team.findMany({
+			where: {
+				guildId: guildDbId,
+			},
+		});
+	},
+
+	/**
+	 * Retrieves a team by its name and parent guild ID.
+	 */
 	async findByName(guildDbId: string, name: string) {
 		return await prisma.team.findUniqueOrThrow({
 			where: {

@@ -1,6 +1,7 @@
 import { createTeamSubcommand } from "@/features/create-team";
 import { deleteTeamSubcommand } from "@/features/delete-team";
 import { pingCommand } from "@/features/ping";
+import { viewConfigSubcommand } from "@/features/view-config";
 import { createParentCommand } from "@/shared/lib";
 
 const teamCommand = createParentCommand(
@@ -9,4 +10,10 @@ const teamCommand = createParentCommand(
 	[createTeamSubcommand, deleteTeamSubcommand],
 );
 
-export const commands = [pingCommand, teamCommand];
+const configCommand = createParentCommand(
+	"config",
+	"View and manage bot configurations.",
+	[viewConfigSubcommand],
+);
+
+export const commands = [pingCommand, teamCommand, configCommand];

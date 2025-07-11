@@ -44,4 +44,11 @@ export const teamService = {
 			throw error;
 		}
 	},
+
+	/**
+	 * Retrieves an existing team by its name within a specific Discord guild.
+	 */
+	async getTeamsByGuildId(guildId: string) {
+		return await teamRepository.findAllByGuildId(guildId);
+	},
 };

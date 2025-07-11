@@ -11,6 +11,8 @@ export async function start() {
 		await discord.init(getEnvVar().DISCORD_TOKEN);
 	} catch (error) {
 		logger.error(`Error initialising bot: ${error}`);
-		process.exit(1);
+		if (["production", "test"].includes(getEnvVar().NODE_ENV)) {
+			process.exit(1);
+		}
 	}
 }
