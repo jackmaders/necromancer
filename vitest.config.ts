@@ -13,6 +13,12 @@ export default defineConfig(({ mode }) => ({
 				"**/__mocks__/**",
 			],
 			reporter: "text",
+			thresholds: {
+				branches: 100,
+				functions: 100,
+				lines: 100,
+				statements: 100,
+			},
 		},
 		env: loadEnv(mode, process.cwd(), ""),
 		mockReset: true,
