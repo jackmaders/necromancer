@@ -37,7 +37,7 @@ export async function main() {
 				`🚀 Bumping version from ${currentBranchVersion} to ${newCalculatedVersion}...`,
 			);
 
-			await $`bunx bumpp ${newCalculatedVersion} --commit "chore(release): 🏷️ bump version to v%s" --no-tag -y`;
+			await $`bunx bumpp ${newCalculatedVersion} --commit "chore: bump version to v%s" --no-tag -y`;
 			logger.info("✅ Version bumped successfully.");
 		} else {
 			logger.info("✅ Current branch version is already up-to-date or newer.");
