@@ -52,10 +52,6 @@ export class DiscordClient {
 
 	private async handleInteraction(interaction: Interaction) {
 		try {
-			console.log(
-				`Handling interaction: ${interaction.id} (${interaction.type})`,
-			);
-
 			if (interaction.isChatInputCommand()) {
 				const command = this.commands.get(interaction.commandName);
 				if (command) {
