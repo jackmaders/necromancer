@@ -9,6 +9,16 @@ datasource db {
     url      = env("PRISMA_DATABASE_URL")
 }
 
+model User {
+    id             String         @id @default(cuid())
+    discordId      String         @unique
+    availabilities Availability[]
+    createdAt      DateTime       @default(now())
+    updatedAt      DateTime       @updatedAt
+
+    @@map("users")
+}
+
 model Guild {
     id      String @id @default(cuid())
     guildId String @unique
@@ -27,9 +37,50 @@ model Team {
     guild   Guild  @relation(fields: [guildId], references: [id])
     guildId String
 
+    polls Poll[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([guildId, name])
     @@map("teams")
+}
+
+model Poll {
+    id            String   @id @default(cuid())
+    team          Team     @relation(fields: [teamId], references: [id])
+    teamId        String
+    weekStartDate DateTime
+
+    messageId String?
+    channelId String?
+
+    availabilities Availability[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("polls")
+}
+
+enum AvailabilityStatus {
+    AVAILABLE
+    PREFER_NOT
+    UNAVAILABLE
+}
+
+model Availability {
+    id     String             @id @default(cuid())
+    poll   Poll               @relation(fields: [pollId], references: [id], onDelete: Cascade)
+    pollId String
+    user   User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+    day    Int
+    status AvailabilityStatus
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([pollId, userId, day])
+    @@map("availabilities")
 }
