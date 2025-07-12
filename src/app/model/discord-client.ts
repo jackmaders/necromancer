@@ -52,20 +52,21 @@ export class DiscordClient {
 
 	private async handleInteraction(interaction: Interaction) {
 		try {
-			if (!interaction.isChatInputCommand()) {
-				return;
+			console.log(
+				`Handling interaction: ${interaction.id} (${interaction.type})`,
+			);
+
+			if (interaction.isChatInputCommand()) {
+				const command = this.commands.get(interaction.commandName);
+				if (command) {
+					await command.execute(interaction);
+				}
+			} else if (interaction.isAutocomplete()) {
+				const command = this.commands.get(interaction.commandName);
+				if (command?.autocomplete) {
+					await command.autocomplete(interaction);
+				}
 			}
-
-			const command = this.commands.get(interaction.commandName);
-
-			if (!command) {
-				logger.warn(
-					`No command matching "${interaction.commandName}" was found.`,
-				);
-				return;
-			}
-
-			await command.execute(interaction);
 		} catch (error) {
 			logger.error(
 				`Error handling interaction (ID: ${interaction.id}): ${error}`,

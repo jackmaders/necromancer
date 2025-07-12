@@ -1,10 +1,11 @@
 import {
+	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	SlashCommandStringOption,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 
-import { TeamDoesNotExistError } from "@/entities/team";
+import { TeamDoesNotExistError, teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
 import {
 	replyWithErrorMessage,
@@ -14,6 +15,28 @@ import { availabilityService } from "./model/availability-service.ts";
 import { replyWithAvailabilityPoll } from "./ui/replies.ts";
 
 export const postAvailabilitySubcommand: Subcommand = {
+	async autocomplete(interaction: AutocompleteInteraction) {
+		if (!interaction.guildId) {
+			return;
+		}
+
+		const focusedValue = interaction.options.getFocused();
+
+		const teams = await teamService.getTeamsByGuildId(interaction.guildId);
+
+		const filtered = teams.filter((team) =>
+			team.name.toLowerCase().startsWith(focusedValue.toLowerCase()),
+		);
+
+		const mapped = filtered
+			.map((team) => ({
+				name: team.name,
+				value: team.name,
+			}))
+			.slice(0, 25);
+
+		await interaction.respond(mapped);
+	},
 	data: new SlashCommandSubcommandBuilder()
 		.setName("post")
 		.setDescription("Posts the weekly availability poll for a team.")
@@ -21,6 +44,7 @@ export const postAvailabilitySubcommand: Subcommand = {
 			new SlashCommandStringOption()
 				.setName("team")
 				.setDescription("The name of the team to post for.")
+				.setAutocomplete(true)
 				.setRequired(true),
 		),
 
