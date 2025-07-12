@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
-import { GuildOnlyError } from "@/shared/model/errors/guild-only-error.ts";
+import { GuildOnlyError } from "@/shared/model";
 import { replyWithGuildConfig } from "./ui/replies.ts";
 
 export const viewConfigSubcommand: Subcommand = {

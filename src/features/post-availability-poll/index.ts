@@ -7,7 +7,7 @@ import {
 
 import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
-import { GuildOnlyError } from "@/shared/model/errors/guild-only-error.ts";
+import { GuildOnlyError } from "@/shared/model";
 import { availabilityService } from "./model/availability-service.ts";
 import { replyWithAvailabilityPollEmbed } from "./ui/replies.ts";
 

@@ -2,9 +2,8 @@ import type { Team } from "prisma/generated/prisma-client-js";
 import { describe, expect, it, vi } from "vitest";
 import { teamService } from "@/entities/team/index.ts";
 import { viewConfigSubcommand } from "@/features/view-config/index.ts";
-import { replyWithGuildOnlyCommandWarn } from "@/shared/ui";
+import { GuildOnlyError } from "@/shared/model/index.ts";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
-
 import { replyWithGuildConfig } from "../ui/replies.ts";
 
 vi.mock("@/entities/team/index.ts");
@@ -30,8 +29,9 @@ describe("View Config Subcommand", () => {
 		const interaction = new InteractionBuilder("team").build();
 		interaction.guildId = null;
 
-		await viewConfigSubcommand.execute(interaction);
-		expect(replyWithGuildOnlyCommandWarn).toHaveBeenCalledWith(interaction);
+		await expect(() =>
+			viewConfigSubcommand.execute(interaction),
+		).rejects.toThrow(GuildOnlyError);
 	});
 
 	it("should create a team and reply with a success message", async () => {

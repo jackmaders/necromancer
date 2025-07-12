@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
-import {
-	replyWithAppErrorMessage,
-	replyWithGuildOnlyCommandWarn,
-} from "@/shared/ui";
+import { GuildOnlyError } from "@/shared/model";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
 import { createTeamSubcommand } from "..";
 import { replyWithTeamCreated } from "../ui/replies.ts";
@@ -17,14 +14,17 @@ describe("Create Team Subcommand", () => {
 	const guildId = "test-guild-id";
 
 	it("should warn the user if the command is not used in a guild", async () => {
+		expect.assertions(1);
 		const interaction = new InteractionBuilder("team").build();
 		interaction.guildId = null;
 
-		await createTeamSubcommand.execute(interaction);
-		expect(replyWithGuildOnlyCommandWarn).toHaveBeenCalledWith(interaction);
+		await expect(() =>
+			createTeamSubcommand.execute(interaction),
+		).rejects.toThrow(GuildOnlyError);
 	});
 
 	it("should create a team and reply with a success message", async () => {
+		expect.assertions(2);
 		const interaction = new InteractionBuilder("team")
 			.with({
 				guildId,
@@ -42,6 +42,7 @@ describe("Create Team Subcommand", () => {
 	});
 
 	it("should handle cases where the team already exists", async () => {
+		expect.assertions(1);
 		const interaction = new InteractionBuilder("team")
 			.with({
 				guildId,
@@ -54,12 +55,9 @@ describe("Create Team Subcommand", () => {
 		const existingTeamError = new TeamAlreadyExistsError(teamName);
 		vi.mocked(teamService.createTeam).mockRejectedValueOnce(existingTeamError);
 
-		await createTeamSubcommand.execute(interaction);
-
-		expect(replyWithAppErrorMessage).toHaveBeenCalledWith(
-			interaction,
-			existingTeamError,
-		);
+		await expect(() =>
+			createTeamSubcommand.execute(interaction),
+		).rejects.toThrow(TeamAlreadyExistsError);
 	});
 
 	it("should re-throw unexpected errors", async () => {

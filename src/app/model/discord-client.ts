@@ -7,8 +7,7 @@ import {
 	MessageFlags,
 } from "discord.js";
 import type { Command } from "@/shared/model";
-import { logger } from "@/shared/model";
-import { AppError } from "@/shared/model/errors/app-error.ts";
+import { AppError, logger } from "@/shared/model";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();

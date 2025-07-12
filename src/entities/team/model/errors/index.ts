@@ -1,4 +1,4 @@
-import { AppError } from "@/shared/model/errors/app-error";
+import { AppError } from "@/shared/model";
 
 export class TeamAlreadyExistsError extends AppError {
 	constructor(teamName: string, options?: ErrorOptions) {

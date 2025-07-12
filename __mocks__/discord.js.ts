@@ -3,6 +3,9 @@
 import { vi } from "vitest";
 
 const slashCommandStringOption = {
+	setAutocomplete: vi.fn(function (this: unknown) {
+		return this;
+	}),
 	setDescription: vi.fn(function (this: unknown) {
 		return this;
 	}),

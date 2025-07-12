@@ -5,7 +5,7 @@ import {
 } from "discord.js";
 import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
-import { GuildOnlyError } from "@/shared/model/errors/guild-only-error.ts";
+import { GuildOnlyError } from "@/shared/model";
 import { replyWithTeamDeleted } from "./ui/replies.ts";
 
 export const deleteTeamSubcommand: Subcommand = {

@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { TeamDoesNotExistError, teamService } from "@/entities/team/index.ts";
-import {
-	replyWithAppErrorMessage,
-	replyWithGuildOnlyCommandWarn,
-} from "@/shared/ui";
+import { GuildOnlyError } from "@/shared/model";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
 import { deleteTeamSubcommand } from "..";
 import { replyWithTeamDeleted } from "../ui/replies.ts";
@@ -17,11 +14,13 @@ describe("Delete Team Subcommand", () => {
 	const guildId = "test-guild-id";
 
 	it("should warn the user if the command is not used in a guild", async () => {
+		expect.assertions(1);
 		const interaction = new InteractionBuilder("team").build();
 		interaction.guildId = null;
 
-		await deleteTeamSubcommand.execute(interaction);
-		expect(replyWithGuildOnlyCommandWarn).toHaveBeenCalledWith(interaction);
+		await expect(() =>
+			deleteTeamSubcommand.execute(interaction),
+		).rejects.toThrow(GuildOnlyError);
 	});
 
 	it("should delete a team and reply with a success message", async () => {
@@ -54,12 +53,9 @@ describe("Delete Team Subcommand", () => {
 		const teamNotExistError = new TeamDoesNotExistError(teamName);
 		vi.mocked(teamService.deleteTeam).mockRejectedValueOnce(teamNotExistError);
 
-		await deleteTeamSubcommand.execute(interaction);
-
-		expect(replyWithAppErrorMessage).toHaveBeenCalledWith(
-			interaction,
-			teamNotExistError,
-		);
+		await expect(() =>
+			deleteTeamSubcommand.execute(interaction),
+		).rejects.toThrow(TeamDoesNotExistError);
 	});
 
 	it("should re-throw unexpected errors", async () => {
