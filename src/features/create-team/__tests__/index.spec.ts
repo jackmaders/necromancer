@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
 import {
-	replyWithErrorMessage,
+	replyWithAppErrorMessage,
 	replyWithGuildOnlyCommandWarn,
 } from "@/shared/ui";
 import { InteractionBuilder } from "@/testing/interaction-builder.ts";
@@ -56,7 +56,7 @@ describe("Create Team Subcommand", () => {
 
 		await createTeamSubcommand.execute(interaction);
 
-		expect(replyWithErrorMessage).toHaveBeenCalledWith(
+		expect(replyWithAppErrorMessage).toHaveBeenCalledWith(
 			interaction,
 			existingTeamError,
 		);

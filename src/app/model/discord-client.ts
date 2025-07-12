@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import type { Command } from "@/shared/model";
 import { logger } from "@/shared/model";
+import { AppError } from "@/shared/model/errors/app-error.ts";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
@@ -67,18 +68,30 @@ export class DiscordClient {
 			logger.error(
 				`Error handling interaction (ID: ${interaction.id}): ${error}`,
 			);
-			await this.sendErrorReply(interaction);
+			await this.handleInteractionError(
+				interaction,
+				error instanceof Error ? error : undefined,
+			);
 		}
 	}
 
-	private async sendErrorReply(interaction: Interaction) {
+	private async handleInteractionError(
+		interaction: Interaction,
+		error?: Error,
+	) {
 		try {
 			if (!interaction.isRepliable()) {
 				throw new Error("Interaction is not repliable");
 			}
 
+			let content = "There was an error while executing this command!";
+
+			if (error instanceof AppError) {
+				content = error.display;
+			}
+
 			const replyOptions: InteractionReplyOptions = {
-				content: "There was an error while executing this command!",
+				content,
 				flags: [MessageFlags.Ephemeral],
 			};
 

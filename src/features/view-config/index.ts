@@ -4,7 +4,7 @@ import {
 } from "discord.js";
 import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
-import { replyWithGuildOnlyCommandWarn } from "@/shared/ui";
+import { GuildOnlyError } from "@/shared/model/errors/guild-only-error.ts";
 import { replyWithGuildConfig } from "./ui/replies.ts";
 
 export const viewConfigSubcommand: Subcommand = {
@@ -14,8 +14,7 @@ export const viewConfigSubcommand: Subcommand = {
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!interaction.guildId) {
-			await replyWithGuildOnlyCommandWarn(interaction);
-			return;
+			throw new GuildOnlyError(interaction);
 		}
 
 		const teams = await teamService.getTeamsByGuildId(interaction.guildId);

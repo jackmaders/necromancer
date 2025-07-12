@@ -29,7 +29,7 @@ function getWeekDateRange(startDate: Date): string {
 /**
  * Builds and sends the availability poll embed with a button.
  */
-export async function replyWithAvailabilityPoll(
+export async function replyWithAvailabilityPollEmbed(
 	interaction: ChatInputCommandInteraction,
 	poll: Poll,
 ) {

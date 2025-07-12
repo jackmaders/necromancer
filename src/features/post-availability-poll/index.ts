@@ -5,14 +5,11 @@ import {
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 
-import { TeamDoesNotExistError, teamService } from "@/entities/team";
+import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
-import {
-	replyWithErrorMessage,
-	replyWithGuildOnlyCommandWarn,
-} from "@/shared/ui";
+import { GuildOnlyError } from "@/shared/model/errors/guild-only-error.ts";
 import { availabilityService } from "./model/availability-service.ts";
-import { replyWithAvailabilityPoll } from "./ui/replies.ts";
+import { replyWithAvailabilityPollEmbed } from "./ui/replies.ts";
 
 export const postAvailabilitySubcommand: Subcommand = {
 	async autocomplete(interaction: AutocompleteInteraction) {
@@ -23,19 +20,20 @@ export const postAvailabilitySubcommand: Subcommand = {
 		const focusedValue = interaction.options.getFocused();
 
 		const teams = await teamService.getTeamsByGuildId(interaction.guildId);
+		const teamNames = teams.map((team) => team.name.toLocaleLowerCase());
 
-		const filtered = teams.filter((team) =>
-			team.name.toLowerCase().startsWith(focusedValue.toLowerCase()),
+		const matchingNames = teamNames.filter((name) =>
+			name.startsWith(focusedValue.toLowerCase()),
 		);
 
-		const mapped = filtered
-			.map((team) => ({
-				name: team.name,
-				value: team.name,
+		const options = matchingNames
+			.map((name) => ({
+				name: name,
+				value: name,
 			}))
 			.slice(0, 25);
 
-		await interaction.respond(mapped);
+		await interaction.respond(options);
 	},
 	data: new SlashCommandSubcommandBuilder()
 		.setName("post")
@@ -50,37 +48,24 @@ export const postAvailabilitySubcommand: Subcommand = {
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!(interaction.guildId && interaction.channel)) {
-			await replyWithGuildOnlyCommandWarn(interaction);
-			return;
+			throw new GuildOnlyError(interaction);
 		}
 
-		try {
-			const teamName = interaction.options.getString("team", true);
+		const teamName = interaction.options.getString("team", true);
 
-			// 1. Create the poll in the database via the (to be created) availability service
-			const poll = await availabilityService.createPoll(
-				interaction.guildId,
-				teamName,
-			);
+		const poll = await availabilityService.createPoll(
+			interaction.guildId,
+			teamName,
+		);
 
-			// 2. Send the poll message to the channel, returning the response
-			const response = await replyWithAvailabilityPoll(interaction, poll);
+		const response = await replyWithAvailabilityPollEmbed(interaction, poll);
 
-			const messageId = response.interaction.responseMessageId;
+		const messageId = response.interaction.responseMessageId;
 
-			if (!messageId) {
-				throw new Error("Failed to retrieve message ID from response.");
-			}
-
-			// 3. Update the poll record with the new message ID for future reference
-			await availabilityService.setPollMessageId(poll.id, messageId);
-		} catch (error) {
-			if (error instanceof TeamDoesNotExistError) {
-				await replyWithErrorMessage(interaction, error);
-				return;
-			}
-			// Let the global handler catch other errors
-			throw error;
+		if (!messageId) {
+			throw new Error("Failed to retrieve message ID from response.");
 		}
+
+		await availabilityService.setPollMessageId(poll.id, messageId);
 	},
 };

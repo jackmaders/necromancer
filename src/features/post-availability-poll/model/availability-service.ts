@@ -12,7 +12,7 @@ export const availabilityService = {
 		const team = await teamService.getTeamByName(guildId, teamName);
 		const weekStartDate = getUpcomingMonday();
 
-		return availabilityRepository.create(team.id, weekStartDate);
+		return availabilityRepository.createPoll(team.id, weekStartDate);
 	},
 
 	/**

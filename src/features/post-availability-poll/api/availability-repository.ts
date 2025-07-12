@@ -4,7 +4,7 @@ export const availabilityRepository = {
 	/**
 	 * Creates a new Poll record for a given team and week.
 	 */
-	async create(teamId: string, weekStartDate: Date) {
+	async createPoll(teamId: string, weekStartDate: Date) {
 		return await prisma.poll.create({
 			data: {
 				teamId,
