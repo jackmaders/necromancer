@@ -7,7 +7,7 @@ import {
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { logger } from "@/shared/model/logging/logger-client.ts";
 import { InteractionBuilder } from "../../../testing/interaction-builder.ts";
-import { createParentCommand } from "../command-factory.ts";
+import { createParentCommand } from "../create-parent-command.ts";
 
 vi.mock("@/shared/model/logging/logger-client.ts");
 

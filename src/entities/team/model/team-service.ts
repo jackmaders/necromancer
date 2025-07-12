@@ -46,6 +46,23 @@ export const teamService = {
 	},
 
 	/**
+	 * Finds a team by its name within a specific Discord guild.
+	 * @throws {TeamDoesNotExistError} If no team with that name is found.
+	 */
+	async getTeamByName(discordGuildId: string, name: string) {
+		const guild = await guildService.ensureExists(discordGuildId);
+		try {
+			return await teamRepository.findByName(guild.id, name);
+		} catch (error) {
+			// P2025 is the error code for "record not found"
+			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
+				throw new TeamDoesNotExistError(name);
+			}
+			throw error;
+		}
+	},
+
+	/**
 	 * Retrieves all teams within a specific Discord guild.
 	 */
 	async getTeamsByGuildId(discordGuildId: string) {

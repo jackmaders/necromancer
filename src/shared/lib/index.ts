@@ -1,1 +1,2 @@
-export { createParentCommand } from "./command-factory.ts";
+export { createParentCommand } from "./create-parent-command.ts";
+export { getUpcomingMonday } from "./get-upcoming-monday.ts";

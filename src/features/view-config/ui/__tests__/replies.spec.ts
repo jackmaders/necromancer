@@ -36,7 +36,6 @@ describe("Config View Replies", () => {
 							},
 						],
 						footer: {
-							icon_url: undefined,
 							text: `Server ID: ${interaction.guild?.id}`,
 						},
 						title: "⚙️ Configuration",
@@ -65,7 +64,6 @@ describe("Config View Replies", () => {
 							},
 						],
 						footer: {
-							icon_url: undefined,
 							text: `Server ID: ${interaction.guild?.id}`,
 						},
 						title: "⚙️ Configuration",

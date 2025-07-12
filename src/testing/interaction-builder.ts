@@ -6,7 +6,7 @@ import type {
 } from "discord.js";
 import { vi } from "vitest";
 import { mock } from "vitest-mock-extended";
-import type { DeepPartial } from "@/shared/lib/types";
+import type { DeepPartial } from "@/shared/lib/deep-partial";
 
 export class InteractionBuilder {
 	private readonly _interaction: ChatInputCommandInteraction;
