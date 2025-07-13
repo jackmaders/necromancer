@@ -3,6 +3,7 @@ import { deleteTeamSubcommand } from "@/features/delete-team";
 import { pingCommand } from "@/features/ping";
 import { postAvailabilitySubcommand } from "@/features/post-availability-poll";
 import { viewConfigSubcommand } from "@/features/view-config";
+import { getEnvVar } from "@/shared/config";
 import { createParentCommand } from "@/shared/lib";
 
 const availabilityCommand = createParentCommand(
@@ -23,9 +24,13 @@ const configCommand = createParentCommand(
 	[viewConfigSubcommand],
 );
 
+// Development-only commands that are not production ready.
+const localCommands = [pingCommand, availabilityCommand];
+
+const { NODE_ENV } = getEnvVar();
+
 export const commands = [
-	pingCommand,
+	...(NODE_ENV === "local" ? localCommands : []),
 	teamCommand,
 	configCommand,
-	availabilityCommand,
 ];
