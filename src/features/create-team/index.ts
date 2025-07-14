@@ -3,12 +3,9 @@ import {
 	SlashCommandStringOption,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
+import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
-import {
-	replyWithErrorMessage,
-	replyWithGuildOnlyCommandWarn,
-} from "@/shared/ui";
+import { GuildOnlyError } from "@/shared/model";
 import { replyWithTeamCreated } from "./ui/replies.ts";
 
 export const createTeamSubcommand: Subcommand = {
@@ -24,21 +21,11 @@ export const createTeamSubcommand: Subcommand = {
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!interaction.guildId) {
-			await replyWithGuildOnlyCommandWarn(interaction);
-			return;
+			throw new GuildOnlyError(interaction);
 		}
 
-		try {
-			const teamName = interaction.options.getString("name", true);
-			await teamService.createTeam(interaction.guildId, teamName);
-			await replyWithTeamCreated(interaction, teamName);
-		} catch (error) {
-			if (error instanceof TeamAlreadyExistsError) {
-				await replyWithErrorMessage(interaction, error);
-				return;
-			}
-
-			throw error;
-		}
+		const teamName = interaction.options.getString("name", true);
+		await teamService.createTeam(interaction.guildId, teamName);
+		await replyWithTeamCreated(interaction, teamName);
 	},
 };

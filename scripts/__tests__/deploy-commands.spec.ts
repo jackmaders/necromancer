@@ -1,8 +1,6 @@
-/** biome-ignore-all lint/suspicious/noConsole: bespoke script doesn't need a logging util */
-
 import { REST, Routes } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { commands } from "@/app/config/commands.ts";
+import { getCommands } from "@/app/config/commands.ts";
 import { getEnvVar } from "@/shared/config/env.ts";
 import { logger } from "@/shared/model/index.ts";
 import { deployCommands } from "../deploy-commands.ts";
@@ -16,6 +14,7 @@ describe("Command Deployment Script", () => {
 	});
 
 	it("should deploy the registered commands", async () => {
+		const commands = getCommands();
 		await deployCommands();
 
 		expect(new REST().setToken).toHaveBeenCalledWith(getEnvVar().DISCORD_TOKEN);
@@ -69,6 +68,7 @@ describe("Command Deployment Script", () => {
 
 		const { REST } = await import("discord.js");
 		await import("../deploy-commands.ts");
+		const commands = getCommands();
 
 		expect(new REST().setToken).toHaveBeenCalledWith(getEnvVar().DISCORD_TOKEN);
 		expect(new REST().put).toHaveBeenCalledWith(

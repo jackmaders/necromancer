@@ -7,7 +7,8 @@ import {
 	MessageFlags,
 } from "discord.js";
 import type { Command } from "@/shared/model";
-import { logger } from "@/shared/model";
+import { AppError, logger } from "@/shared/model";
+import { getCommands } from "../config/commands.ts";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
@@ -40,9 +41,8 @@ export class DiscordClient {
 		);
 	}
 
-	private async loadCommands() {
-		// Need dynamic import to support Bun's hot reloading
-		const { commands } = await import("../config/commands.ts");
+	private loadCommands() {
+		const commands = getCommands();
 
 		this.commands.clear();
 		for (const command of commands) {
@@ -52,36 +52,42 @@ export class DiscordClient {
 
 	private async handleInteraction(interaction: Interaction) {
 		try {
-			if (!interaction.isChatInputCommand()) {
-				return;
+			if (interaction.isChatInputCommand()) {
+				const command = this.commands.get(interaction.commandName);
+				if (command) {
+					await command.execute(interaction);
+				}
+			} else if (interaction.isAutocomplete()) {
+				const command = this.commands.get(interaction.commandName);
+				if (command?.autocomplete) {
+					await command.autocomplete(interaction);
+				}
 			}
-
-			const command = this.commands.get(interaction.commandName);
-
-			if (!command) {
-				logger.warn(
-					`No command matching "${interaction.commandName}" was found.`,
-				);
-				return;
-			}
-
-			await command.execute(interaction);
 		} catch (error) {
 			logger.error(
 				`Error handling interaction (ID: ${interaction.id}): ${error}`,
 			);
-			await this.sendErrorReply(interaction);
+			await this.handleInteractionError(
+				interaction,
+				error instanceof Error ? error : new Error(String(error)),
+			);
 		}
 	}
 
-	private async sendErrorReply(interaction: Interaction) {
+	private async handleInteractionError(interaction: Interaction, error: Error) {
 		try {
 			if (!interaction.isRepliable()) {
 				throw new Error("Interaction is not repliable");
 			}
 
+			let content = "There was an error while executing this command!";
+
+			if (error instanceof AppError) {
+				content = error.display;
+			}
+
 			const replyOptions: InteractionReplyOptions = {
-				content: "There was an error while executing this command!",
+				content,
 				flags: [MessageFlags.Ephemeral],
 			};
 

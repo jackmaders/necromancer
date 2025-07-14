@@ -1,4 +1,5 @@
 import {
+	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	MessageFlags,
 	SlashCommandBuilder,
@@ -28,7 +29,7 @@ export function createParentCommand(
 		subcommandsMap.set(subcommand.data.name, subcommand);
 	}
 
-	const execute = async (interaction: ChatInputCommandInteraction) => {
+	async function execute(interaction: ChatInputCommandInteraction) {
 		const subcommandName = interaction.options.getSubcommand();
 		const subcommand = subcommandsMap.get(subcommandName);
 
@@ -44,9 +45,19 @@ export function createParentCommand(
 				flags: [MessageFlags.Ephemeral],
 			});
 		}
-	};
+	}
+
+	async function autocomplete(interaction: AutocompleteInteraction) {
+		const subcommandName = interaction.options.getSubcommand();
+
+		const subcommand = subcommandsMap.get(subcommandName);
+		if (subcommand?.autocomplete) {
+			await subcommand.autocomplete(interaction);
+		}
+	}
 
 	return {
+		autocomplete,
 		data,
 		execute,
 	};

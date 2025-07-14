@@ -18,8 +18,7 @@
 			"@/entities/*": ["src/entities/*"],
 			"@/features/*": ["src/features/*"],
 			"@/scripts/*": ["src/scripts/*"],
-			"@/shared/*": ["src/shared/*"],
-			"@/testing/*": ["src/testing/*"]
+			"@/shared/*": ["src/shared/*"]
 		},
 		"skipLibCheck": true,
 		"strict": true,

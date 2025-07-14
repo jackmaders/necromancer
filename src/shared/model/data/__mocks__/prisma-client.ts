@@ -11,4 +11,9 @@ const team = {
 	findUniqueOrThrow: vi.fn(),
 };
 
-export const prisma = { guild, team };
+const poll = {
+	create: vi.fn(),
+	update: vi.fn(),
+};
+
+export const prisma = { guild, poll, team };

@@ -1,26 +1,19 @@
-import type { Team } from "prisma/generated/prisma-client-js";
+import type { Team } from "prisma/generated/prisma-client-js/index";
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { type MockProxy, mock } from "vitest-mock-extended";
 import { prisma } from "@/shared/model";
 import { teamRepository } from "../team-repository.ts";
 
 vi.mock("@/shared/model/data/prisma-client.ts");
 
-const guild = {
-	createdAt: new Date(),
-	guildId: "test-guild-db-id",
-	id: "test-db-guild-id",
-	updatedAt: new Date(),
-};
-const team: Team = {
-	createdAt: new Date(),
-	guildId: guild.guildId,
-	id: "test-team-id",
-	name: "Test Team",
-	updatedAt: new Date(),
-};
-
 describe("Team Repository", () => {
+	let team: MockProxy<Team>;
+
+	beforeEach(() => {
+		team = mock<Team>();
+	});
+
 	describe("create", () => {
 		it("should handle creating a team", async () => {
 			expect.assertions(2);

@@ -3,13 +3,9 @@ import {
 	SlashCommandStringOption,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { TeamDoesNotExistError } from "@/entities/team";
 import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
-import {
-	replyWithErrorMessage,
-	replyWithGuildOnlyCommandWarn,
-} from "@/shared/ui/index.ts";
+import { GuildOnlyError } from "@/shared/model";
 import { replyWithTeamDeleted } from "./ui/replies.ts";
 
 export const deleteTeamSubcommand: Subcommand = {
@@ -25,21 +21,11 @@ export const deleteTeamSubcommand: Subcommand = {
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!interaction.guildId) {
-			await replyWithGuildOnlyCommandWarn(interaction);
-			return;
+			throw new GuildOnlyError(interaction);
 		}
 
-		try {
-			const teamName = interaction.options.getString("name", true);
-			await teamService.deleteTeam(interaction.guildId, teamName);
-			await replyWithTeamDeleted(interaction, teamName);
-		} catch (error) {
-			if (error instanceof TeamDoesNotExistError) {
-				await replyWithErrorMessage(interaction, error);
-				return;
-			}
-
-			throw error;
-		}
+		const teamName = interaction.options.getString("name", true);
+		await teamService.deleteTeam(interaction.guildId, teamName);
+		await replyWithTeamDeleted(interaction, teamName);
 	},
 };
