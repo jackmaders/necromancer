@@ -1,18 +1,14 @@
-import {
-	type ChatInputCommandInteraction,
-	EmbedBuilder,
-	MessageFlags,
-} from "discord.js";
+import { type ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import type { Team } from "prisma/generated/prisma-client-js";
 
 /**
  * Reply with the team's configuration details.
  */
-export async function replyWithGuildConfig(
+export function buildGuildConfigEmbed(
 	interaction: ChatInputCommandInteraction,
 	{ teams }: { teams: Team[] },
 ) {
-	const embed = new EmbedBuilder()
+	return new EmbedBuilder()
 		.setTitle("⚙️ Configuration")
 		.setColor(0x5865f2)
 		.addFields({
@@ -25,9 +21,4 @@ export async function replyWithGuildConfig(
 					.slice(0, 1020) || "None",
 		})
 		.setFooter({ text: `Server ID: ${interaction.guild?.id}` });
-
-	return await interaction.reply({
-		embeds: [embed],
-		flags: [MessageFlags.Ephemeral],
-	});
 }

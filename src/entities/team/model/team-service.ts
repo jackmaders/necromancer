@@ -1,5 +1,5 @@
 import { LRUCache } from "lru-cache";
-import type { Team } from "prisma/generated/prisma-client-js/index";
+import type { Team } from "prisma/generated/prisma-client-js";
 import {
 	PrismaOperationFailedError,
 	PrismaUniqueConstraintError,

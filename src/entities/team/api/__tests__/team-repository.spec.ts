@@ -1,4 +1,4 @@
-import type { Team } from "prisma/generated/prisma-client-js/index";
+import type { Team } from "prisma/generated/prisma-client-js";
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
