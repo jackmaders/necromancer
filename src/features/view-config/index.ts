@@ -1,11 +1,12 @@
 import {
 	type ChatInputCommandInteraction,
+	MessageFlags,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
 import { GuildOnlyError } from "@/shared/model";
-import { replyWithGuildConfig } from "./ui/replies.ts";
+import { buildGuildConfigEmbed } from "./ui/guild-config.ts";
 
 export const viewConfigSubcommand: Subcommand = {
 	data: new SlashCommandSubcommandBuilder()
@@ -23,6 +24,11 @@ export const viewConfigSubcommand: Subcommand = {
 			teams,
 		};
 
-		await replyWithGuildConfig(interaction, config);
+		const embed = buildGuildConfigEmbed(interaction, config);
+
+		await interaction.reply({
+			embeds: [embed],
+			flags: [MessageFlags.Ephemeral],
+		});
 	},
 };
