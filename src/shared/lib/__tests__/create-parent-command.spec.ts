@@ -5,7 +5,7 @@ import {
 	SlashCommandBuilder,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import type { Guild } from "prisma/generated/prisma-client-js/index";
+import type { Guild } from "prisma/generated/prisma-client-js";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { logger } from "@/shared/model/logging/logger-client.ts";

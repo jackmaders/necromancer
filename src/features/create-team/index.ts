@@ -6,7 +6,7 @@ import {
 import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
 import { GuildOnlyError } from "@/shared/model";
-import { replyWithTeamCreated } from "./ui/replies.ts";
+import { buildReplyOptions } from "./ui/message-payload.ts";
 
 export const createTeamSubcommand: Subcommand = {
 	data: new SlashCommandSubcommandBuilder()
@@ -26,6 +26,8 @@ export const createTeamSubcommand: Subcommand = {
 
 		const teamName = interaction.options.getString("name", true);
 		await teamService.createTeam(interaction.guildId, teamName);
-		await replyWithTeamCreated(interaction, teamName);
+		const options = buildReplyOptions(teamName);
+
+		await interaction.reply(options);
 	},
 };
