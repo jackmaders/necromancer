@@ -90,7 +90,7 @@ describe("Team Service", () => {
 
 			await expect(
 				teamService.deleteTeam(team.guildId, team.name),
-			).rejects.toThrow(TeamDoesNotExistError);
+			).rejects.toThrow(new TeamDoesNotExistError(team.name));
 		});
 
 		it("should re-throw other errors when deleting a team", async () => {

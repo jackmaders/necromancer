@@ -62,12 +62,10 @@ export const teamService = {
 	 */
 	async getTeamByName(discordGuildId: string, name: string) {
 		const cachedTeams = teamCache.get(discordGuildId);
+		const cachedTeam = cachedTeams?.find((team) => team.name === name);
 
-		if (cachedTeams) {
-			const team = cachedTeams.find((team) => team.name === name);
-			if (team) {
-				return team;
-			}
+		if (cachedTeam) {
+			return cachedTeam;
 		}
 
 		const guild = await guildService.ensureExists(discordGuildId);
