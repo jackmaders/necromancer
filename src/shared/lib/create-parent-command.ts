@@ -48,10 +48,7 @@ export function createParentCommand(
 	}
 
 	async function autocomplete(interaction: AutocompleteInteraction) {
-		const subcommandName = interaction.options.getSubcommand(false);
-		if (!subcommandName) {
-			return;
-		}
+		const subcommandName = interaction.options.getSubcommand();
 
 		const subcommand = subcommandsMap.get(subcommandName);
 		if (subcommand?.autocomplete) {

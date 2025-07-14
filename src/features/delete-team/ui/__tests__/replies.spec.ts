@@ -1,16 +1,23 @@
-import { MessageFlags } from "discord.js";
-import { describe, expect, it } from "vitest";
-import { InteractionBuilder } from "@/testing/interaction-builder.ts";
+import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import type { Team } from "prisma/generated/prisma-client-js/index";
+import { beforeEach, describe, expect, it } from "vitest";
+import { type MockProxy, mock } from "vitest-mock-extended";
 import { replyWithTeamDeleted } from "../replies.ts";
 
 describe("Delete Team Replies", () => {
+	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let team: MockProxy<Team>;
+
+	beforeEach(() => {
+		team = mock<Team>();
+		interaction = mock<ChatInputCommandInteraction>();
+	});
+
 	it("should send a team deleted confirmation", async () => {
-		const interaction = new InteractionBuilder("team").build();
-		const teamName = "Victorious Secret";
-		await replyWithTeamDeleted(interaction, teamName);
+		await replyWithTeamDeleted(interaction, team.name);
 
 		expect(interaction.reply).toHaveBeenCalledWith({
-			content: `Team "Victorious Secret" has been successfully deleted!`,
+			content: `Team "${team.name}" has been successfully deleted!`,
 			flags: [MessageFlags.Ephemeral],
 		});
 	});

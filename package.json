@@ -2,6 +2,7 @@
 	"dependencies": {
 		"@prisma/client": "^6.11.1",
 		"discord.js": "^14.21.0",
+		"lru-cache": "^11.1.0",
 		"pino": "^9.7.0",
 		"zod": "^3.25.75"
 	},

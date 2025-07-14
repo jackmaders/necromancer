@@ -1,3 +1,5 @@
+import { LRUCache } from "lru-cache";
+import type { Team } from "prisma/generated/prisma-client-js/index";
 import {
 	PrismaOperationFailedError,
 	PrismaUniqueConstraintError,
@@ -9,7 +11,11 @@ import {
 	TeamDoesNotExistError,
 } from "./errors/index.ts";
 import { guildService } from "./guild-service.ts";
-import { teamCacheManager } from "./team-cache.ts";
+
+const teamCache = new LRUCache<string, Team[]>({
+	max: 100,
+	ttl: 60 * 60 * 1000,
+});
 
 export const teamService = {
 	/**
@@ -21,7 +27,7 @@ export const teamService = {
 
 		try {
 			const team = await teamRepository.create(guild.id, name);
-			teamCacheManager.invalidate(discordGuildId);
+			teamCache.delete(discordGuildId);
 			return team;
 		} catch (error) {
 			if (parsePrismaError(error) instanceof PrismaUniqueConstraintError) {
@@ -39,7 +45,7 @@ export const teamService = {
 		const guild = await guildService.ensureExists(discordGuildId);
 		try {
 			const team = await teamRepository.deleteByName(guild.id, name);
-			teamCacheManager.invalidate(discordGuildId);
+			teamCache.delete(discordGuildId);
 			return team;
 		} catch (error) {
 			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
@@ -55,9 +61,10 @@ export const teamService = {
 	 * @throws {TeamDoesNotExistError} If no team with that name is found.
 	 */
 	async getTeamByName(discordGuildId: string, name: string) {
-		const cachedTeams = teamCacheManager.get(discordGuildId);
+		const cachedTeams = teamCache.get(discordGuildId);
+
 		if (cachedTeams) {
-			const team = cachedTeams.find((t) => t.name === name);
+			const team = cachedTeams.find((team) => team.name === name);
 			if (team) {
 				return team;
 			}
@@ -67,7 +74,6 @@ export const teamService = {
 		try {
 			return await teamRepository.findByName(guild.id, name);
 		} catch (error) {
-			// P2025 is the error code for "record not found"
 			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
 				throw new TeamDoesNotExistError(name);
 			}
@@ -79,14 +85,14 @@ export const teamService = {
 	 * Retrieves all teams within a specific Discord guild.
 	 */
 	async getTeamsByGuildId(discordGuildId: string) {
-		const cachedTeams = teamCacheManager.get(discordGuildId);
+		const cachedTeams = teamCache.get(discordGuildId);
 		if (cachedTeams) {
 			return cachedTeams;
 		}
 
 		const guild = await guildService.ensureExists(discordGuildId);
 		const teams = await teamRepository.findAllByGuildId(guild.id);
-		teamCacheManager.set(discordGuildId, teams);
+		teamCache.set(discordGuildId, teams);
 		return teams;
 	},
 };

@@ -8,7 +8,7 @@ export class AppError extends Error {
 	constructor(display: string, internal?: string, options?: ErrorOptions) {
 		super(internal ?? display, options);
 		this.name = this.constructor.name;
-		this.display = display ?? internal;
+		this.display = display;
 
 		Object.setPrototypeOf(this, new.target.prototype);
 	}

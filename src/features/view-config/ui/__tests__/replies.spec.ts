@@ -1,26 +1,20 @@
-import { MessageFlags } from "discord.js";
-import type { Team } from "prisma/generated/prisma-client-js";
-import { describe, expect, it } from "vitest";
-import { InteractionBuilder } from "@/testing/interaction-builder.ts";
+import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import type { Team } from "prisma/generated/prisma-client-js/index";
+import { beforeEach, describe, expect, it } from "vitest";
+import { type MockProxy, mock } from "vitest-mock-extended";
 import { replyWithGuildConfig } from "../replies.ts";
 
-const guild = {
-	createdAt: new Date(),
-	guildId: "test-guild-db-id",
-	id: "test-db-guild-id",
-	updatedAt: new Date(),
-};
-const team: Team = {
-	createdAt: new Date(),
-	guildId: guild.id,
-	id: "test-team-id",
-	name: "Test Team",
-	updatedAt: new Date(),
-};
 describe("Config View Replies", () => {
-	it("should create the embed with teams", async () => {
-		const interaction = new InteractionBuilder("team").build();
+	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let team: MockProxy<Team>;
 
+	beforeEach(() => {
+		team = mock<Team>();
+		interaction = mock<ChatInputCommandInteraction>();
+	});
+
+	it("should create the embed with teams", async () => {
+		team.name = "Test Team";
 		await replyWithGuildConfig(interaction, { teams: [team, team] });
 
 		expect(interaction.reply).toHaveBeenCalledWith({
@@ -47,8 +41,6 @@ describe("Config View Replies", () => {
 	});
 
 	it("should create the embed with no teams", async () => {
-		const interaction = new InteractionBuilder("team").build();
-
 		await replyWithGuildConfig(interaction, { teams: [] });
 
 		expect(interaction.reply).toHaveBeenCalledWith({

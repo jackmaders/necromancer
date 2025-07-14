@@ -27,10 +27,12 @@ const configCommand = createParentCommand(
 // Development-only commands that are not production ready.
 const localCommands = [pingCommand, availabilityCommand];
 
-const { NODE_ENV } = getEnvVar();
+export function getCommands() {
+	const { NODE_ENV } = getEnvVar(true);
 
-export const commands = [
-	...(NODE_ENV === "local" ? localCommands : []),
-	teamCommand,
-	configCommand,
-];
+	return [
+		...(NODE_ENV === "local" ? localCommands : []),
+		teamCommand,
+		configCommand,
+	];
+}

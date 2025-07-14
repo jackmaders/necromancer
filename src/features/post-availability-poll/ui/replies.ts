@@ -10,7 +10,12 @@ import type { Poll } from "prisma/generated/prisma-client-js";
 /**
  * Formats a date range for the poll title.
  */
-function getWeekDateRange(startDate: Date): string {
+function getWeekDateRange(
+	startDate: Date,
+	interaction: ChatInputCommandInteraction,
+): string {
+	const { locale } = interaction;
+
 	const end = new Date(startDate);
 	end.setDate(startDate.getDate() + 6); // Add 6 days to get to Sunday
 
@@ -20,8 +25,8 @@ function getWeekDateRange(startDate: Date): string {
 		year: "numeric",
 	};
 
-	const startFormatted = startDate.toLocaleDateString("en-US", options);
-	const endFormatted = end.toLocaleDateString("en-US", options);
+	const startFormatted = startDate.toLocaleDateString(locale, options);
+	const endFormatted = end.toLocaleDateString(locale, options);
 
 	return `${startFormatted} - ${endFormatted}`;
 }
@@ -29,13 +34,15 @@ function getWeekDateRange(startDate: Date): string {
 /**
  * Builds and sends the availability poll embed with a button.
  */
-export async function replyWithAvailabilityPollEmbed(
+export async function editReplyWithAvailabilityPollEmbed(
 	interaction: ChatInputCommandInteraction,
 	poll: Poll,
 ) {
 	const embed = new EmbedBuilder()
 		.setColor(0x5865f2)
-		.setTitle(`🗓️ Availability for ${getWeekDateRange(poll.weekStartDate)}`)
+		.setTitle(
+			`🗓️ Availability for ${getWeekDateRange(poll.weekStartDate, interaction)}`,
+		)
 		.setDescription(
 			"Click the button below to set your availability for the week.",
 		)
@@ -46,7 +53,7 @@ export async function replyWithAvailabilityPollEmbed(
 		});
 
 	const setAvailabilityButton = new ButtonBuilder()
-		.setCustomId(`availability-set:${poll.id}`) // Namespaced ID with poll context
+		.setCustomId(`availability-set:${poll.id}`)
 		.setLabel("Set Availability")
 		.setStyle(ButtonStyle.Primary);
 
@@ -54,10 +61,8 @@ export async function replyWithAvailabilityPollEmbed(
 		setAvailabilityButton,
 	);
 
-	// Using withResponse ensures the full message object is returned
-	return await interaction.reply({
+	return await interaction.editReply({
 		components: [row],
 		embeds: [embed],
-		withResponse: true,
 	});
 }

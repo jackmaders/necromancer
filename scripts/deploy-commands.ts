@@ -1,5 +1,5 @@
 import { type APIApplicationCommand, REST, Routes } from "discord.js";
-import { commands } from "@/app/config/commands";
+import { getCommands } from "@/app/config/commands";
 import { getEnvVar } from "@/shared/config/env";
 import { logger } from "@/shared/model/logging/logger-client";
 
@@ -9,6 +9,7 @@ import { logger } from "@/shared/model/logging/logger-client";
  */
 export async function deployCommands() {
 	try {
+		const commands = getCommands();
 		logger.info(`Deploying ${commands.length} command(s)...`);
 
 		// Passing true bypasses error handling for missing vars

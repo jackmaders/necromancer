@@ -1,18 +1,25 @@
 import {
+	type AutocompleteInteraction,
 	type ChatInputCommandInteraction,
 	MessageFlags,
 	SlashCommandBuilder,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
+import type { Guild } from "prisma/generated/prisma-client-js/index";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import { type MockProxy, mock } from "vitest-mock-extended";
 import { logger } from "@/shared/model/logging/logger-client.ts";
-import { InteractionBuilder } from "../../../testing/interaction-builder.ts";
+import type { Subcommand } from "@/shared/model/types.js";
 import { createParentCommand } from "../create-parent-command.ts";
 
 vi.mock("@/shared/model/logging/logger-client.ts");
 
 describe("createParentCommand", () => {
-	let subcommands = newSubcommands();
+	let chatInputCommandInteraction: MockProxy<ChatInputCommandInteraction>;
+	let autocompleteInteraction: MockProxy<AutocompleteInteraction>;
+	let subcommands: Subcommand[];
+
+	let guild: MockProxy<Guild>;
 
 	beforeAll(() => {
 		vi.spyOn(SlashCommandBuilder.prototype, "setName");
@@ -22,6 +29,12 @@ describe("createParentCommand", () => {
 
 	beforeEach(() => {
 		subcommands = newSubcommands();
+		guild = mock<Guild>();
+		chatInputCommandInteraction = mock<ChatInputCommandInteraction>();
+		autocompleteInteraction = mock<AutocompleteInteraction>();
+		chatInputCommandInteraction.options.getSubcommand = vi
+			.fn()
+			.mockReturnValue("sub1");
 	});
 
 	it("should return a Command object with data and execute properties", () => {
@@ -58,43 +71,49 @@ describe("createParentCommand", () => {
 	});
 
 	it("should execute the correct subcommand based on interaction options", async () => {
-		const overrides = {
-			options: {
-				getSubcommand: vi.fn().mockReturnValue("sub1"),
-			},
-		};
-
 		const parent = createParentCommand("parent", "description", subcommands);
 
-		const interaction = new InteractionBuilder("parent")
-			.with(overrides as unknown as Partial<ChatInputCommandInteraction>)
-			.build();
-
-		await parent.execute(interaction);
+		await parent.execute(chatInputCommandInteraction);
 
 		expect(subcommands[0].execute).toHaveBeenCalledTimes(1);
-		expect(subcommands[0].execute).toHaveBeenCalledWith(interaction);
+		expect(subcommands[0].execute).toHaveBeenCalledWith(
+			chatInputCommandInteraction,
+		);
 		expect(subcommands[1].execute).not.toHaveBeenCalled();
 	});
 
-	it("should log a warning and reply with an error if the subcommand is not found", async () => {
+	it("should execute the correct autocomplete based on interaction options", async () => {
+		autocompleteInteraction.commandName = "parent";
+		autocompleteInteraction.guildId = guild.guildId;
+		autocompleteInteraction.options.getSubcommand = vi
+			.fn()
+			.mockReturnValue("sub1");
+
+		const parent = createParentCommand("parent", "description", subcommands);
+
+		if (parent.autocomplete) {
+			await parent.autocomplete(autocompleteInteraction);
+		}
+
+		expect(subcommands[0].autocomplete).toHaveBeenCalledTimes(1);
+		expect(subcommands[0].autocomplete).toHaveBeenCalledWith(
+			autocompleteInteraction,
+		);
+		expect(subcommands[1].autocomplete).not.toHaveBeenCalled();
+	});
+
+	it("should log a warning and reply with an error if the subcommand is not found when executing", async () => {
+		chatInputCommandInteraction.options.getSubcommand = vi
+			.fn()
+			.mockReturnValue("non-existent-sub");
 		const parentCommand = createParentCommand(
 			"parent",
 			"description",
 			subcommands,
 		);
 		const nonExistentSubcommand = "non-existent-sub";
-		const overrides = {
-			options: {
-				getSubcommand: vi.fn().mockReturnValue(nonExistentSubcommand),
-			},
-		};
 
-		const interaction = new InteractionBuilder("parent")
-			.with(overrides as unknown as Partial<ChatInputCommandInteraction>)
-			.build();
-
-		await parentCommand.execute(interaction);
+		await parentCommand.execute(chatInputCommandInteraction);
 
 		expect(subcommands[0].execute).not.toHaveBeenCalled();
 		expect(subcommands[1].execute).not.toHaveBeenCalled();
@@ -103,7 +122,7 @@ describe("createParentCommand", () => {
 			nonExistentSubcommand,
 		);
 
-		expect(interaction.reply).toHaveBeenCalledWith({
+		expect(chatInputCommandInteraction.reply).toHaveBeenCalledWith({
 			content: "I couldn't find that subcommand. Please report this issue.",
 			flags: [MessageFlags.Ephemeral],
 		});
@@ -113,10 +132,12 @@ describe("createParentCommand", () => {
 function newSubcommands() {
 	return [
 		{
+			autocomplete: vi.fn(),
 			data: new SlashCommandSubcommandBuilder().setName("sub1"),
 			execute: vi.fn(),
 		},
 		{
+			autocomplete: vi.fn(),
 			data: new SlashCommandSubcommandBuilder().setName("sub2"),
 			execute: vi.fn(),
 		},

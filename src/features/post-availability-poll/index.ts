@@ -9,12 +9,12 @@ import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
 import { GuildOnlyError } from "@/shared/model";
 import { availabilityService } from "./model/availability-service.ts";
-import { replyWithAvailabilityPollEmbed } from "./ui/replies.ts";
+import { editReplyWithAvailabilityPollEmbed } from "./ui/replies.ts";
 
 export const postAvailabilitySubcommand: Subcommand = {
 	async autocomplete(interaction: AutocompleteInteraction) {
 		if (!interaction.guildId) {
-			return;
+			throw new GuildOnlyError(interaction);
 		}
 
 		const focusedValue = interaction.options.getFocused();
@@ -47,9 +47,11 @@ export const postAvailabilitySubcommand: Subcommand = {
 		),
 
 	async execute(interaction: ChatInputCommandInteraction) {
-		if (!(interaction.guildId && interaction.channel)) {
+		if (!interaction.guildId) {
 			throw new GuildOnlyError(interaction);
 		}
+
+		await interaction.deferReply();
 
 		const teamName = interaction.options.getString("team", true);
 
@@ -58,13 +60,9 @@ export const postAvailabilitySubcommand: Subcommand = {
 			teamName,
 		);
 
-		const response = await replyWithAvailabilityPollEmbed(interaction, poll);
+		await editReplyWithAvailabilityPollEmbed(interaction, poll);
 
-		const messageId = response.interaction.responseMessageId;
-
-		if (!messageId) {
-			throw new Error("Failed to retrieve message ID from response.");
-		}
+		const messageId = (await interaction.fetchReply()).id;
 
 		await availabilityService.setPollMessageId(poll.id, messageId);
 	},

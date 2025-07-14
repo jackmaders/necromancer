@@ -8,6 +8,7 @@ import {
 } from "discord.js";
 import type { Command } from "@/shared/model";
 import { AppError, logger } from "@/shared/model";
+import { getCommands } from "../config/commands.ts";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
@@ -40,9 +41,8 @@ export class DiscordClient {
 		);
 	}
 
-	private async loadCommands() {
-		// Need dynamic import to support Bun's hot reloading
-		const { commands } = await import("../config/commands.ts");
+	private loadCommands() {
+		const commands = getCommands();
 
 		this.commands.clear();
 		for (const command of commands) {
@@ -69,15 +69,12 @@ export class DiscordClient {
 			);
 			await this.handleInteractionError(
 				interaction,
-				error instanceof Error ? error : undefined,
+				error instanceof Error ? error : new Error(String(error)),
 			);
 		}
 	}
 
-	private async handleInteractionError(
-		interaction: Interaction,
-		error?: Error,
-	) {
+	private async handleInteractionError(interaction: Interaction, error: Error) {
 		try {
 			if (!interaction.isRepliable()) {
 				throw new Error("Interaction is not repliable");
