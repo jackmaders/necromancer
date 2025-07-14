@@ -1,14 +1,14 @@
 import type { ChatInputCommandInteraction } from "discord.js";
-import type { Guild, Team } from "prisma/generated/prisma-client-js/index";
+import type { Guild, Team } from "prisma/generated/prisma-client-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { teamService } from "@/entities/team/index.ts";
 import { viewConfigSubcommand } from "@/features/view-config/index.ts";
 import { GuildOnlyError } from "@/shared/model/index.ts";
-import { replyWithGuildConfig } from "../ui/replies.ts";
+import { buildGuildConfigEmbed } from "../ui/guild-config.ts";
 
 vi.mock("@/entities/team/index.ts");
-vi.mock("../ui/replies.ts");
+vi.mock("../ui/guild-config.ts");
 vi.mock("@/shared/ui");
 
 describe("View Config Subcommand", () => {
@@ -37,7 +37,7 @@ describe("View Config Subcommand", () => {
 		await viewConfigSubcommand.execute(interaction);
 
 		expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
-		expect(replyWithGuildConfig).toHaveBeenCalledWith(interaction, {
+		expect(buildGuildConfigEmbed).toHaveBeenCalledWith(interaction, {
 			teams: [team],
 		});
 	});
@@ -48,7 +48,7 @@ describe("View Config Subcommand", () => {
 		await viewConfigSubcommand.execute(interaction);
 
 		expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
-		expect(replyWithGuildConfig).toHaveBeenCalledWith(interaction, {
+		expect(buildGuildConfigEmbed).toHaveBeenCalledWith(interaction, {
 			teams: [],
 		});
 	});
