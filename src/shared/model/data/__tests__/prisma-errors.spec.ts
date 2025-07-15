@@ -1,32 +1,38 @@
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 import { describe, expect, it } from "vitest";
-import { errorCodeToClass, parsePrismaError } from "../prisma-errors.ts";
+import { parsePrismaError } from "../prisma-errors.ts";
 
 describe("Prisma Errors", () => {
-	it.each(Object.entries(errorCodeToClass))(
-		"should handle a %s error",
-		(code, ExpectedErrorClass) => {
-			const error = new PrismaClientKnownRequestError("", {
-				clientVersion: "1",
-				code,
-			});
+	it("should handle a PrismaUniqueConstraintError", () => {
+		const genericError = new PrismaClientKnownRequestError("A generic error", {
+			clientVersion: "1",
+			code: "P2002",
+		});
+		expect(parsePrismaError(genericError)?.name).toBe(
+			"PrismaUniqueConstraintError",
+		);
+	});
 
-			const parsedError = parsePrismaError(error);
-			expect(parsedError).toBeInstanceOf(ExpectedErrorClass);
-			expect(parsedError?.code).toBe(code);
-		},
-	);
+	it("should handle a PrismaOperationFailedError", () => {
+		const genericError = new PrismaClientKnownRequestError("A generic error", {
+			clientVersion: "1",
+			code: "P2025",
+		});
+		expect(parsePrismaError(genericError)?.name).toBe(
+			"PrismaOperationFailedError",
+		);
+	});
 
 	it("should return null for non-PrismaClientKnownRequestError errors", () => {
 		const genericError = new Error("A generic error");
 		expect(parsePrismaError(genericError)).toBeNull();
 	});
 
-	it("should return null for unknown Prisma error codes", () => {
+	it("should handle unknown Prisma error codes", () => {
 		const unknownPrismaError = new PrismaClientKnownRequestError("", {
 			clientVersion: "1",
 			code: "P9999", // An unknown code
 		});
-		expect(parsePrismaError(unknownPrismaError)).toBeNull();
+		expect(parsePrismaError(unknownPrismaError)?.name).toBe("unknown");
 	});
 });
