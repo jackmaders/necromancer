@@ -1,7 +1,5 @@
 /** biome-ignore-all lint/style/useNamingConvention: Environment variables are CONSTANT_CASE */
-import { z } from "zod/v4";
-// Zod V4 is considered stable and should be using "/v4" import path in ^3.25.0: https://zod.dev/v4
-// Once 4.0.0 is released, we can remove the "/v4" import path and use "zod" directly.
+import { z } from "zod";
 
 export const envSchema = z.object({
 	DISCORD_CLIENT_ID: z.string().min(1),
