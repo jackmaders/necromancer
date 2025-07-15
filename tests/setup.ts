@@ -1,6 +1,7 @@
-// Import heavy dependencies
 import { beforeEach, expect } from "vitest";
-import "zod/v4";
+
+// Import heavy dependencies
+import "zod";
 
 beforeEach(() => {
 	// biome-ignore lint/suspicious/noMisplacedAssertion: this will run after all tests
