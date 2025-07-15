@@ -40,5 +40,5 @@
 		"version:increment": "bun scripts/increment-version.ts"
 	},
 	"type": "module",
-	"version": "0.10.6"
+	"version": "0.11.0"
 }
