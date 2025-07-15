@@ -9,6 +9,12 @@ const slashCommandStringOption = {
 	setDescription: vi.fn(function (this: unknown) {
 		return this;
 	}),
+	setMaxLength: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setMinLength: vi.fn(function (this: unknown) {
+		return this;
+	}),
 	setName: vi.fn(function (this: unknown) {
 		return this;
 	}),
