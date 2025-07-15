@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { getCommands } from "@/app/config/commands.ts";
+import { getCommands } from "@/app/config";
 import type { Command } from "@/shared/model";
 import { buildHelpEmbed } from "../message-payload.ts";
 
@@ -27,6 +27,7 @@ function addCommandData(command: Command) {
 		...command,
 		data: {
 			...command.data,
+			// biome-ignore lint/style/useNamingConvention: match existing implementation
 			toJSON: vi.fn(() => ({
 				...command.data,
 			})),

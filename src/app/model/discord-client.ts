@@ -7,7 +7,7 @@ import {
 	MessageFlags,
 } from "discord.js";
 import type { Command } from "@/shared/model";
-import { AppError, logger } from "@/shared/model";
+import { type AppContext, AppError, logger } from "@/shared/model";
 import { getCommands } from "../config/commands.ts";
 
 export class DiscordClient {
@@ -24,7 +24,7 @@ export class DiscordClient {
 	 * Initializes the Discord client and logs the client in.
 	 */
 	async init(token: string) {
-		await this.loadCommands();
+		this.loadCommands();
 		await this.client.login(token);
 	}
 
@@ -52,15 +52,19 @@ export class DiscordClient {
 
 	private async handleInteraction(interaction: Interaction) {
 		try {
+			const context: AppContext = {
+				commands: this.commands,
+			};
+
 			if (interaction.isChatInputCommand()) {
 				const command = this.commands.get(interaction.commandName);
 				if (command) {
-					await command.execute(interaction);
+					await command.execute(interaction, context);
 				}
 			} else if (interaction.isAutocomplete()) {
 				const command = this.commands.get(interaction.commandName);
 				if (command?.autocomplete) {
-					await command.autocomplete(interaction);
+					await command.autocomplete(interaction, context);
 				}
 			}
 		} catch (error) {

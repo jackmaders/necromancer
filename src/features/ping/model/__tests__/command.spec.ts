@@ -5,13 +5,16 @@ import type {
 } from "discord.js";
 import { beforeEach, describe, expect, it } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
+import type { AppContext } from "@/shared/model/types.js";
 import { pingCommand } from "../../index.ts";
 
 describe("Ping Command", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let context: MockProxy<AppContext>;
 
 	beforeEach(() => {
 		interaction = mock<ChatInputCommandInteraction>();
+		context = mock<AppContext>();
 	});
 
 	it("should export the correct properties", () => {
@@ -32,7 +35,7 @@ describe("Ping Command", () => {
 			interaction: replyInteraction,
 		}));
 
-		await pingCommand.execute(interaction);
+		await pingCommand.execute(interaction, context);
 
 		expect(interaction.reply).toHaveBeenCalled();
 		expect(interaction.reply).toHaveBeenCalledWith({

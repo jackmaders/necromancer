@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
 import { mockGuild, mockTeam } from "@/fixtures/prisma";
-import { GuildOnlyError } from "@/shared/model";
+import { type AppContext, GuildOnlyError } from "@/shared/model";
 import { createTeamSubcommand } from "..";
 
 vi.mock("@/entities/team/index.ts");
@@ -12,6 +12,7 @@ vi.mock("@/shared/ui");
 
 describe("Create Team Subcommand", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let context: MockProxy<AppContext>;
 	let team: MockProxy<Team>;
 	let guild: MockProxy<Guild>;
 
@@ -19,6 +20,7 @@ describe("Create Team Subcommand", () => {
 		team = mock<Team>(mockTeam);
 		guild = mock<Guild>(mockGuild);
 		interaction = mock<ChatInputCommandInteraction>();
+		context = mock<AppContext>();
 		interaction.guildId = guild.id;
 		interaction.commandName = "team";
 		interaction.options.getString = vi.fn().mockReturnValue(team.name);
@@ -29,14 +31,14 @@ describe("Create Team Subcommand", () => {
 		interaction.guildId = null;
 
 		await expect(() =>
-			createTeamSubcommand.execute(interaction),
+			createTeamSubcommand.execute(interaction, context),
 		).rejects.toThrow(GuildOnlyError);
 	});
 
 	it("should create a team and reply with a success message", async () => {
 		expect.assertions(2);
 
-		await createTeamSubcommand.execute(interaction);
+		await createTeamSubcommand.execute(interaction, context);
 
 		expect(teamService.createTeam).toHaveBeenCalledWith(guild.id, team.name);
 		expect(interaction.reply).toHaveBeenCalledWith({
@@ -51,7 +53,7 @@ describe("Create Team Subcommand", () => {
 		vi.mocked(teamService.createTeam).mockRejectedValueOnce(existingTeamError);
 
 		await expect(() =>
-			createTeamSubcommand.execute(interaction),
+			createTeamSubcommand.execute(interaction, context),
 		).rejects.toThrow(TeamAlreadyExistsError);
 	});
 
@@ -59,8 +61,8 @@ describe("Create Team Subcommand", () => {
 		const unexpectedError = new Error("Something went wrong!");
 		vi.mocked(teamService.createTeam).mockRejectedValueOnce(unexpectedError);
 
-		await expect(createTeamSubcommand.execute(interaction)).rejects.toThrow(
-			unexpectedError,
-		);
+		await expect(
+			createTeamSubcommand.execute(interaction, context),
+		).rejects.toThrow(unexpectedError);
 	});
 });

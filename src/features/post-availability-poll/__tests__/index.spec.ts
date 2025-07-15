@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { mockPollData } from "@/fixtures/discord.ts";
 import { mockGuild } from "@/fixtures/prisma.ts";
-import { GuildOnlyError } from "@/shared/model";
+import { type AppContext, GuildOnlyError } from "@/shared/model";
 import { postAvailabilitySubcommand } from "..";
 import { buildAvailabilityPoll } from "../ui/availability-poll.ts";
 
@@ -14,6 +14,7 @@ vi.mock("../ui/availability-poll");
 
 describe("Post Availability Poll Subcommand", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let context: MockProxy<AppContext>;
 	let guild: MockProxy<Guild>;
 	let poll: MockProxy<PollData>;
 
@@ -21,6 +22,7 @@ describe("Post Availability Poll Subcommand", () => {
 		guild = mock<Guild>(mockGuild);
 		poll = mock<PollData>(mockPollData);
 		interaction = mock<ChatInputCommandInteraction>();
+		context = mock<AppContext>();
 		interaction.guildId = guild.guildId;
 	});
 
@@ -28,14 +30,14 @@ describe("Post Availability Poll Subcommand", () => {
 		interaction.guildId = null;
 
 		await expect(
-			postAvailabilitySubcommand.execute(interaction),
+			postAvailabilitySubcommand.execute(interaction, context),
 		).rejects.toThrow(GuildOnlyError);
 	});
 
 	it("should create a poll and post it", async () => {
 		vi.mocked(buildAvailabilityPoll).mockReturnValue(poll);
 
-		await postAvailabilitySubcommand.execute(interaction);
+		await postAvailabilitySubcommand.execute(interaction, context);
 
 		expect(interaction.reply).toHaveBeenCalledWith({ poll });
 	});

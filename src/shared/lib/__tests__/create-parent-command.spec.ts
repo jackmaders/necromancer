@@ -9,12 +9,13 @@ import type { Guild } from "prisma/generated/prisma-client-js";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { logger } from "@/shared/model/logging/logger-client.ts";
-import type { Subcommand } from "@/shared/model/types.js";
+import type { AppContext, Subcommand } from "@/shared/model/types.js";
 import { createParentCommand } from "../create-parent-command.ts";
 
 vi.mock("@/shared/model/logging/logger-client.ts");
 
 describe("createParentCommand", () => {
+	let context: MockProxy<AppContext>;
 	let chatInputCommandInteraction: MockProxy<ChatInputCommandInteraction>;
 	let autocompleteInteraction: MockProxy<AutocompleteInteraction>;
 	let subcommands: Subcommand[];
@@ -30,6 +31,7 @@ describe("createParentCommand", () => {
 	beforeEach(() => {
 		subcommands = newSubcommands();
 		guild = mock<Guild>();
+		context = mock<AppContext>();
 		chatInputCommandInteraction = mock<ChatInputCommandInteraction>();
 		autocompleteInteraction = mock<AutocompleteInteraction>();
 		chatInputCommandInteraction.options.getSubcommand = vi
@@ -73,11 +75,12 @@ describe("createParentCommand", () => {
 	it("should execute the correct subcommand based on interaction options", async () => {
 		const parent = createParentCommand("parent", "description", subcommands);
 
-		await parent.execute(chatInputCommandInteraction);
+		await parent.execute(chatInputCommandInteraction, context);
 
 		expect(subcommands[0].execute).toHaveBeenCalledTimes(1);
 		expect(subcommands[0].execute).toHaveBeenCalledWith(
 			chatInputCommandInteraction,
+			context,
 		);
 		expect(subcommands[1].execute).not.toHaveBeenCalled();
 	});
@@ -92,12 +95,13 @@ describe("createParentCommand", () => {
 		const parent = createParentCommand("parent", "description", subcommands);
 
 		if (parent.autocomplete) {
-			await parent.autocomplete(autocompleteInteraction);
+			await parent.autocomplete(autocompleteInteraction, context);
 		}
 
 		expect(subcommands[0].autocomplete).toHaveBeenCalledTimes(1);
 		expect(subcommands[0].autocomplete).toHaveBeenCalledWith(
 			autocompleteInteraction,
+			context,
 		);
 		expect(subcommands[1].autocomplete).not.toHaveBeenCalled();
 	});
@@ -113,7 +117,7 @@ describe("createParentCommand", () => {
 		);
 		const nonExistentSubcommand = "non-existent-sub";
 
-		await parentCommand.execute(chatInputCommandInteraction);
+		await parentCommand.execute(chatInputCommandInteraction, context);
 
 		expect(subcommands[0].execute).not.toHaveBeenCalled();
 		expect(subcommands[1].execute).not.toHaveBeenCalled();

@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => ({
 				...coverageConfigDefaults.exclude,
 				"prisma/generated",
 				"**/__mocks__/**",
+				"steiger.config.ts",
 			],
 			reporter: "text",
 			thresholds: {
