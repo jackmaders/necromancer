@@ -8,6 +8,9 @@ jobs:
   test:
     name: 🧪 Run Unit Tests
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.ref }}-unit-tests
+      cancel-in-progress: false
 
     steps:
       - name: 🛒 Checkout

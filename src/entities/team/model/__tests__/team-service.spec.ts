@@ -3,6 +3,7 @@ import type { Guild, Team } from "prisma/generated/prisma-client-js";
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
+import { mockGuild, mockTeam } from "@/fixtures/prisma.ts";
 import { teamRepository } from "../../api/team-repository.ts";
 import {
 	TeamAlreadyExistsError,
@@ -21,8 +22,8 @@ describe("Team Service", () => {
 	let guild: MockProxy<Guild>;
 
 	beforeEach(() => {
-		team = mock<Team>();
-		guild = mock<Guild>();
+		team = mock<Team>(mockTeam);
+		guild = mock<Guild>(mockGuild);
 	});
 
 	const cache = new LRUCache<string, Team[]>({
