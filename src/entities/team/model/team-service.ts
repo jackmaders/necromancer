@@ -1,10 +1,6 @@
 import { LRUCache } from "lru-cache";
 import type { Team } from "prisma/generated/prisma-client-js";
-import {
-	PrismaOperationFailedError,
-	PrismaUniqueConstraintError,
-	parsePrismaError,
-} from "@/shared/model";
+import { parsePrismaError } from "@/shared/model";
 import { teamRepository } from "../api/team-repository.ts";
 import {
 	TeamAlreadyExistsError,
@@ -30,7 +26,7 @@ export const teamService = {
 			teamCache.delete(discordGuildId);
 			return team;
 		} catch (error) {
-			if (parsePrismaError(error) instanceof PrismaUniqueConstraintError) {
+			if (parsePrismaError(error)?.name === "PrismaUniqueConstraintError") {
 				throw new TeamAlreadyExistsError(name);
 			}
 
@@ -48,7 +44,7 @@ export const teamService = {
 			teamCache.delete(discordGuildId);
 			return team;
 		} catch (error) {
-			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
+			if (parsePrismaError(error)?.name === "PrismaOperationFailedError") {
 				throw new TeamDoesNotExistError(name);
 			}
 
@@ -72,7 +68,7 @@ export const teamService = {
 		try {
 			return await teamRepository.findByName(guild.id, name);
 		} catch (error) {
-			if (parsePrismaError(error) instanceof PrismaOperationFailedError) {
+			if (parsePrismaError(error)?.name === "PrismaOperationFailedError") {
 				throw new TeamDoesNotExistError(name);
 			}
 			throw error;
