@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { teamService } from "@/entities/team/index.ts";
 import { viewConfigSubcommand } from "@/features/view-config/index.ts";
+import { mockTeam } from "@/fixtures/prisma.ts";
 import { GuildOnlyError } from "@/shared/model/index.ts";
 import { buildGuildConfigEmbed } from "../ui/guild-config.ts";
 
@@ -17,7 +18,7 @@ describe("View Config Subcommand", () => {
 	let guild: MockProxy<Guild>;
 
 	beforeEach(() => {
-		team = mock<Team>();
+		team = mock<Team>(mockTeam);
 		guild = mock<Guild>();
 		interaction = mock<ChatInputCommandInteraction>();
 		interaction.guildId = guild.guildId;

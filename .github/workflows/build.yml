@@ -6,6 +6,9 @@ on:
 
 jobs:
   build:
+    concurrency:
+      group: ${{ github.ref }}-docker-build
+      cancel-in-progress: false
     name: 🛠️ Check Docker Build
     runs-on: ubuntu-latest
     steps:

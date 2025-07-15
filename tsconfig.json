@@ -17,6 +17,7 @@
 			"@/app/*": ["src/app/*"],
 			"@/entities/*": ["src/entities/*"],
 			"@/features/*": ["src/features/*"],
+			"@/fixtures/*": ["src/__fixtures__/*"],
 			"@/scripts/*": ["src/scripts/*"],
 			"@/shared/*": ["src/shared/*"]
 		},

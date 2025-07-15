@@ -2,6 +2,7 @@ import type { Team } from "prisma/generated/prisma-client-js";
 import { PrismaClientKnownRequestError } from "prisma/generated/prisma-client-js/runtime/library";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
+import { mockTeam } from "@/fixtures/prisma.ts";
 import { prisma } from "@/shared/model";
 import { teamRepository } from "../team-repository.ts";
 
@@ -11,7 +12,7 @@ describe("Team Repository", () => {
 	let team: MockProxy<Team>;
 
 	beforeEach(() => {
-		team = mock<Team>();
+		team = mock<Team>(mockTeam);
 	});
 
 	describe("create", () => {
