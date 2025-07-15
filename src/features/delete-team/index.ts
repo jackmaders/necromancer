@@ -40,7 +40,9 @@ export const deleteTeamSubcommand: Subcommand = {
 			new SlashCommandStringOption()
 				.setName("name")
 				.setDescription("The name of the team.")
-				.setRequired(true),
+				.setRequired(true)
+				.setMinLength(3)
+				.setMaxLength(128),
 		),
 
 	async execute(interaction: ChatInputCommandInteraction) {
