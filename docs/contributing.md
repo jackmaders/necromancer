@@ -88,15 +88,3 @@ await interaction.reply({
 //     fetchReply: true // <-- Do not use
 // });
 ```
-
-### Zod Import
-
-Zod V4 is considered stable and should be using "/v4" import path starting at version 3.25.0 (https://zod.dev/v4). Once 4.0.0 is released, we can remove the "/v4" import path and use "zod" directly.
-
-```typescript
-// Correct
-import { z } from "zod/v4";
-
-// Incorrect
-// import { z } from "zod";
-```
