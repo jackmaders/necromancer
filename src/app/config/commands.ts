@@ -1,5 +1,6 @@
 import { createTeamSubcommand } from "@/features/create-team";
 import { deleteTeamSubcommand } from "@/features/delete-team";
+import { helpCommand } from "@/features/help";
 import { pingCommand } from "@/features/ping";
 import { postAvailabilitySubcommand } from "@/features/post-availability-poll";
 import { viewConfigSubcommand } from "@/features/view-config";
@@ -32,6 +33,7 @@ export function getCommands() {
 
 	return [
 		...(NODE_ENV === "local" ? localCommands : []),
+		helpCommand,
 		teamCommand,
 		configCommand,
 	];

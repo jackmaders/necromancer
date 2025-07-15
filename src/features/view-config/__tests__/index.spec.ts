@@ -5,7 +5,7 @@ import { type MockProxy, mock } from "vitest-mock-extended";
 import { teamService } from "@/entities/team/index.ts";
 import { viewConfigSubcommand } from "@/features/view-config/index.ts";
 import { mockTeam } from "@/fixtures/prisma.ts";
-import { GuildOnlyError } from "@/shared/model/index.ts";
+import { type AppContext, GuildOnlyError } from "@/shared/model/index.ts";
 import { buildGuildConfigEmbed } from "../ui/guild-config.ts";
 
 vi.mock("@/entities/team/index.ts");
@@ -14,6 +14,7 @@ vi.mock("@/shared/ui");
 
 describe("View Config Subcommand", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let context: MockProxy<AppContext>;
 	let team: MockProxy<Team>;
 	let guild: MockProxy<Guild>;
 
@@ -21,6 +22,7 @@ describe("View Config Subcommand", () => {
 		team = mock<Team>(mockTeam);
 		guild = mock<Guild>();
 		interaction = mock<ChatInputCommandInteraction>();
+		context = mock<AppContext>();
 		interaction.guildId = guild.guildId;
 	});
 
@@ -28,14 +30,14 @@ describe("View Config Subcommand", () => {
 		interaction.guildId = null;
 
 		await expect(() =>
-			viewConfigSubcommand.execute(interaction),
+			viewConfigSubcommand.execute(interaction, context),
 		).rejects.toThrow(GuildOnlyError);
 	});
 
 	it("should create a team and reply with a success message", async () => {
 		vi.mocked(teamService.getTeamsByGuildId).mockResolvedValue([team]);
 
-		await viewConfigSubcommand.execute(interaction);
+		await viewConfigSubcommand.execute(interaction, context);
 
 		expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
 		expect(buildGuildConfigEmbed).toHaveBeenCalledWith(interaction, {
@@ -46,7 +48,7 @@ describe("View Config Subcommand", () => {
 	it("should handle cases where no teams exists", async () => {
 		vi.mocked(teamService.getTeamsByGuildId).mockResolvedValue([]);
 
-		await viewConfigSubcommand.execute(interaction);
+		await viewConfigSubcommand.execute(interaction, context);
 
 		expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
 		expect(buildGuildConfigEmbed).toHaveBeenCalledWith(interaction, {
@@ -58,8 +60,8 @@ describe("View Config Subcommand", () => {
 		const error = new Error("Unexpected error");
 		vi.mocked(teamService.getTeamsByGuildId).mockRejectedValue(error);
 
-		await expect(viewConfigSubcommand.execute(interaction)).rejects.toThrow(
-			error,
-		);
+		await expect(
+			viewConfigSubcommand.execute(interaction, context),
+		).rejects.toThrow(error);
 	});
 });

@@ -4,7 +4,7 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { Command, Subcommand } from "@/shared/model";
+import type { AppContext, Command, Subcommand } from "@/shared/model";
 import { logger } from "@/shared/model";
 
 /**
@@ -29,12 +29,15 @@ export function createParentCommand(
 		subcommandsMap.set(subcommand.data.name, subcommand);
 	}
 
-	async function execute(interaction: ChatInputCommandInteraction) {
+	async function execute(
+		interaction: ChatInputCommandInteraction,
+		context: AppContext,
+	) {
 		const subcommandName = interaction.options.getSubcommand();
 		const subcommand = subcommandsMap.get(subcommandName);
 
 		if (subcommand) {
-			await subcommand.execute(interaction);
+			await subcommand.execute(interaction, context);
 		} else {
 			logger.warn(
 				`No matching subcommand found for command "${name}"`,
@@ -47,12 +50,15 @@ export function createParentCommand(
 		}
 	}
 
-	async function autocomplete(interaction: AutocompleteInteraction) {
+	async function autocomplete(
+		interaction: AutocompleteInteraction,
+		context: AppContext,
+	) {
 		const subcommandName = interaction.options.getSubcommand();
 
 		const subcommand = subcommandsMap.get(subcommandName);
 		if (subcommand?.autocomplete) {
-			await subcommand.autocomplete(interaction);
+			await subcommand.autocomplete(interaction, context);
 		}
 	}
 
