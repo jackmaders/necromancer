@@ -5,10 +5,6 @@ on:
     types: [opened, synchronize, reopened]
     branches: [main]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
   version:
     name: 📌 Increment Package Version
@@ -16,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    concurrency:
+      group: ${{ github.ref }}-version-increment
+      cancel-in-progress: false
 
     steps:
       - name: 🛒 Checkout

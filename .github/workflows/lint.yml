@@ -6,6 +6,9 @@ on:
 
 jobs:
   lint:
+    concurrency:
+      group: ${{ github.ref }}-linting
+      cancel-in-progress: false
     name: ✨ Check Code Quality
     runs-on: ubuntu-latest
 
