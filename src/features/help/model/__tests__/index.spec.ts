@@ -1,24 +1,30 @@
-import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import {
+	type ChatInputCommandInteraction,
+	type EmbedBuilder,
+	MessageFlags,
+} from "discord.js";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { helpCommand } from "..";
-import { buildHelpEmbed } from "../ui/message-payload.ts";
+import { buildHelpEmbed } from "../../ui/message-payload.ts";
+import { HelpCommand } from "../index.ts";
 
-vi.mock("../ui/message-payload");
+vi.mock("../../ui/message-payload");
 
 describe("Help Command", () => {
+	let command = new HelpCommand();
 	let interaction: MockProxy<ChatInputCommandInteraction>;
 
 	beforeAll(() => {
+		command = new HelpCommand();
 		interaction = mock<ChatInputCommandInteraction>();
 	});
 
 	it("should build and reply with a help embed", async () => {
-		const mockEmbed = { title: "Mock Help Embed" };
+		const mockEmbed = mock<EmbedBuilder>();
 
-		vi.mocked(buildHelpEmbed).mockReturnValue(mockEmbed as never);
+		vi.mocked(buildHelpEmbed).mockReturnValue(mockEmbed);
 
-		await helpCommand.execute(interaction, { commands: new Map() });
+		await command.execute(interaction, { commands: new Map() });
 
 		expect(interaction.reply).toHaveBeenCalledWith({
 			embeds: [mockEmbed],

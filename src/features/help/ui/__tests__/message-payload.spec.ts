@@ -1,36 +1,29 @@
+import { EmbedBuilder } from "discord.js";
 import { describe, expect, it, vi } from "vitest";
-import { getCommands } from "@/app/config";
-import type { Command } from "@/shared/model";
+import { PingCommand } from "@/features/ping/index.ts";
 import { buildHelpEmbed } from "../message-payload.ts";
 
-vi.mock("@/app/config/commands");
+vi.mock("discord.js");
+vi.mock("@/features/ping/index.ts");
 
 describe("Help Embed", () => {
 	it("should build an embed with simple and parent commands", () => {
-		const commands: Command[] = getCommands().map(addCommandData);
+		const commands = [new PingCommand()];
 
-		const embed = buildHelpEmbed(commands);
-		const embedData = embed.toJSON();
+		buildHelpEmbed(commands);
+		const embedBuilder = vi.mocked(new EmbedBuilder());
 
-		expect(embedData.title).toBe("❓ Help - Command List");
-		expect(embedData.fields).toHaveLength(2);
-		expect(embedData.fields?.[0].name).toBe("/test");
-		expect(embedData.fields?.[0].value).toBe("`/test` - A test command");
+		expect(embedBuilder.setTitle).toHaveBeenCalledWith(
+			"❓ Help - Command List",
+		);
+		expect(embedBuilder.setDescription).toHaveBeenCalledWith(
+			"Here is a list of all the commands you can use.",
+		);
+		expect(embedBuilder.setColor).toHaveBeenCalledWith(0x5865f2);
 
-		expect(embedData.fields?.[1].name).toBe("/ping");
-		expect(embedData.fields?.[1].value).toBe("`/ping pong` - A pong command");
+		expect(embedBuilder.addFields).toHaveBeenCalledWith({
+			name: "/ping",
+			value: "`/ping` - A pong command",
+		});
 	});
 });
-
-function addCommandData(command: Command) {
-	return {
-		...command,
-		data: {
-			...command.data,
-			// biome-ignore lint/style/useNamingConvention: match existing implementation
-			toJSON: vi.fn(() => ({
-				...command.data,
-			})),
-		},
-	} as unknown as Command;
-}

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { getCommands } from "../commands.ts";
+import { getCommands } from "../../commands/index.ts";
 
 describe("Commands Registry", () => {
 	it("should export an array with the correct properties", () => {

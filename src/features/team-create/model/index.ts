@@ -6,10 +6,10 @@ import {
 import { teamService } from "@/entities/team/index.ts";
 import type { Subcommand } from "@/shared/model";
 import { GuildOnlyError } from "@/shared/model";
-import { buildReplyOptions } from "./ui/message-payload.ts";
+import { buildReplyOptions } from "../ui/message-payload.ts";
 
-export const createTeamSubcommand: Subcommand = {
-	data: new SlashCommandSubcommandBuilder()
+export class TeamCreateSubcommand implements Subcommand {
+	readonly data = new SlashCommandSubcommandBuilder()
 		.setName("create")
 		.setDescription("Creates a new team in this server.")
 		.addStringOption(
@@ -19,7 +19,7 @@ export const createTeamSubcommand: Subcommand = {
 				.setRequired(true)
 				.setMinLength(3)
 				.setMaxLength(128),
-		),
+		);
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!interaction.guildId) {
@@ -31,5 +31,5 @@ export const createTeamSubcommand: Subcommand = {
 		const options = buildReplyOptions(teamName);
 
 		await interaction.reply(options);
-	},
-};
+	}
+}

@@ -6,12 +6,12 @@ import {
 import { teamService } from "@/entities/team";
 import type { Subcommand } from "@/shared/model";
 import { GuildOnlyError } from "@/shared/model";
-import { buildGuildConfigEmbed } from "./ui/guild-config.ts";
+import { buildGuildConfigEmbed } from "../ui/guild-config.ts";
 
-export const viewConfigSubcommand: Subcommand = {
-	data: new SlashCommandSubcommandBuilder()
+export class AdminViewSubcommand implements Subcommand {
+	readonly data = new SlashCommandSubcommandBuilder()
 		.setName("server") // Discord.js uses "guild" but users would expect "server"
-		.setDescription("Displays the configuration for the server."),
+		.setDescription("Displays the configuration for the server.");
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!interaction.guildId) {
@@ -30,5 +30,5 @@ export const viewConfigSubcommand: Subcommand = {
 			embeds: [embed],
 			flags: [MessageFlags.Ephemeral],
 		});
-	},
-};
+	}
+}

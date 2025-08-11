@@ -1,7 +1,7 @@
 import { type ChatInputCommandInteraction, Client, Events } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { getCommands } from "@/app/config/commands.ts";
+import { getCommands } from "@/app/commands/index.ts";
 import type { AppContext, Command } from "@/shared/model";
 import { AppError, logger } from "@/shared/model";
 import { DiscordClient } from "../discord-client.ts";

@@ -1,5 +1,5 @@
 import { type APIApplicationCommand, REST, Routes } from "discord.js";
-import { getCommands } from "@/app/config/commands";
+import { getCommands } from "@/app/commands";
 import { getEnvVar } from "@/shared/config/env";
 import { logger } from "@/shared/model/logging/logger-client";
 

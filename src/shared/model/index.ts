@@ -1,5 +1,4 @@
-export { Command } from "./commands/command.ts";
-export { Subcommand } from "./commands/subcommand.ts";
+export { Command, Subcommand } from "./commands/command.ts";
 export { prisma } from "./data/prisma-client.ts";
 export { parsePrismaError } from "./data/prisma-errors.ts";
 export { AppError } from "./errors/app-error.ts";

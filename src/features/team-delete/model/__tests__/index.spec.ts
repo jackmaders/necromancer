@@ -8,24 +8,24 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { TeamDoesNotExistError, teamService } from "@/entities/team/index.ts";
 import { mockGuild, mockTeam } from "@/fixtures/prisma";
-import { type AppContext, GuildOnlyError } from "@/shared/model";
-import { deleteTeamSubcommand } from "..";
+import { GuildOnlyError } from "@/shared/model";
+import { TeamDeleteSubcommand } from "..";
 
 vi.mock("@/entities/team/index.ts");
 vi.mock("@/shared/ui");
 
 describe("Delete Team Subcommand", () => {
 	describe("execute", () => {
+		let command = new TeamDeleteSubcommand();
 		let interaction: MockProxy<ChatInputCommandInteraction>;
-		let context: MockProxy<AppContext>;
 		let team: MockProxy<Team>;
 		let guild: MockProxy<Guild>;
 
 		beforeEach(() => {
+			command = new TeamDeleteSubcommand();
 			team = mock<Team>(mockTeam);
 			guild = mock<Guild>(mockGuild);
 			interaction = mock<ChatInputCommandInteraction>();
-			context = mock<AppContext>();
 			interaction.guildId = guild.id;
 			interaction.options.getString = vi.fn().mockReturnValue(team.name);
 		});
@@ -34,13 +34,13 @@ describe("Delete Team Subcommand", () => {
 			expect.assertions(1);
 			interaction.guildId = null;
 
-			await expect(() =>
-				deleteTeamSubcommand.execute(interaction, context),
-			).rejects.toThrow(GuildOnlyError);
+			await expect(() => command.execute(interaction)).rejects.toThrow(
+				GuildOnlyError,
+			);
 		});
 
 		it("should delete a team and reply with a success message", async () => {
-			await deleteTeamSubcommand.execute(interaction, context);
+			await command.execute(interaction);
 
 			expect(teamService.deleteTeam).toHaveBeenCalledWith(guild.id, team.name);
 			expect(interaction.reply).toHaveBeenCalledWith({
@@ -55,30 +55,30 @@ describe("Delete Team Subcommand", () => {
 				teamNotExistError,
 			);
 
-			await expect(() =>
-				deleteTeamSubcommand.execute(interaction, context),
-			).rejects.toThrow(TeamDoesNotExistError);
+			await expect(() => command.execute(interaction)).rejects.toThrow(
+				TeamDoesNotExistError,
+			);
 		});
 
 		it("should re-throw unexpected errors", async () => {
 			const unexpectedError = new Error("Something went wrong!");
 			vi.mocked(teamService.deleteTeam).mockRejectedValueOnce(unexpectedError);
 
-			await expect(
-				deleteTeamSubcommand.execute(interaction, context),
-			).rejects.toThrow(unexpectedError);
+			await expect(command.execute(interaction)).rejects.toThrow(
+				unexpectedError,
+			);
 		});
 	});
 
 	describe("autocomplete", () => {
+		let command = new TeamDeleteSubcommand();
 		let interaction: MockProxy<AutocompleteInteraction>;
-		let context: MockProxy<AppContext>;
 		let guild: MockProxy<Guild>;
 
 		beforeEach(() => {
+			command = new TeamDeleteSubcommand();
 			guild = mock<Guild>(mockGuild);
 			interaction = mock<AutocompleteInteraction>();
-			context = mock<AppContext>();
 			interaction.guildId = guild.guildId;
 			interaction.options.getFocused = vi.fn().mockReturnValue("team");
 		});
@@ -86,11 +86,11 @@ describe("Delete Team Subcommand", () => {
 		it("should throw GuildOnlyError if not in a guild", async () => {
 			interaction.guildId = null;
 
-			expect(deleteTeamSubcommand.autocomplete).toBeDefined();
+			expect(command.autocomplete).toBeDefined();
 
-			await expect(() =>
-				deleteTeamSubcommand.autocomplete?.(interaction, context),
-			).rejects.toThrow(GuildOnlyError);
+			await expect(() => command.autocomplete?.(interaction)).rejects.toThrow(
+				GuildOnlyError,
+			);
 		});
 
 		it("should return filtered team names", async () => {
@@ -103,7 +103,7 @@ describe("Delete Team Subcommand", () => {
 				teams as never,
 			);
 
-			await deleteTeamSubcommand.autocomplete?.(interaction, context);
+			await command.autocomplete?.(interaction);
 
 			expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
 			expect(interaction.respond).toHaveBeenCalledWith([
@@ -120,7 +120,7 @@ describe("Delete Team Subcommand", () => {
 				teams as never,
 			);
 
-			await deleteTeamSubcommand.autocomplete?.(interaction, context);
+			await command.autocomplete?.(interaction);
 
 			const respondedOptions = vi.mocked(interaction.respond).mock.calls[0][0];
 			expect(respondedOptions.length).toBe(25);

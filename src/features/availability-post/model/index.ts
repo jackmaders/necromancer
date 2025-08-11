@@ -4,12 +4,12 @@ import {
 } from "discord.js";
 import type { Subcommand } from "@/shared/model";
 import { GuildOnlyError } from "@/shared/model";
-import { buildAvailabilityPoll } from "./ui/availability-poll.ts";
+import { buildAvailabilityPoll } from "../ui/availability-poll.ts";
 
-export const postAvailabilitySubcommand: Subcommand = {
-	data: new SlashCommandSubcommandBuilder()
+export class AvailabilityPostSubcommand implements Subcommand {
+	readonly data = new SlashCommandSubcommandBuilder()
 		.setName("post")
-		.setDescription("Posts the weekly availability poll for a team."),
+		.setDescription("Posts the weekly availability poll for a team.");
 
 	async execute(interaction: ChatInputCommandInteraction) {
 		if (!interaction.guildId) {
@@ -19,5 +19,5 @@ export const postAvailabilitySubcommand: Subcommand = {
 		const poll = buildAvailabilityPoll();
 
 		await interaction.reply({ poll });
-	},
-};
+	}
+}

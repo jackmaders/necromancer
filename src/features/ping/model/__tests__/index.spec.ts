@@ -5,7 +5,7 @@ import type {
 } from "discord.js";
 import { beforeEach, describe, expect, it } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { PingCommand } from "../command.ts";
+import { PingCommand } from "../index.ts";
 
 describe("Ping Command", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;

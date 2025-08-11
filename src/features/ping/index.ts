@@ -1,1 +1,1 @@
-export { PingCommand } from "./model/command.ts";
+export { PingCommand } from "./model/index.ts";

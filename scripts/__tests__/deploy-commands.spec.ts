@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getCommands } from "@/app/config/commands.ts";
+import { getCommands } from "@/app/commands/index.ts";
 import { getEnvVar } from "@/shared/config/env.ts";
 import { logger } from "@/shared/model/index.ts";
 import { deployCommands } from "../deploy-commands.ts";
