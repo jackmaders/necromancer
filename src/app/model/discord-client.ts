@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import { type Command, logger } from "@/shared/lib/index.ts";
 import { type AppContext, AppError } from "@/shared/model";
-import { getCommands } from "../config/commands.ts";
+import { getCommands } from "../config/index.ts";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();

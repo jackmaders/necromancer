@@ -7,6 +7,7 @@ const teamCommand = new ParentCommand(
 	"Manage teams and their settings.",
 	[new TeamCreateSubcommand(), new TeamDeleteSubcommand()],
 );
+
 export function getCommands() {
 	return [teamCommand];
 }
