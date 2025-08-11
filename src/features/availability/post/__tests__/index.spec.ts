@@ -5,7 +5,7 @@ import { type MockProxy, mock } from "vitest-mock-extended";
 import { mockPollData } from "@/fixtures/discord.ts";
 import { mockGuild } from "@/fixtures/prisma.ts";
 import { type AppContext, GuildOnlyError } from "@/shared/model";
-import { postAvailabilitySubcommand } from "..";
+import { postAvailabilitySubcommand } from "../index.ts";
 import { buildAvailabilityPoll } from "../ui/availability-poll.ts";
 
 vi.mock("@/entities/team");

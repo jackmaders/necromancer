@@ -5,24 +5,24 @@ import type {
 } from "discord.js";
 import { beforeEach, describe, expect, it } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import type { AppContext } from "@/shared/model/types.js";
-import { pingCommand } from "../../index.ts";
+import { PingCommand } from "../command.ts";
 
 describe("Ping Command", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
-	let context: MockProxy<AppContext>;
 
 	beforeEach(() => {
 		interaction = mock<ChatInputCommandInteraction>();
-		context = mock<AppContext>();
 	});
 
 	it("should export the correct properties", () => {
-		expect(pingCommand.data).toBeDefined();
-		expect(pingCommand.execute).toBeDefined();
+		const command = new PingCommand();
+
+		expect(command.data).toBeDefined();
+		expect(command.execute).toBeDefined();
 	});
 
 	it("should handle an interaction", async () => {
+		const command = new PingCommand();
 		const replyInteraction = mock<Interaction>();
 		// biome-ignore lint/suspicious/noExplicitAny: overriding readonly property
 		(interaction.createdTimestamp as any) = Date.now();
@@ -35,7 +35,7 @@ describe("Ping Command", () => {
 			interaction: replyInteraction,
 		}));
 
-		await pingCommand.execute(interaction, context);
+		await command.execute(interaction);
 
 		expect(interaction.reply).toHaveBeenCalled();
 		expect(interaction.reply).toHaveBeenCalledWith({

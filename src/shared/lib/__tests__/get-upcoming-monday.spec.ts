@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getUpcomingMonday } from "../get-upcoming-monday.ts";
+import { getUpcomingMonday } from "../utils/get-upcoming-monday.ts";
 
 describe("getUpcomingMonday", () => {
 	beforeEach(() => {

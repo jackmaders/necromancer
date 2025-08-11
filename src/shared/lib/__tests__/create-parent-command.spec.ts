@@ -9,8 +9,8 @@ import type { Guild } from "prisma/generated/prisma-client-js";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { logger } from "@/shared/model/logging/logger-client.ts";
-import type { AppContext, Subcommand } from "@/shared/model/types.js";
-import { createParentCommand } from "../create-parent-command.ts";
+import type { AppContext, Subcommand } from "@/shared/model/types/index.js";
+import { createParentCommand } from "../utils/create-parent-command.ts";
 
 vi.mock("@/shared/model/logging/logger-client.ts");
 

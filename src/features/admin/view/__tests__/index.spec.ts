@@ -3,7 +3,7 @@ import type { Guild, Team } from "prisma/generated/prisma-client-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { teamService } from "@/entities/team/index.ts";
-import { viewConfigSubcommand } from "@/features/view-config/index.ts";
+import { viewConfigSubcommand } from "@/features/admin/view/index.ts";
 import { mockTeam } from "@/fixtures/prisma.ts";
 import { type AppContext, GuildOnlyError } from "@/shared/model/index.ts";
 import { buildGuildConfigEmbed } from "../ui/guild-config.ts";
