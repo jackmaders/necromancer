@@ -1,9 +1,10 @@
 import { type ChatInputCommandInteraction, Client, Events } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { commands } from "@/app/commands/index.ts";
+import { getCommands } from "@/app/config/commands.ts";
+import { logger } from "@/shared/lib/index.ts";
 import type { AppContext } from "@/shared/model";
-import { AppError, logger } from "@/shared/model";
+import { AppError } from "@/shared/model";
 import { DiscordClient } from "../discord-client.ts";
 
 vi.mock("discord.js");
@@ -67,7 +68,7 @@ describe("DiscordClient", () => {
 
 		const map = new Map();
 		const context = { commands: map };
-		for (const command of commands) {
+		for (const command of getCommands()) {
 			context.commands.set(command.data.name, command);
 		}
 
@@ -81,8 +82,8 @@ describe("DiscordClient", () => {
 
 		await handler(interaction);
 
-		expect(commands[0].execute).toHaveBeenCalled();
-		expect(commands[0].execute).toHaveBeenCalledWith(interaction, context);
+		expect(getCommands()[0].execute).toHaveBeenCalled();
+		expect(getCommands()[0].execute).toHaveBeenCalledWith(interaction, context);
 	});
 
 	it("should handle an autocomplete command interaction", async () => {
@@ -90,7 +91,7 @@ describe("DiscordClient", () => {
 
 		const map = new Map();
 		const context = { commands: map };
-		for (const command of commands) {
+		for (const command of getCommands()) {
 			context.commands.set(command.data.name, command);
 		}
 
@@ -107,8 +108,11 @@ describe("DiscordClient", () => {
 
 		await handler(interaction);
 
-		expect(commands[0].autocomplete).toHaveBeenCalled();
-		expect(commands[0].autocomplete).toHaveBeenCalledWith(interaction, context);
+		expect(getCommands()[0].autocomplete).toHaveBeenCalled();
+		expect(getCommands()[0].autocomplete).toHaveBeenCalledWith(
+			interaction,
+			context,
+		);
 	});
 
 	it("should handle an unknown interaction type", async () => {
@@ -128,7 +132,7 @@ describe("DiscordClient", () => {
 		const response = await handler(interaction, context);
 
 		expect(response).toBeUndefined();
-		expect(commands[0].execute).not.toHaveBeenCalled();
+		expect(getCommands()[0].execute).not.toHaveBeenCalled();
 	});
 
 	it("should handle an invalid command name", async () => {
@@ -147,7 +151,7 @@ describe("DiscordClient", () => {
 		const response = await handler(interaction, context);
 
 		expect(response).toBeUndefined();
-		expect(commands[0].execute).not.toHaveBeenCalled();
+		expect(getCommands()[0].execute).not.toHaveBeenCalled();
 	});
 
 	it("should handle an command throwing an error", async () => {
@@ -159,7 +163,7 @@ describe("DiscordClient", () => {
 			handler = vi.fn(listener);
 			return client;
 		});
-		vi.mocked(commands[0].execute).mockRejectedValue(error);
+		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
 		const response = await handler(interaction, context);
@@ -185,7 +189,7 @@ describe("DiscordClient", () => {
 			handler = vi.fn(listener);
 			return client;
 		});
-		vi.mocked(commands[0].execute).mockRejectedValue(error);
+		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
 		const response = await handler(interaction, context);
@@ -211,7 +215,7 @@ describe("DiscordClient", () => {
 			handler = vi.fn(listener);
 			return client;
 		});
-		vi.mocked(commands[0].execute).mockRejectedValue(error);
+		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
 		const response = await handler(interaction, context);
@@ -239,7 +243,7 @@ describe("DiscordClient", () => {
 			handler = vi.fn(listener);
 			return client;
 		});
-		vi.mocked(commands[0].execute).mockRejectedValue(error);
+		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
 		const response = await handler(interaction, context);
@@ -266,7 +270,7 @@ describe("DiscordClient", () => {
 			handler = vi.fn(listener);
 			return client;
 		});
-		vi.mocked(commands[0].execute).mockRejectedValue(error);
+		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
 		const response = await handler(interaction, context);
