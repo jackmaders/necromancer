@@ -5,7 +5,7 @@ import {
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { teamService } from "@/entities/team/index.ts";
-import type { Subcommand } from "@/shared/model";
+import type { Subcommand } from "@/shared/lib";
 import { GuildOnlyError } from "@/shared/model";
 import { buildReplyOptions } from "../ui/message-payload.ts";
 

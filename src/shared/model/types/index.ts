@@ -1,4 +1,4 @@
-import type { Command } from "../commands/command.ts";
+import type { Command } from "../../lib/classes/command.ts";
 
 export interface AppContext {
 	commands: Map<string, Command>;

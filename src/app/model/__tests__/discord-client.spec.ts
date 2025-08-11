@@ -1,8 +1,8 @@
 import { type ChatInputCommandInteraction, Client, Events } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { getCommands } from "@/app/commands/index.ts";
-import type { AppContext, Command } from "@/shared/model";
+import { commands } from "@/app/commands/index.ts";
+import type { AppContext } from "@/shared/model";
 import { AppError, logger } from "@/shared/model";
 import { DiscordClient } from "../discord-client.ts";
 
@@ -13,10 +13,8 @@ vi.mock("@/shared/model/logging/logger-client.ts");
 describe("DiscordClient", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
 	let context: MockProxy<AppContext>;
-	let commands: Command[];
 
 	beforeEach(() => {
-		commands = getCommands();
 		interaction = mock<ChatInputCommandInteraction>();
 		context = mock<AppContext>();
 		interaction.commandName = "test";

@@ -1,7 +1,7 @@
 import { type APIApplicationCommand, REST, Routes } from "discord.js";
 import { getCommands } from "@/app/commands";
 import { getEnvVar } from "@/shared/config/env";
-import { logger } from "@/shared/model/logging/logger-client";
+import { logger } from "@/shared/lib/logging/logger-client";
 
 /**
  * This script registers all application slash commands with Discord.

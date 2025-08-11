@@ -4,7 +4,7 @@ import {
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
 import { teamService } from "@/entities/team";
-import type { Subcommand } from "@/shared/model";
+import type { Subcommand } from "@/shared/lib";
 import { GuildOnlyError } from "@/shared/model";
 import { buildGuildConfigEmbed } from "../ui/guild-config.ts";
 

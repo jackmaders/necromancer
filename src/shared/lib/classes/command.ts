@@ -5,8 +5,8 @@ import {
 	type SlashCommandSubcommandBuilder,
 	type SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
+import type { AppContext } from "../../model/types/index.ts";
 import { logger } from "../logging/logger-client.ts";
-import type { AppContext } from "../types/index.ts";
 
 /**
  * The abstract base class that all top-level command classes must extend.

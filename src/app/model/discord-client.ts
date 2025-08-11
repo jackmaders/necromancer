@@ -8,7 +8,7 @@ import {
 } from "discord.js";
 import type { Command } from "@/shared/model";
 import { type AppContext, AppError, logger } from "@/shared/model";
-import { getCommands } from "../commands/index.ts";
+import { commands } from "../commands/index.ts";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
@@ -42,8 +42,6 @@ export class DiscordClient {
 	}
 
 	private loadCommands() {
-		const commands = getCommands();
-
 		this.commands.clear();
 		for (const command of commands) {
 			this.commands.set(command.data.name, command);

@@ -3,7 +3,8 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { AppContext, Command } from "@/shared/model";
+import type { Command } from "@/shared/lib";
+import type { AppContext } from "@/shared/model";
 import { buildHelpEmbed } from "../ui/message-payload.ts";
 
 export class HelpCommand implements Command {

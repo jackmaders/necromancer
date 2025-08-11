@@ -2,7 +2,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandSubcommandBuilder,
 } from "discord.js";
-import type { Subcommand } from "@/shared/model";
+import type { Subcommand } from "@/shared/lib";
 import { GuildOnlyError } from "@/shared/model";
 import { buildAvailabilityPoll } from "../ui/availability-poll.ts";
 

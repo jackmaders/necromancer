@@ -2,7 +2,7 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import { Command } from "@/shared/model";
+import { Command } from "@/shared/lib";
 
 export class PingCommand extends Command {
 	readonly data = new SlashCommandBuilder()
