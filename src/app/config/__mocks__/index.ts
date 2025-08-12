@@ -10,6 +10,7 @@ const slashCommand = {
 	data: mock<SlashCommandBuilder>({
 		description: "A test command",
 		name: "test",
+		toJSON: vi.fn(),
 	}),
 	execute: vi.fn(),
 };
@@ -19,6 +20,7 @@ const subcommand = {
 	data: mock<SlashCommandSubcommandBuilder>({
 		description: "A pong command",
 		name: "pong",
+		toJSON: vi.fn(),
 	}),
 	execute: vi.fn(),
 };
@@ -35,6 +37,7 @@ const parentCommand = {
 				type: 1,
 			},
 		],
+		toJSON: vi.fn(),
 	}),
 	execute: vi.fn(() => subcommand.execute()),
 };

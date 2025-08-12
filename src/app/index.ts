@@ -1,5 +1,5 @@
 import { getEnvVar } from "@/shared/config";
-import { logger } from "@/shared/model";
+import { logger } from "@/shared/lib/index.ts";
 import { discord } from "./model/discord-client.ts";
 
 /**
