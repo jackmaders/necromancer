@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import type { Command } from "@/shared/model";
+import type { Command } from "@/shared/lib";
 
 export function buildHelpEmbed(commands: Command[]) {
 	const embed = new EmbedBuilder()

@@ -22,17 +22,17 @@
 		"vitest": "^3.2.4",
 		"vitest-mock-extended": "^3.1.0"
 	},
-	"module": "src/index.ts",
+	"module": "src/app/index.ts",
 	"name": "necromancer",
 	"scripts": {
-		"build": "bun build src/index.ts --outdir ./dist --target bun",
+		"build": "bun build src/app/index.ts --outdir ./dist --target bun",
 		"check": "biome check --write",
 		"check:ci": "biome ci .",
 		"check:fsd": "steiger ./src",
 		"check:tsc": "tsc --noEmit --skipLibCheck",
 		"commands:deploy": "bun scripts/deploy-commands.ts",
 		"prisma:generate": "prisma generate",
-		"start": "bun --watch src/index.ts",
+		"start": "bun --watch src/app/index.ts",
 		"start:prod": "bunx prisma migrate deploy && bun dist/index.js",
 		"test": "vitest run",
 		"test:coverage": "vitest run --coverage",
@@ -40,5 +40,5 @@
 		"version:increment": "bun scripts/increment-version.ts"
 	},
 	"type": "module",
-	"version": "0.11.1"
+	"version": "0.11.2"
 }

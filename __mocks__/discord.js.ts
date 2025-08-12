@@ -24,7 +24,7 @@ const slashCommandStringOption = {
 };
 export const SlashCommandStringOption = vi.fn(() => slashCommandStringOption);
 
-const slashCommandBuilderMock = {
+const slashCommandBuilder = {
 	addSubcommand: vi.fn(function (this: unknown) {
 		return this;
 	}),
@@ -34,9 +34,9 @@ const slashCommandBuilderMock = {
 	setName: vi.fn(function (this: unknown) {
 		return this;
 	}),
-	toJSON: vi.fn(),
+	toJSON: vi.fn(() => ({ cmdData: { options: [] } })),
 };
-export const SlashCommandBuilder = vi.fn(() => slashCommandBuilderMock);
+export const SlashCommandBuilder = vi.fn(() => slashCommandBuilder);
 
 export const SlashCommandSubcommandBuilder = vi.fn(() => ({
 	addStringOption: vi.fn(function (this: unknown) {
@@ -138,3 +138,20 @@ export const REST = vi.fn(() => rest);
 export const Routes = {
 	applicationCommands: vi.fn(() => "/applications/{application.id}/commands"),
 };
+
+const embedBuilder = {
+	addFields: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setColor: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setDescription: vi.fn(function (this: unknown) {
+		return this;
+	}),
+	setTitle: vi.fn(function (this: unknown) {
+		return this;
+	}),
+};
+
+export const EmbedBuilder = vi.fn(() => embedBuilder);
