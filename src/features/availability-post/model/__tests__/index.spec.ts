@@ -2,8 +2,7 @@ import type { ChatInputCommandInteraction, PollData } from "discord.js";
 import type { Guild } from "prisma/generated/prisma-client-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { mockPollData } from "@/fixtures/discord.ts";
-import { mockGuild } from "@/fixtures/prisma.ts";
+
 import { GuildOnlyError } from "@/shared/model";
 import { buildAvailabilityPoll } from "../../ui/availability-poll.ts";
 import { AvailabilityPostSubcommand } from "..";
@@ -20,8 +19,8 @@ describe("Post Availability Poll Subcommand", () => {
 
 	beforeEach(() => {
 		command = new AvailabilityPostSubcommand();
-		guild = mock<Guild>(mockGuild);
-		poll = mock<PollData>(mockPollData);
+		guild = mock<Guild>();
+		poll = mock<PollData>();
 		interaction = mock<ChatInputCommandInteraction>();
 		interaction.guildId = guild.guildId;
 	});

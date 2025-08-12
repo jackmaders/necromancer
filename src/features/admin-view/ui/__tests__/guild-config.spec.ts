@@ -2,7 +2,6 @@ import type { ChatInputCommandInteraction } from "discord.js";
 import type { Team } from "prisma/generated/prisma-client-js";
 import { beforeEach, describe, expect, it } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { mockTeam } from "@/fixtures/prisma.ts";
 import { buildGuildConfigEmbed } from "../guild-config.ts";
 
 describe("Guild Config Embed", () => {
@@ -10,7 +9,7 @@ describe("Guild Config Embed", () => {
 	let team: MockProxy<Team>;
 
 	beforeEach(() => {
-		team = mock<Team>(mockTeam);
+		team = mock<Team>();
 		interaction = mock<ChatInputCommandInteraction>();
 	});
 

@@ -3,7 +3,7 @@ import type { Guild, Team } from "prisma/generated/prisma-client-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { TeamAlreadyExistsError, teamService } from "@/entities/team/index.ts";
-import { mockGuild, mockTeam } from "@/fixtures/prisma";
+
 import { GuildOnlyError } from "@/shared/model";
 import { TeamCreateSubcommand } from "..";
 
@@ -19,8 +19,8 @@ describe("Create Team Subcommand", () => {
 
 	beforeEach(() => {
 		command = new TeamCreateSubcommand();
-		team = mock<Team>(mockTeam);
-		guild = mock<Guild>(mockGuild);
+		team = mock<Team>();
+		guild = mock<Guild>();
 		interaction = mock<ChatInputCommandInteraction>();
 
 		interaction.guildId = guild.id;

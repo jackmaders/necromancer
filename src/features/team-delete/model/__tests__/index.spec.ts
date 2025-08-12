@@ -7,7 +7,7 @@ import type { Guild, Team } from "prisma/generated/prisma-client-js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
 import { TeamDoesNotExistError, teamService } from "@/entities/team/index.ts";
-import { mockGuild, mockTeam } from "@/fixtures/prisma";
+
 import { GuildOnlyError } from "@/shared/model";
 import { TeamDeleteSubcommand } from "..";
 
@@ -23,8 +23,8 @@ describe("Delete Team Subcommand", () => {
 
 		beforeEach(() => {
 			command = new TeamDeleteSubcommand();
-			team = mock<Team>(mockTeam);
-			guild = mock<Guild>(mockGuild);
+			team = mock<Team>();
+			guild = mock<Guild>();
 			interaction = mock<ChatInputCommandInteraction>();
 			interaction.guildId = guild.id;
 			interaction.options.getString = vi.fn().mockReturnValue(team.name);
@@ -77,7 +77,7 @@ describe("Delete Team Subcommand", () => {
 
 		beforeEach(() => {
 			command = new TeamDeleteSubcommand();
-			guild = mock<Guild>(mockGuild);
+			guild = mock<Guild>();
 			interaction = mock<AutocompleteInteraction>();
 			interaction.guildId = guild.guildId;
 			interaction.options.getFocused = vi.fn().mockReturnValue("team");
