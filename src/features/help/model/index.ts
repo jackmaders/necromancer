@@ -3,11 +3,11 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 } from "discord.js";
-import type { Command } from "@/shared/lib";
+import type { StandaloneCommand } from "@/shared/lib";
 import type { AppContext } from "@/shared/model";
 import { buildHelpEmbed } from "../ui/message-payload.ts";
 
-export class HelpCommand implements Command {
+export class HelpCommand implements StandaloneCommand {
 	readonly data = new SlashCommandBuilder()
 		.setName("help")
 		.setDescription("Displays a list of all available commands.");

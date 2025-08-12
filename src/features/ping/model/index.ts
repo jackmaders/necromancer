@@ -2,9 +2,9 @@ import {
 	type ChatInputCommandInteraction,
 	SlashCommandBuilder,
 } from "discord.js";
-import { Command } from "@/shared/lib";
+import { StandaloneCommand } from "@/shared/lib";
 
-export class PingCommand extends Command {
+export class PingCommand extends StandaloneCommand {
 	readonly data = new SlashCommandBuilder()
 		.setName("ping")
 		.setDescription("Replies with Pong!");
