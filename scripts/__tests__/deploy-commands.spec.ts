@@ -1,11 +1,12 @@
 import { REST, Routes } from "discord.js";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getCommands } from "@/app/config/commands.ts";
+import { getCommands } from "@/app/config";
 import { getEnvVar } from "@/shared/config/env.ts";
-import { logger } from "@/shared/model/index.ts";
+import { logger } from "@/shared/lib";
 import { deployCommands } from "../deploy-commands.ts";
 
-vi.mock("@/shared/model/logging/logger-client.ts");
+vi.mock("@/shared/lib");
+vi.mock("@/app/config");
 vi.mock("discord.js");
 
 describe("Command Deployment Script", () => {

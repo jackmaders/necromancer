@@ -1,0 +1,64 @@
+import type { ChatInputCommandInteraction } from "discord.js";
+import type { Guild, Team } from "prisma/generated/prisma-client-js";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { type MockProxy, mock } from "vitest-mock-extended";
+import { teamService } from "@/entities/team/index.ts";
+import { GuildOnlyError } from "@/shared/model/index.ts";
+import { buildGuildConfigEmbed } from "../../ui/guild-config.ts";
+import { AdminViewSubcommand } from "../index.ts";
+
+vi.mock("@/entities/team/index.ts");
+vi.mock("../../ui/guild-config.ts");
+vi.mock("@/shared/ui");
+
+describe("View Config Subcommand", () => {
+	let command = new AdminViewSubcommand();
+	let interaction: MockProxy<ChatInputCommandInteraction>;
+	let team: MockProxy<Team>;
+	let guild: MockProxy<Guild>;
+
+	beforeEach(() => {
+		command = new AdminViewSubcommand();
+		team = mock<Team>();
+		guild = mock<Guild>();
+		interaction = mock<ChatInputCommandInteraction>();
+		interaction.guildId = guild.guildId;
+	});
+
+	it("should warn the user if the command is not used in a guild", async () => {
+		interaction.guildId = null;
+
+		await expect(() => command.execute(interaction)).rejects.toThrow(
+			GuildOnlyError,
+		);
+	});
+
+	it("should create a team and reply with a success message", async () => {
+		vi.mocked(teamService.getTeamsByGuildId).mockResolvedValue([team]);
+
+		await command.execute(interaction);
+
+		expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
+		expect(buildGuildConfigEmbed).toHaveBeenCalledWith(interaction, {
+			teams: [team],
+		});
+	});
+
+	it("should handle cases where no teams exists", async () => {
+		vi.mocked(teamService.getTeamsByGuildId).mockResolvedValue([]);
+
+		await command.execute(interaction);
+
+		expect(teamService.getTeamsByGuildId).toHaveBeenCalledWith(guild.guildId);
+		expect(buildGuildConfigEmbed).toHaveBeenCalledWith(interaction, {
+			teams: [],
+		});
+	});
+
+	it("should re-throw unexpected errors", async () => {
+		const error = new Error("Unexpected error");
+		vi.mocked(teamService.getTeamsByGuildId).mockRejectedValue(error);
+
+		await expect(command.execute(interaction)).rejects.toThrow(error);
+	});
+});

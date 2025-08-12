@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { logger } from "@/shared/model/index.ts";
+import { logger } from "@/shared/lib";
 import { main } from "../increment-version.ts";
 import { compareVersions } from "../utils/compare-versions.ts";
 import { getVersionTypeFromCommits } from "../utils/get-version-type.ts";
 
 vi.mock("bun");
-vi.mock("@/shared/model/logging/logger-client.ts");
+vi.mock("@/shared/lib");
 vi.mock("../utils/get-version-type.ts");
 vi.mock("../utils/compare-versions.ts");
 
@@ -87,7 +87,7 @@ describe("main", () => {
 		vi.resetModules();
 
 		await import("../increment-version.ts");
-		const { logger } = await import("@/shared/model");
+		const { logger } = await import("@/shared/lib");
 
 		expect(logger.info).toHaveBeenCalledWith(
 			"🚀 Bumping version from 1.0.0 to 1.1.0...",

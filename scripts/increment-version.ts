@@ -1,5 +1,5 @@
 import { $, file } from "bun";
-import { logger } from "@/shared/model";
+import { logger } from "@/shared/lib/index.ts";
 import { compareVersions } from "./utils/compare-versions.ts";
 import { getVersionTypeFromCommits } from "./utils/get-version-type.ts";
 import { incrementVersion } from "./utils/increment-version.ts";
