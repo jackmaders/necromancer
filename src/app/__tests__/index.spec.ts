@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { logger } from "@/shared/lib";
-import { start } from "..";
+import { start } from "../index.ts";
 import { discord } from "../model/discord-client.ts";
 
 vi.mock("@/shared/lib");

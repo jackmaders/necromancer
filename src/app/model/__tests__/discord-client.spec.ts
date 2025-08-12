@@ -1,14 +1,15 @@
 import { type ChatInputCommandInteraction, Client, Events } from "discord.js";
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { type MockProxy, mock } from "vitest-mock-extended";
-import { getCommands } from "@/app/config/index.ts";
+import { getCommands } from "@/app/config";
 import { logger } from "@/shared/lib";
 import type { AppContext } from "@/shared/model";
 import { AppError } from "@/shared/model";
 import { DiscordClient } from "../discord-client.ts";
 
 vi.mock("discord.js");
-vi.mock("@/app/config/index.ts");
+vi.mock("@/app/config");
 vi.mock("@/shared/lib");
 
 describe("DiscordClient", () => {
