@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { logger } from "@/shared/lib";
-import { start } from "../index.ts";
-import { discord } from "../model/discord-client.ts";
+import { start } from "..";
+import { discord } from "../discord/discord-client.ts";
 
 vi.mock("@/shared/lib");
-vi.mock("../model/discord-client.ts");
+vi.mock("../discord/discord-client.ts");
 
 describe("Discord Bot Entrypoint", () => {
 	beforeEach(() => {
