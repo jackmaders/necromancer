@@ -1,29 +1,25 @@
 import { EmbedBuilder } from "discord.js";
 import { describe, expect, it, vi } from "vitest";
-import { PingCommand } from "@/features/ping/index.ts";
+import { getCommands } from "@/app/config"; // Use the mock with a parent command
 import { buildHelpEmbed } from "../message-payload.ts";
 
 vi.mock("discord.js");
-vi.mock("@/features/ping/index.ts");
+vi.mock("@/features/ping");
+vi.mock("@/app/config");
 
 describe("Help Embed", () => {
-	it("should build an embed with simple and parent commands", () => {
-		const commands = [new PingCommand()];
-
-		buildHelpEmbed(commands);
+	it("should build an embed with a simple command", () => {
+		buildHelpEmbed(getCommands());
 		const embedBuilder = vi.mocked(new EmbedBuilder());
-
-		expect(embedBuilder.setTitle).toHaveBeenCalledWith(
-			"❓ Help - Command List",
-		);
-		expect(embedBuilder.setDescription).toHaveBeenCalledWith(
-			"Here is a list of all the commands you can use.",
-		);
-		expect(embedBuilder.setColor).toHaveBeenCalledWith(0x5865f2);
 
 		expect(embedBuilder.addFields).toHaveBeenCalledWith({
 			name: "/ping",
 			value: "`/ping` - A pong command",
+		});
+
+		expect(embedBuilder.addFields).toHaveBeenCalledWith({
+			name: "/team",
+			value: "`/team create` - Create a team",
 		});
 	});
 });

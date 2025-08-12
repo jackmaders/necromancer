@@ -19,7 +19,7 @@ describe("DiscordClient", () => {
 	beforeEach(() => {
 		interaction = mock<ChatInputCommandInteraction>();
 		context = mock<AppContext>();
-		interaction.commandName = "test";
+		interaction.commandName = "ping";
 		interaction.isChatInputCommand.mockReturnValue(true);
 		interaction.isRepliable.mockReturnValue(true);
 	});

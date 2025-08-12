@@ -1,47 +1,43 @@
-import type {
-	SlashCommandBuilder,
-	SlashCommandSubcommandBuilder,
-} from "discord.js";
 import { vi } from "vitest";
-import { mock } from "vitest-mock-extended";
 
-const slashCommand = {
+const pingCommandData = {
+	description: "A pong command",
+	name: "ping",
+	options: [],
+};
+export const PingCommand = vi.fn(() => ({
 	autocomplete: vi.fn(),
-	data: mock<SlashCommandBuilder>({
-		description: "A test command",
-		name: "test",
-		toJSON: vi.fn(),
-	}),
+	data: {
+		...pingCommandData,
+		toJSON: vi.fn(() => ({ ...pingCommandData, type: 1 })),
+	},
 	execute: vi.fn(),
-};
+}));
 
-const subcommand = {
+const teamCreateCommandData = {
+	description: "Create a team",
+	name: "create",
+	type: 1,
+};
+const teamCommandData = {
+	description: "Manage teams",
+	name: "team",
+	options: [teamCreateCommandData],
+};
+export const TeamCommand = vi.fn(() => ({
 	autocomplete: vi.fn(),
-	data: mock<SlashCommandSubcommandBuilder>({
-		description: "A pong command",
-		name: "pong",
-		toJSON: vi.fn(),
-	}),
+	data: {
+		...teamCommandData,
+		toJSON: vi.fn(() => ({
+			...teamCommandData,
+		})),
+	},
 	execute: vi.fn(),
-};
+	subcommands: new Map(),
+}));
 
-const parentCommand = {
-	autocomplete: vi.fn(() => subcommand.autocomplete()),
-	data: mock<SlashCommandSubcommandBuilder>({
-		description: "A ping command",
-		name: "ping",
-		options: [
-			{
-				description: subcommand.data.description,
-				name: subcommand.data.name,
-				type: 1,
-			},
-		],
-		toJSON: vi.fn(),
-	}),
-	execute: vi.fn(() => subcommand.execute()),
-};
+const commands = [new PingCommand(), new TeamCommand()];
 
 export const getCommands = vi.fn(() => {
-	return [slashCommand, parentCommand];
+	return commands;
 });
