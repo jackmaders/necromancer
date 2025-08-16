@@ -24,12 +24,16 @@ const availabilityCommand = new ParentCommand(
 	[new AvailabilityPostSubcommand()],
 );
 
+const helpCommand = new HelpCommand();
+
+const pingCommand = new PingCommand();
+
 export function getCommands(): Command[] {
 	return [
 		teamCommand,
 		adminCommand,
 		availabilityCommand,
-		new HelpCommand(),
-		new PingCommand(),
+		helpCommand,
+		pingCommand,
 	];
 }
