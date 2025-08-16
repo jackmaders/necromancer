@@ -15,13 +15,18 @@ vi.mock("@/shared/lib");
 describe("DiscordClient", () => {
 	let interaction: MockProxy<ChatInputCommandInteraction>;
 	let context: MockProxy<AppContext>;
+	let handlers = new Map<
+		string | symbol,
+		(interaction: unknown) => Promise<void>
+	>();
 
 	beforeEach(() => {
 		interaction = mock<ChatInputCommandInteraction>();
-		context = mock<AppContext>();
 		interaction.commandName = "ping";
 		interaction.isChatInputCommand.mockReturnValue(true);
 		interaction.isRepliable.mockReturnValue(true);
+		context = { commands: new Map() };
+		handlers = new Map();
 	});
 
 	const client = new Client({
@@ -67,21 +72,18 @@ describe("DiscordClient", () => {
 	it("should handle a slash command interaction", async () => {
 		expect.assertions(2);
 
-		const map = new Map();
-		const context = { commands: map };
 		for (const command of getCommands()) {
 			context.commands.set(command.data.name, command);
 		}
 
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 
 		await new DiscordClient().init("token");
 
-		await handler(interaction);
+		await handlers.get(Events.InteractionCreate)?.(interaction);
 
 		expect(getCommands()[0].execute).toHaveBeenCalled();
 		expect(getCommands()[0].execute).toHaveBeenCalledWith(interaction, context);
@@ -90,8 +92,6 @@ describe("DiscordClient", () => {
 	it("should handle an autocomplete command interaction", async () => {
 		expect.assertions(2);
 
-		const map = new Map();
-		const context = { commands: map };
 		for (const command of getCommands()) {
 			context.commands.set(command.data.name, command);
 		}
@@ -99,15 +99,13 @@ describe("DiscordClient", () => {
 		interaction.isAutocomplete.mockReturnValue(true);
 		interaction.isChatInputCommand.mockReturnValue(false);
 
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
-
 		await new DiscordClient().init("token");
 
-		await handler(interaction);
+		await handlers.get(Events.InteractionCreate)?.(interaction);
 
 		expect(getCommands()[0].autocomplete).toHaveBeenCalled();
 		expect(getCommands()[0].autocomplete).toHaveBeenCalledWith(
@@ -122,15 +120,16 @@ describe("DiscordClient", () => {
 		interaction.isAutocomplete.mockReturnValue(false);
 		interaction.isChatInputCommand.mockReturnValue(false);
 
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 
 		await new DiscordClient().init("token");
 
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(getCommands()[0].execute).not.toHaveBeenCalled();
@@ -141,15 +140,16 @@ describe("DiscordClient", () => {
 
 		interaction.commandName = "invalid";
 
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 
 		await new DiscordClient().init("token");
 
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(getCommands()[0].execute).not.toHaveBeenCalled();
@@ -159,15 +159,16 @@ describe("DiscordClient", () => {
 		expect.assertions(5);
 
 		const error = new Error("Unexpected error");
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(1);
@@ -185,15 +186,16 @@ describe("DiscordClient", () => {
 		expect.assertions(5);
 
 		const error = "string";
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(1);
@@ -211,15 +213,16 @@ describe("DiscordClient", () => {
 		expect.assertions(5);
 
 		const error = new AppError("Unexpected error");
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(1);
@@ -239,15 +242,16 @@ describe("DiscordClient", () => {
 		interaction.isRepliable.mockReturnValue(false);
 
 		const error = new Error("Unexpected error");
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(2);
@@ -266,15 +270,16 @@ describe("DiscordClient", () => {
 		interaction.deferred = false;
 
 		const error = new Error("Unexpected error");
-		let handler = vi.fn();
 		vi.mocked(client.on).mockImplementation((_event, listener) => {
-			handler = vi.fn(listener);
+			handlers.set(_event, async (i) => listener(i));
 			return client;
 		});
 		vi.mocked(getCommands()[0].execute).mockRejectedValue(error);
 
 		await new DiscordClient().init("token");
-		const response = await handler(interaction, context);
+		const response = await handlers.get(Events.InteractionCreate)?.(
+			interaction,
+		);
 
 		expect(response).toBeUndefined();
 		expect(logger.error).toHaveBeenCalledTimes(1);
