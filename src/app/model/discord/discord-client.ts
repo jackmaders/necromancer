@@ -7,13 +7,13 @@ import {
 	MessageFlags,
 } from "discord.js";
 import { getCommands } from "@/app/config";
-import { type Command, logger } from "@/shared/lib/index.ts";
+import { type Command, eventBus, logger } from "@/shared/lib/index.ts";
 import { type AppContext, AppError } from "@/shared/model";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
 	readonly client = new Client({
-		intents: [GatewayIntentBits.Guilds],
+		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessagePolls],
 	});
 
 	constructor() {
@@ -39,6 +39,10 @@ export class DiscordClient {
 		this.client.on(Events.InteractionCreate, (interaction) =>
 			this.handleInteraction(interaction),
 		);
+
+		this.client.on(Events.MessagePollVoteAdd, (pollAnswer, userId) => {
+			eventBus.emit(Events.MessagePollVoteAdd, [pollAnswer, userId]);
+		});
 	}
 
 	private loadCommands() {
