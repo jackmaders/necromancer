@@ -13,7 +13,7 @@ import { type AppContext, AppError } from "@/shared/model";
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
 	readonly client = new Client({
-		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessagePolls],
+		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessagePolls],
 	});
 
 	constructor() {
@@ -62,14 +62,10 @@ export class DiscordClient {
 
 			if (interaction.isChatInputCommand()) {
 				const command = this.commands.get(interaction.commandName);
-				if (command) {
-					await command.execute(interaction, context);
-				}
+				await command?.execute(interaction, context);
 			} else if (interaction.isAutocomplete()) {
 				const command = this.commands.get(interaction.commandName);
-				if (command?.autocomplete) {
-					await command.autocomplete(interaction, context);
-				}
+				await command?.autocomplete?.(interaction, context);
 			}
 		} catch (error) {
 			logger.error(
