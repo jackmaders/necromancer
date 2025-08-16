@@ -4,5 +4,6 @@ export {
 	StandaloneCommand,
 	Subcommand,
 } from "./classes/command.ts";
+export { eventBus } from "./event-bus/index.ts";
 export { logger } from "./logging/logger-client.ts";
 export { getUpcomingMonday } from "./utils/get-upcoming-monday.ts";
