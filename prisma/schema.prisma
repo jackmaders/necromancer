@@ -27,9 +27,61 @@ model Team {
     guild   Guild  @relation(fields: [guildId], references: [id])
     guildId String
 
+    polls Poll[]
+
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([guildId, name])
     @@map("teams")
+}
+
+model Player {
+    id        String @id @default(cuid())
+    discordId String @unique
+
+    availabilities Availability[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("players")
+}
+
+model Poll {
+    id            String   @id @default(cuid())
+    messageId     String   @unique
+    channelId     String
+    team          Team     @relation(fields: [teamId], references: [id])
+    teamId        String
+    weekStartDate DateTime
+
+    availabilities Availability[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("polls")
+}
+
+model Availability {
+    id       String             @id @default(cuid())
+    poll     Poll               @relation(fields: [pollId], references: [id], onDelete: Cascade)
+    pollId   String
+    player   Player             @relation(fields: [playerId], references: [id], onDelete: Cascade)
+    playerId String
+    day      Int
+    status   AvailabilityStatus
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@unique([pollId, playerId, day])
+    @@map("availabilities")
+}
+
+enum AvailabilityStatus {
+    Available
+    PreferNot
+    Unavailable
 }
