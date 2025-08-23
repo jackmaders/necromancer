@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useNamingConvention: Mirroring existing module */
 import { vi } from "vitest";
 
 const pingCommandData = {
