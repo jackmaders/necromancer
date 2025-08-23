@@ -18,28 +18,32 @@ export const availabilityService = {
 
 		return poll;
 	},
+
+	/**
+	 * Creates a poll record in the database and returns it.
+	 */
+	async getPollByMessageId(messageId: string) {
+		return await availabilityRepository.getPollByMessageId(messageId);
+	},
+
 	/**
 	 * Handles an availability vote from a Discord poll,
 	 * updating the database accordingly.
 	 */
 	async handleVote(
-		_messageId: string,
-		_channelId: string,
+		pollMessageId: string,
 		playerDiscordId: string,
-		day: number,
+		dayIndex: number,
 		status: AvailabilityStatus,
 	) {
 		const player = await playerService.ensureExists(playerDiscordId);
 
-		// Get the poll from the database
-		// TODO: add logic to retrieve the poll record
-		// This will be needed when we implement poll creation.
-		const pollId = "TBD";
+		const poll = await this.getPollByMessageId(pollMessageId);
 
 		await availabilityRepository.upsertAvailability(
-			pollId,
+			poll.id,
 			player.id,
-			day,
+			dayIndex,
 			status,
 		);
 	},

@@ -21,6 +21,12 @@ export const availabilityRepository = {
 		});
 	},
 
+	async getPollByMessageId(messageId: string) {
+		return await prisma.poll.findUniqueOrThrow({
+			where: { messageId },
+		});
+	},
+
 	/**
 	 * Updates or creates a player's availability for a specific day in a poll.
 	 */

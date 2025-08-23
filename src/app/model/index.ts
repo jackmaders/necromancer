@@ -1,6 +1,6 @@
 import { getEnvVar } from "@/shared/config";
 import { logger } from "@/shared/lib/index.ts";
-import { discord } from "./discord/discord-client.ts";
+import { discord } from "./discord-client.ts";
 
 /**
  * Starts the application by initializing the Discord client.

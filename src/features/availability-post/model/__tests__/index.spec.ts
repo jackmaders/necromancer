@@ -23,6 +23,7 @@ describe("Post Availability Poll Subcommand", () => {
 		poll = mock<PollData>();
 		interaction = mock<ChatInputCommandInteraction>();
 		interaction.guildId = guild.guildId;
+		interaction.options.getString = vi.fn(() => "Raiders");
 	});
 
 	it("should throw GuildOnlyError if not in a guild", async () => {
