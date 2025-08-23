@@ -42,3 +42,5 @@ const commands = [new PingCommand(), new TeamCommand()];
 export const getCommands = vi.fn(() => {
 	return commands;
 });
+
+export const setupEventHandlers = vi.fn();

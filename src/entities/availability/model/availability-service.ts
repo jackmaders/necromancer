@@ -23,15 +23,15 @@ export const availabilityService = {
 	/**
 	 * Creates a poll record in the database and returns it.
 	 */
-	async getPollById(pollPrismaId: string) {
-		return await availabilityRepository.getPollById(pollPrismaId);
+	async findPollByMessageId(messageId: string) {
+		return await availabilityRepository.findPollByMessageId(messageId);
 	},
 
 	/**
 	 * Creates a poll record in the database and returns it.
 	 */
-	async getPollByMessageId(messageId: string) {
-		return await availabilityRepository.getPollByMessageId(messageId);
+	async getPollById(pollPrismaId: string) {
+		return await availabilityRepository.getPollById(pollPrismaId);
 	},
 
 	/**

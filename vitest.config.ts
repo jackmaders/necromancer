@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => ({
 			},
 		},
 		env: loadEnv(mode, process.cwd(), ""),
+		globals: true,
 		mockReset: true,
 		setupFiles: ["./tests/setup.ts"],
 		unstubEnvs: true,

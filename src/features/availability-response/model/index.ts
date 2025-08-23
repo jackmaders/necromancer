@@ -6,7 +6,7 @@ export async function handleAvailabilityResponse([
 	pollAnswer,
 	playerDiscordId,
 ]: ClientEvents[Events.MessagePollVoteAdd]) {
-	const poll = await availabilityService.getPollByMessageId(
+	const poll = await availabilityService.findPollByMessageId(
 		pollAnswer.poll.message.id,
 	);
 
