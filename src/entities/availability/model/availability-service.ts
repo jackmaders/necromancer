@@ -23,6 +23,13 @@ export const availabilityService = {
 	/**
 	 * Creates a poll record in the database and returns it.
 	 */
+	async getPollById(pollPrismaId: string) {
+		return await availabilityRepository.getPollById(pollPrismaId);
+	},
+
+	/**
+	 * Creates a poll record in the database and returns it.
+	 */
 	async getPollByMessageId(messageId: string) {
 		return await availabilityRepository.getPollByMessageId(messageId);
 	},
@@ -32,14 +39,14 @@ export const availabilityService = {
 	 * updating the database accordingly.
 	 */
 	async handleVote(
-		pollMessageId: string,
+		pollPrismaId: string,
 		playerDiscordId: string,
 		dayIndex: number,
 		status: AvailabilityStatus,
 	) {
 		const player = await playerService.ensureExists(playerDiscordId);
 
-		const poll = await this.getPollByMessageId(pollMessageId);
+		const poll = await this.getPollById(pollPrismaId);
 
 		await availabilityRepository.upsertAvailability(
 			poll.id,

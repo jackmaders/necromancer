@@ -6,13 +6,22 @@ export async function handleAvailabilityResponse([
 	pollAnswer,
 	playerDiscordId,
 ]: ClientEvents[Events.MessagePollVoteAdd]) {
+	const poll = await availabilityService.getPollByMessageId(
+		pollAnswer.poll.message.id,
+	);
+
+	// If we aren't tracking this poll, ignore the vote
+	if (!poll) {
+		return;
+	}
+
+	// Day index is 0-based, while Discord poll answer IDs are 1-based
 	const dayIndex = pollAnswer.id - 1;
 
-	// For now, we'll assume any vote means "Available".
 	const status = AvailabilityStatus.Available;
 
 	await availabilityService.handleVote(
-		pollAnswer.poll.message.id,
+		poll.id,
 		playerDiscordId,
 		dayIndex,
 		status,

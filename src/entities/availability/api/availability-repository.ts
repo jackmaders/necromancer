@@ -21,6 +21,12 @@ export const availabilityRepository = {
 		});
 	},
 
+	async getPollById(id: string) {
+		return await prisma.poll.findUniqueOrThrow({
+			where: { id },
+		});
+	},
+
 	async getPollByMessageId(messageId: string) {
 		return await prisma.poll.findUniqueOrThrow({
 			where: { messageId },

@@ -17,6 +17,7 @@ export function buildAvailabilityPoll(): PollData {
 		day: "numeric",
 		month: "short",
 		weekday: "short",
+		year: "numeric",
 	};
 
 	const answers = weekdays.map((date, index) => ({
