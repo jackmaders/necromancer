@@ -6,24 +6,29 @@ import {
 	type InteractionReplyOptions,
 	MessageFlags,
 } from "discord.js";
-import { getCommands } from "@/app/config";
+import { getCommands, setupEventHandlers } from "@/app/config";
 import { type Command, eventBus, logger } from "@/shared/lib/index.ts";
 import { type AppContext, AppError } from "@/shared/model";
 
 export class DiscordClient {
 	readonly commands = new Map<string, Command>();
 	readonly client = new Client({
-		intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessagePolls],
+		intents: [
+			GatewayIntentBits.Guilds,
+			GatewayIntentBits.GuildMessagePolls,
+			GatewayIntentBits.GuildMessages,
+		],
 	});
 
 	constructor() {
-		this.registerEventHandlers();
+		this.registerDiscordEventListeners();
 	}
 
 	/**
 	 * Initializes the Discord client and logs the client in.
 	 */
 	async init(token: string) {
+		setupEventHandlers();
 		this.loadCommands();
 		await this.client.login(token);
 	}
@@ -31,7 +36,7 @@ export class DiscordClient {
 	/**
 	 * Registers all client event handlers.
 	 */
-	private registerEventHandlers(): void {
+	private registerDiscordEventListeners(): void {
 		this.client.once(Events.ClientReady, (readyClient) => {
 			logger.info(`Ready! Logged in as ${readyClient.user.tag}`);
 		});
@@ -40,9 +45,9 @@ export class DiscordClient {
 			this.handleInteraction(interaction),
 		);
 
-		this.client.on(Events.MessagePollVoteAdd, (pollAnswer, userId) => {
-			eventBus.emit(Events.MessagePollVoteAdd, [pollAnswer, userId]);
-		});
+		this.client.on(Events.MessagePollVoteAdd, (...args) =>
+			eventBus.emit(Events.MessagePollVoteAdd, [...args]),
+		);
 	}
 
 	private loadCommands() {

@@ -1,7 +1,8 @@
 import type { AvailabilityStatus } from "prisma/generated/prisma-client-js/index";
-import { playerService } from "@/entities/player/@x/availability.ts";
+
 import { getUpcomingMonday } from "@/shared/lib";
 import { availabilityRepository } from "../api/availability-repository.ts";
+import { playerService } from "./player-service.ts";
 
 export const availabilityService = {
 	/**
