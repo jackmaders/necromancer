@@ -1,4 +1,4 @@
-import { type Logger, type LoggerOptions, pino } from "pino";
+import { type Logger, type LoggerOptions, pino, stdTimeFunctions } from "pino";
 import { getEnvVar } from "@/shared/config";
 
 export class LoggerClient {
@@ -30,7 +30,7 @@ export class LoggerClient {
 
 		const options: LoggerOptions = {
 			level: PINO_LOG_LEVEL,
-			timestamp: pino.stdTimeFunctions.isoTime,
+			timestamp: stdTimeFunctions.isoTime,
 			...(isDevelopmentTty ? DevOptions : {}),
 		};
 

@@ -8,7 +8,6 @@ const logger = {
 };
 export const pino = vi.fn(() => logger);
 
-// biome-ignore lint/suspicious/noExplicitAny: Need to set static property
-(pino as any).stdTimeFunctions = {
+export const stdTimeFunctions = {
 	isoTime: vi.fn(),
 };
