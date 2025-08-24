@@ -28,13 +28,6 @@ export const availabilityService = {
 	},
 
 	/**
-	 * Creates a poll record in the database and returns it.
-	 */
-	async getPollById(pollPrismaId: string) {
-		return await availabilityRepository.getPollById(pollPrismaId);
-	},
-
-	/**
 	 * Handles an availability vote from a Discord poll,
 	 * updating the database accordingly.
 	 */
@@ -46,7 +39,7 @@ export const availabilityService = {
 	) {
 		const player = await playerService.ensureExists(playerDiscordId);
 
-		const poll = await this.getPollById(pollPrismaId);
+		const poll = await availabilityRepository.getPollById(pollPrismaId);
 
 		await availabilityRepository.upsertAvailability(
 			poll.id,

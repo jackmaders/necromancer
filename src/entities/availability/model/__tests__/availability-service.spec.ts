@@ -34,18 +34,6 @@ describe("availabilityService", () => {
 		});
 	});
 
-	describe("getPollById", () => {
-		it("should call availabilityRepository.getPollById with correct arguments", async () => {
-			const pollPrismaId = "poll-123";
-
-			await availabilityService.getPollById(pollPrismaId);
-
-			expect(availabilityRepository.getPollById).toHaveBeenCalledWith(
-				pollPrismaId,
-			);
-		});
-	});
-
 	describe("getPollByMessageId", () => {
 		it("should call availabilityRepository.getPollByMessageId with correct arguments", async () => {
 			const messageId = "message-123";
