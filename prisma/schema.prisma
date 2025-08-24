@@ -81,7 +81,7 @@ model Availability {
 }
 
 enum AvailabilityStatus {
-    Available
-    PreferNot
-    Unavailable
+    AVAILABLE
+    PREFER_NOT
+    UNAVAILABLE
 }

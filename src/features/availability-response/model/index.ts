@@ -18,7 +18,7 @@ export async function handleAvailabilityResponse([
 	// Day index is 0-based, while Discord poll answer IDs are 1-based
 	const dayIndex = pollAnswer.id - 1;
 
-	const status = AvailabilityStatus.Available;
+	const status = AvailabilityStatus.AVAILABLE;
 
 	await availabilityService.handleVote(
 		poll.id,

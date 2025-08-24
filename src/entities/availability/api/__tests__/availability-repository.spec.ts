@@ -60,7 +60,7 @@ describe("availabilityRepository", () => {
 			const pollId = "poll-123";
 			const playerPrismaId = "player-123";
 			const day = 1;
-			const status = AvailabilityStatus.Available;
+			const status = AvailabilityStatus.AVAILABLE;
 
 			await availabilityRepository.upsertAvailability(
 				pollId,

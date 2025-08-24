@@ -63,7 +63,7 @@ describe("availabilityService", () => {
 			const pollPrismaId = "poll-123";
 			const playerDiscordId = "discord-123";
 			const dayIndex = 1;
-			const status = AvailabilityStatus.Available;
+			const status = AvailabilityStatus.AVAILABLE;
 
 			const player: Player = {
 				createdAt: new Date(),
