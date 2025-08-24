@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useNamingConvention: Mirroring existing module */
 import { vi } from "vitest";
 
 const pingCommandData = {
@@ -41,3 +42,5 @@ const commands = [new PingCommand(), new TeamCommand()];
 export const getCommands = vi.fn(() => {
 	return commands;
 });
+
+export const setupEventHandlers = vi.fn();
