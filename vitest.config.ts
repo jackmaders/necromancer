@@ -11,6 +11,7 @@ export default defineConfig(({ mode }) => ({
 				...coverageConfigDefaults.exclude,
 				"prisma/generated",
 				"**/__mocks__/**",
+				"**/types/**",
 				"src/app/config/index.ts",
 				"src/app/model/index.ts",
 				"src/features/*/index.ts",
