@@ -1,1 +1,2 @@
-export { getCommands } from "./commands/index.ts";
+export { getCommands } from "./commands.ts";
+export { setupEventHandlers } from "./events.ts";

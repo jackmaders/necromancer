@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ParentCommand } from "@/shared/lib";
-import { getCommands } from "..";
+import { getCommands } from "../commands.ts";
 
 describe("getCommands", () => {
 	it("should return an array of commands", () => {
