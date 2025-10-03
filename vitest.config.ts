@@ -1,6 +1,7 @@
-import { loadEnv } from "vite";
+import process from "node:process";
+import { defineConfig, loadEnv } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { coverageConfigDefaults, defineConfig } from "vitest/config";
+import { coverageConfigDefaults } from "vitest/config";
 
 // biome-ignore lint/style/noDefaultExport: Default export is required for vitest
 export default defineConfig(({ mode }) => ({
