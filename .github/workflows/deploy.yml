@@ -21,7 +21,7 @@ jobs:
       contents: write
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -61,7 +61,7 @@ jobs:
       cancel-in-progress: false
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -75,7 +75,7 @@ jobs:
 
       - name: 🔍 Check for command changes
         id: command_changes
-        uses: tj-actions/changed-files@v46
+        uses: tj-actions/changed-files@v47
         with:
           files: |
             src/app/config/commands.ts
@@ -95,7 +95,7 @@ jobs:
     concurrency: deploy-group
     steps:
       - name: 🛒 Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
