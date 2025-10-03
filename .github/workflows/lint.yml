@@ -24,6 +24,9 @@ jobs:
       - name: 📦 Install Dependencies
         run: bun install --frozen-lockfile
 
+      - name: 🔐 Scan for Vulnerabilities
+        run: bun audit --prod --audit-level=high
+
       - name: 🦺 Check Type Safety
         run: bun run check:tsc
 
